@@ -56,7 +56,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
-                                            FilterChain chain, Authentication auth) {
+                                            FilterChain chain, Authentication auth) throws IOException {
         Long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
@@ -68,7 +68,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
                 .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
                 .compact();
+
         // Add token to header
+
         response.addHeader("user", auth.getName());
         response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix()+token);
     }
