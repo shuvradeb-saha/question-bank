@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apisauce": "^1.0.2",
     "history": "^4.9.0",
     "immutable": "^4.0.0-rc.12",
     "intl": "^1.2.5",
@@ -17,7 +18,8 @@
     "redux-form": "^8.2.0",
     "redux-immutable": "^4.0.0",
     "redux-saga": "^1.0.2",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "urijs": "^1.19.1"
   },
   "scripts": {
     "format": "prettier-eslint --write \"src/**/*.{js,scss}\"",

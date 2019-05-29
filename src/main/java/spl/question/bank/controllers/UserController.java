@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 public class UserController {
-
-
     @RequestMapping("/api/secure")
     public String abc() {
         return "secured ";
