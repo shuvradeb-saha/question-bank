@@ -1,11 +1,10 @@
 package spl.question.bank.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.security.RolesAllowed;
-
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 public class UserController {
 
@@ -19,6 +18,4 @@ public class UserController {
     public String def() {
         return "not secured";
     }
-
-
 }

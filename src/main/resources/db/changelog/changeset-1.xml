@@ -1,0 +1,74 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="sdl-export-config-1" author="shuvra">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="export_target"/>
+                <tableExists tableName="export_group"/>
+                <tableExists tableName="export_group_target"/>
+
+                <foreignKeyConstraintExists foreignKeyName="export_group_target_group_id_fkey"/>
+                <foreignKeyConstraintExists foreignKeyName="export_group_target_target_id_fkey"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="export_target">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="export_target_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" uniqueConstraintName="export_target_name_unique"/>
+            </column>
+            <column name="type" type="VARCHAR(15)"/>
+            <column name="data" type="JSONB"/>
+        </createTable>
+
+        <createTable tableName="export_group">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="export_group_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints unique="true" uniqueConstraintName="export_group_name_unique"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="export_group_target">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="export_group_target_pkey"/>
+            </column>
+            <column name="group_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                constraintName="export_group_target_group_id_fkey"
+                deferrable="false"
+                initiallyDeferred="false"
+                baseColumnNames="group_id"
+                baseTableName="export_group_target"
+                onDelete="CASCADE"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="export_group"
+                validate="true"/>
+
+        <addForeignKeyConstraint
+                constraintName="export_group_target_target_id_fkey"
+                deferrable="false"
+                initiallyDeferred="false"
+                baseColumnNames="target_id"
+                baseTableName="export_group_target"
+                onDelete="CASCADE"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="export_target"
+                validate="true"/>
+    </changeSet>
+</databaseChangeLog>

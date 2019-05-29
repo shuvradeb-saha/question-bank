@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         role1.add("USER");
         role1.add("ADMIN");
         List<String> role2 = new ArrayList<>();
-        role1.add("USER");
+        role2.add("USER");
 
         final List<AppUser> users = Arrays.asList(
                 new AppUser(1, "admin", encoder.encode("123456"), role1),

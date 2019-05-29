@@ -72,14 +72,14 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
         // Add token to header
 
         response.addHeader("user", auth.getName());
-        response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix()+token);
+        response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         logger.error(failed.getMessage());
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setHeader("AuthError",failed.getMessage());
+        response.setHeader("AuthError", failed.getMessage());
     }
 
     @Data
