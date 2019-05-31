@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { required } from '../../utils/validation';
+import { required } from '../../../utils/validation';
 import { Field } from 'redux-form/immutable';
 
 class FormInput extends Component {
@@ -18,8 +18,8 @@ class FormInput extends Component {
   };
 
   renderField = field => {
-    const { input, meta } = field;
-    const { type, label, require } = this.props;
+    const { input } = field;
+    const { type, label } = this.props;
 
     return (
       <div>
@@ -37,8 +37,8 @@ class FormInput extends Component {
       value === undefined ? undefined : parseInt(value, 10);
     return (
       <div>
-        <div className="row">
-          <div className="column">
+        <div>
+          <div>
             <div>
               <Field
                 name={name}
