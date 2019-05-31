@@ -4,9 +4,9 @@ import API from '../../utils/api';
 
 import { FETCH_PROFILE } from './constants';
 
-export function* fetchProfile() {
+export function* submitInfoForAuthentication({ payload: { data } }) {
   try {
-    const profile = yield call(API.get, 'api/user');
+    const profile = yield call(API.post, 'api/auth');
     console.log('Profile ', profile);
   } catch (error) {
     console.log('Error in profile saga: ', error);
@@ -14,5 +14,5 @@ export function* fetchProfile() {
 }
 
 export default function* saga() {
-  yield takeLatest(FETCH_PROFILE, fetchProfile);
+  yield takeLatest(FETCH_PROFILE, submitInfoForAuthentication);
 }

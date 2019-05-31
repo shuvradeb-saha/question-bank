@@ -1,3 +1,5 @@
 export const REDUCER_NAME = 'login';
-export const FETCH_PROFILE = 'app/state/Login/FETCH_PROFILE';
-export const FETCH_PROFILE_SUCCESS = 'app/state/Login/FETCH_PROFILE_SUCCESS';
+export const SUBMIT_INFO_AND_FETCH_PROFILE =
+  'app/state/Login/SUBMIT_INFO_AND_FETCH_PROFILE';
+export const SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS =
+  'app/state/Login/SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS';

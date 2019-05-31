@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 
-import { FETCH_PROFILE } from './constants';
+import { SUBMIT_INFO_AND_FETCH_PROFILE } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -16,8 +16,9 @@ const initialState = fromJS({
 
 function reducer(state = initialState, { type, payload }) {
   switch (type) {
-    case FETCH_PROFILE:
+    case SUBMIT_INFO_AND_FETCH_PROFILE:
       return state.merge({ inProgress: true, error: '' });
+
     default:
       return state;
   }

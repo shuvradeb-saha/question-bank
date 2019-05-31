@@ -5,14 +5,16 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 import { FormInput } from '../../components/FormComponent';
+import { submitLoginInfo } from '../../state/login/action';
 
 class Login extends Component {
   static propTypes = {
-    verifyLogin: PropTypes.func,
+    submitLoginInfo: PropTypes.func,
   };
 
   onSubmit = values => {
     console.log('values ', values.toJS());
+    this.props.submitLoginInfo(values.toJS());
   };
 
   render() {
@@ -31,7 +33,7 @@ class Login extends Component {
 
 const mapStateToProps = null;
 const mapDispatchToProps = dispatch => ({
-  verifyLogin: data => dispatch(verifyLoginInfo(data)),
+  submitLoginInfo: data => dispatch(submitLoginInfo(data)),
 });
 
 const withConnect = connect(
