@@ -56,6 +56,9 @@ export class Api {
 
   post = async (uri, data, params) => {
     try {
+      console.log('url is == ', uri, data);
+      this.api.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+
       const response = await this.api.post(uri, data, params);
       return this.getDataFromResponse(response);
     } catch (error) {

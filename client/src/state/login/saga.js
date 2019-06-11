@@ -2,11 +2,12 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import API from '../../utils/api';
 
-import { FETCH_PROFILE } from './constants';
+import { SUBMIT_INFO_AND_FETCH_PROFILE } from './constants';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
+  console.log('submitted here', data);
   try {
-    const profile = yield call(API.post, 'api/auth');
+    const profile = yield call(API.post, 'auth', data);
     console.log('Profile ', profile);
   } catch (error) {
     console.log('Error in profile saga: ', error);
@@ -14,5 +15,5 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
 }
 
 export default function* saga() {
-  yield takeLatest(FETCH_PROFILE, submitInfoForAuthentication);
+  yield takeLatest(SUBMIT_INFO_AND_FETCH_PROFILE, submitInfoForAuthentication);
 }

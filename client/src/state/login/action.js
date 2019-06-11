@@ -1,5 +1,6 @@
-import { FETCH_PROFILE } from './constants';
+import { SUBMIT_INFO_AND_FETCH_PROFILE } from './constants';
 
 export function submitLoginInfo(data) {
-  return { type: FETCH_PROFILE, payload: { data } };
+  console.log('data', data);
+  return { type: SUBMIT_INFO_AND_FETCH_PROFILE, payload: { data } };
 }

@@ -80,9 +80,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
         .setRoles(auth.getAuthorities());
 
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
-
-    response.addHeader("user", auth.getName());
     response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
+    response.setStatus(HttpServletResponse.SC_OK);
   }
 
   @Override
