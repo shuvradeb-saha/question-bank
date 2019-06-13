@@ -31,6 +31,7 @@ export class Api {
   getBaseUrl = () => this.baseUrl;
 
   getDataFromResponse = response => {
+    console.log('response ', response.status);
     if (response.ok && (response.status >= 200 && response.status < 300)) {
       return response.data;
     }
@@ -56,10 +57,9 @@ export class Api {
 
   post = async (uri, data, params) => {
     try {
-      console.log('url is == ', uri, data);
-      this.api.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-
+      console.log('camej djkf');
       const response = await this.api.post(uri, data, params);
+      console.log('Response in post', response.config);
       return this.getDataFromResponse(response);
     } catch (error) {
       console.error(error);

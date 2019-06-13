@@ -1,12 +1,15 @@
 package spl.question.bank.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.internal.org.jvnet.mimepull.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +39,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
     this.authenticationManager = authenticationManager;
     this.jwtConfig = jwtConfig;
     this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getUri(),
-        "POST"));
+        HttpMethod.POST.name()));
   }
 
   @Override
@@ -72,16 +75,14 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
         .compact();
 
-    // Add token to header
-
     LoginResponse loginResponse = new LoginResponse();
-    loginResponse.setUser(auth.getName())
+    loginResponse
+        .setUser(auth.getName())
         .setToken(token)
-        .setRoles(auth.getAuthorities());
-
+        .setRoles(null);
+    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
-    response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
-    response.setStatus(HttpServletResponse.SC_OK);
+
   }
 
   @Override
@@ -89,8 +90,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
       HttpServletResponse response, AuthenticationException failed)
       throws IOException, ServletException {
     logger.error(failed.getMessage());
+    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-    response.setHeader("AuthError", failed.getMessage());
+    response.getWriter().write(failed.getMessage());
   }
 
   @Data

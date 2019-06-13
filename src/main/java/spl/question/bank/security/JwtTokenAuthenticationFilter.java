@@ -46,9 +46,9 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     .getBody();
 
             String username = claims.getSubject();
-            logger.info(claims.get("authorities"));
-            log.info("issued at "+claims.getIssuedAt());
-            log.info("expire at "+claims.getExpiration());
+
+            logger.info("issued at "+claims.getIssuedAt());
+            logger.info("expire at "+claims.getExpiration());
 
             if(username != null){
                 List<String> authorities = (List<String>) claims.get("authorities");

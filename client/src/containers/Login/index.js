@@ -13,8 +13,25 @@ class Login extends Component {
   };
 
   onSubmit = values => {
-    console.log('values ', values.toJS());
-    this.props.submitLoginInfo(values.toJS());
+    fetch('http://localhost:1515/auth', {
+      method: 'POST',
+      mode: 'cors', // no-cors, cors, *same-origin
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrer: 'no-referrer',
+      body: JSON.stringify(values.toJS()),
+    })
+      .then(res => res.json())
+      .then(response => console.log('Response ', response))
+      .catch(() =>
+        console.error('Please enter username and password correctly ')
+      );
+
+    //this.props.submitLoginInfo(values.toJS());
   };
 
   render() {
