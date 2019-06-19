@@ -1,11 +1,9 @@
 package spl.question.bank.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.internal.org.jvnet.mimepull.Header;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 
 import org.springframework.http.HttpHeaders;

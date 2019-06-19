@@ -1,74 +1,168 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet id="sdl-export-config-1" author="shuvra">
-        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
-            <not>
-                <tableExists tableName="export_target"/>
-                <tableExists tableName="export_group"/>
-                <tableExists tableName="export_group_target"/>
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet id="spl3-question-bank" author="shuvra">
+    <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+      <not>
+        <tableExists tableName="role"/>
+        <tableExists tableName="user"/>
+        <tableExists tableName="class"/>
+        <tableExists tableName="subject"/>
+        <tableExists tableName="chapter"/>
+        <tableExists tableName="learning_outcome"/>
 
-                <foreignKeyConstraintExists foreignKeyName="export_group_target_group_id_fkey"/>
-                <foreignKeyConstraintExists foreignKeyName="export_group_target_target_id_fkey"/>
-            </not>
-        </preConditions>
+        <foreignKeyConstraintExists foreignKeyName="user_role_user_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="user_role_role_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="chapter_class_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="chapter_subject_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="learning_outcome_chapter_id_fkey"/>
+      </not>
+    </preConditions>
 
-        <createTable tableName="export_target">
-            <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="export_target_pkey"/>
-            </column>
-            <column name="name" type="VARCHAR(50)">
-                <constraints unique="true" uniqueConstraintName="export_target_name_unique"/>
-            </column>
-            <column name="type" type="VARCHAR(15)"/>
-            <column name="data" type="JSONB"/>
-        </createTable>
+    <createTable tableName="role">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="role_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(50)">
+        <constraints unique="true" uniqueConstraintName="role_name_unique"/>
+      </column>
+    </createTable>
 
-        <createTable tableName="export_group">
-            <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="export_group_pkey"/>
-            </column>
-            <column name="name" type="VARCHAR(50)">
-                <constraints unique="true" uniqueConstraintName="export_group_name_unique"/>
-            </column>
-        </createTable>
+    <createTable tableName="user">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+      </column>
+      <column name="email" type="VARCHAR(100)">
+        <constraints unique="true" uniqueConstraintName="user_email_unique"/>
+      </column>
+      <column name="password" type="VARCHAR(50)"/>
+      <column name="firstName" type="VARCHAR(50)"/>
+      <column name="lastName" type="VARCHAR(50)"/>
+      <column name="permanentAddress" type="VARCHAR(100)"/>
+      <column name="tempAddress" type="VARCHAR(100)"/>
+      <column name="birth_date" type="DATE"/>
+      <column name="join_date" type="DATE"/>
 
-        <createTable tableName="export_group_target">
-            <column autoIncrement="true" name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="export_group_target_pkey"/>
-            </column>
-            <column name="group_id" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
-            <column name="target_id" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+    </createTable>
 
-        <addForeignKeyConstraint
-                constraintName="export_group_target_group_id_fkey"
-                deferrable="false"
-                initiallyDeferred="false"
-                baseColumnNames="group_id"
-                baseTableName="export_group_target"
-                onDelete="CASCADE"
-                onUpdate="NO ACTION"
-                referencedColumnNames="id"
-                referencedTableName="export_group"
-                validate="true"/>
+    <createTable tableName="user_role">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="user_role_pkey"/>
+      </column>
+      <column name="user_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="role_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
 
-        <addForeignKeyConstraint
-                constraintName="export_group_target_target_id_fkey"
-                deferrable="false"
-                initiallyDeferred="false"
-                baseColumnNames="target_id"
-                baseTableName="export_group_target"
-                onDelete="CASCADE"
-                onUpdate="NO ACTION"
-                referencedColumnNames="id"
-                referencedTableName="export_target"
-                validate="true"/>
-    </changeSet>
+    <!-- class-> subject -> chapter -> learning -->
+
+    <createTable tableName="class">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="class_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(30)"/>
+    </createTable>
+
+    <createTable tableName="subject">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="subject_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(50)"/>
+    </createTable>
+
+    <createTable tableName="chapter">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="chapter_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(50)"/>
+
+      <column name="class_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="subject_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+
+    </createTable>
+
+    <createTable tableName="learning_outcome">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="learning_outcome_pkey"/>
+      </column>
+      <column name="outcome" type="VARCHAR(200)"/>
+
+      <column name="chapter_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+
+    </createTable>
+
+
+    <addForeignKeyConstraint
+      constraintName="user_role_user_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="user_id"
+      baseTableName="user_role"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="user"
+      validate="true"/>
+
+    <addForeignKeyConstraint
+      constraintName="user_role_role_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="role_id"
+      baseTableName="user_role"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="role"
+      validate="true"/>
+
+    <addForeignKeyConstraint
+      constraintName="chapter_class_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="class_id"
+      baseTableName="chapter"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="class"
+      validate="true"/>
+
+    <addForeignKeyConstraint
+      constraintName="chapter_subject_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="subject_id"
+      baseTableName="chapter"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="subject"
+      validate="true"/>
+
+
+    <addForeignKeyConstraint
+      constraintName="learning-outcome_chapter_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="chapter_id"
+      baseTableName="learning_outcome"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="chapter"
+      validate="true"/>
+
+  </changeSet>
 </databaseChangeLog>
