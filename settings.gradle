@@ -4,3 +4,4 @@ pluginManagement {
     }
 }
 rootProject.name = 'question-bank'
+include 'backend'

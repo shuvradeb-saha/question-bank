@@ -1,4 +1,4 @@
-HELP.md
+HELP.txt
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -197,7 +197,7 @@ bin/
 ### Gradle template
 .gradle
 server/build/
-client/build/
+frontend/build/
 build/
 
 # Ignore Gradle GUI config

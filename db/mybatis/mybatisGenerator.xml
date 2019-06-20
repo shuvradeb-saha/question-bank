@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ############################################ THIS IS AN EXAMPLE FILE, WE CAN START FROM HERE ############################################  -->
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="context1" targetRuntime="MyBatis3">
+        <!-- We want the standard equals, hashCode & toString methods -->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <jdbcConnection
+                driverClass="org.postgresql.Driver"
+                connectionURL="jdbc:postgresql://satao.db.elephantsql.com:5432/lwdwxyuq"
+                userId="lwdwxyuq"
+                password="RijwFQSfNCjVxp2Ew3sStfvLzcXW8Fs0"/>
+
+        <javaModelGenerator
+                targetPackage="spl.question.bank.database.model"
+                targetProject="backend/src/main/java"/>
+
+        <javaClientGenerator
+                targetPackage="spl.question.bank.database.client"
+                targetProject="backend/src/main/java"
+                type="ANNOTATEDMAPPER">
+            <property name="rootInterface" value="spl.question.bank.database.MapperMarker"/>
+        </javaClientGenerator>
+
+        <table tableName="user" domainObjectName="User">
+            <generatedKey
+                    column="id"
+                    sqlStatement="select currval('user_id_seq')"
+                    identity="true"/>
+        </table>
+
+        <table tableName="role" domainObjectName="Role">
+            <generatedKey
+                    column="id"
+                    sqlStatement="select currval('role_id_seq')"
+                    identity="true"/>
+        </table>
+        <table tableName="user_role" domainObjectName="UserRole">
+            <generatedKey column="id"
+                          sqlStatement="select currval('user_role_id_seq')"
+                          identity="true"/>
+        </table>
+
+      <table tableName="class" domainObjectName="Class">
+        <generatedKey column="id"
+          sqlStatement="select currval('class_id_seq')"
+          identity="true"/>
+      </table>
+
+      <table tableName="subject" domainObjectName="Subject">
+        <generatedKey column="id"
+          sqlStatement="select currval('subject_id_seq')"
+          identity="true"/>
+      </table>
+
+      <table tableName="chapter" domainObjectName="Chapter">
+        <generatedKey column="id"
+          sqlStatement="select currval('chapter_id_seq')"
+          identity="true"/>
+      </table>
+
+      <table tableName="learning_outcome" domainObjectName="LearningOutcome">
+        <generatedKey column="id"
+          sqlStatement="select currval('learning_outcome_id_seq')"
+          identity="true"/>
+      </table>
+
+
+
+
+
+    </context>
+</generatorConfiguration>
