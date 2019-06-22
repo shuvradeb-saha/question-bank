@@ -3,7 +3,7 @@
   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-  <changeSet id="spl3-question-bank" author="shuvra">
+  <changeSet id="spl3-question-bank-1" author="shuvra">
     <preConditions onFail="MARK_RAN" onError="MARK_RAN">
       <not>
         <tableExists tableName="role"/>
@@ -38,10 +38,10 @@
         <constraints unique="true" uniqueConstraintName="user_email_unique"/>
       </column>
       <column name="password" type="VARCHAR(50)"/>
-      <column name="firstName" type="VARCHAR(50)"/>
-      <column name="lastName" type="VARCHAR(50)"/>
-      <column name="permanentAddress" type="VARCHAR(100)"/>
-      <column name="tempAddress" type="VARCHAR(100)"/>
+      <column name="first_name" type="VARCHAR(50)"/>
+      <column name="last_name" type="VARCHAR(50)"/>
+      <column name="permanent_address" type="VARCHAR(100)"/>
+      <column name="temp_address" type="VARCHAR(100)"/>
       <column name="birth_date" type="DATE"/>
       <column name="join_date" type="DATE"/>
 

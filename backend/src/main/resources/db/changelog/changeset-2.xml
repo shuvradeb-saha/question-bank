@@ -3,6 +3,15 @@
   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-  <include file="changeset-1.xml" relativeToChangelogFile="true"/>
-  <include file="changeset-2.xml" relativeToChangelogFile="true"/>
+  <changeSet id="spl3-question-bank-3" author="shuvra">
+    <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+      <not>
+        <columnExists tableName="user" columnName="eiinNumber"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="user">
+      <column name="eiin_number" type="INT"/>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

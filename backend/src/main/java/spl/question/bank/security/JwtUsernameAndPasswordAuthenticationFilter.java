@@ -75,9 +75,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
 
     LoginResponse loginResponse = new LoginResponse();
     loginResponse
-        .setUser(auth.getName())
-        .setToken(token)
-        .setRoles(null);
+        //    .setUser(auth.getName())
+        .setToken(token);
+    //  .setRoles(null);
     response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
 

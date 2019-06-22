@@ -16,9 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @Configuration
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
@@ -46,7 +44,10 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
             UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()
         .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-        .antMatchers("/api/secure").hasRole("USER")
+        .antMatchers("/api/admin/**").hasRole("ADMIN")
+        .antMatchers("/api/teacher/**").hasAnyRole("TEACHER", "HEADMASTER", "MODERATOR")
+        .antMatchers("/api/headmaster/**").hasAnyRole("HEADMASTER", "MODERATOR")
+        .antMatchers("/api/moderator/**").hasRole("MODERATOR")
         .anyRequest().permitAll();
   }
 

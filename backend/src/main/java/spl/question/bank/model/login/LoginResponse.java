@@ -1,15 +1,13 @@
 package spl.question.bank.model.login;
 
-import java.util.Collection;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
+import spl.question.bank.model.UserInfo;
 
 @Data
 @Accessors(chain = true)
 public class LoginResponse {
-  String user;
-  Collection<? extends GrantedAuthority> roles;
-  String token;
+
+  private UserInfo userInfo;
+  private String token;
 }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { FormInput } from '../../components/FormComponent';
+import { FormInput } from '../../components';
 import { submitLoginInfo } from '../../state/login/action';
 
 class Login extends Component {
@@ -15,14 +15,10 @@ class Login extends Component {
   onSubmit = values => {
     fetch('http://localhost:1515/auth', {
       method: 'POST',
-      mode: 'cors', // no-cors, cors, *same-origin
-      credentials: 'same-origin',
       headers: {
         Accept: 'application/x-www-form-urlencoded',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer',
       body: JSON.stringify(values.toJS()),
     })
       .then(res => res.json())
