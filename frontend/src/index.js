@@ -5,13 +5,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import createHistory from 'history/createBrowserHistory';
-
+import './static/css/app.css';
 // Import root app
 import App from './containers/App';
-
-// Import i18n messages
-
-/* eslint-enable import/no-webpack-loader-syntax */
 
 import configureStore from './state/configureStore';
 
@@ -32,5 +28,4 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
-// TODO: Maybe figure out a good way to use service-worker.js instead of disabling it?
 unregister();

@@ -8,6 +8,7 @@
     "immutable": "^4.0.0-rc.12",
     "intl": "^1.2.5",
     "react": "^16.8.6",
+    "react-burger-menu": "^2.6.10",
     "react-dom": "^16.8.6",
     "react-intl": "^2.9.0",
     "react-redux": "^7.0.3",
