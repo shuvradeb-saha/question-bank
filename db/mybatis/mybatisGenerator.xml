@@ -27,10 +27,10 @@
             <property name="rootInterface" value="spl.question.bank.database.MapperMarker"/>
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User">
+        <table tableName="users" domainObjectName="User">
             <generatedKey
                     column="id"
-                    sqlStatement="select currval('user_id_seq')"
+                    sqlStatement="select currval('users_id_seq')"
                     identity="true"/>
         </table>
 
@@ -70,9 +70,10 @@
           identity="true"/>
       </table>
 
-
-
-
-
+      <table tableName="institute" domainObjectName="Institute">
+        <generatedKey column="id"
+          sqlStatement="select currval('institute_id_seq')"
+          identity="true"/>
+      </table>
     </context>
 </generatorConfiguration>

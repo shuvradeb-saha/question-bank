@@ -5,13 +5,19 @@ import API from '../../utils/api';
 import { SUBMIT_INFO_AND_FETCH_PROFILE } from './constants';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
-  console.log('submitted here', data);
-  try {
-    const profile = yield call(API.post, 'auth', data);
-    console.log('Profile ', profile);
-  } catch (error) {
-    console.log('Error in profile saga: ', error);
-  }
+  fetch('http://localhost:1515/api/auth', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data.toJS()),
+  })
+    .then(res => res.json())
+    .then(response => console.log('Response ', response))
+    .catch(e =>
+      console.error('Please enter username and password correctly ', e)
+    );
 }
 
 export default function* saga() {

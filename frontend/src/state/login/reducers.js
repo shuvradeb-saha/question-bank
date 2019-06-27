@@ -4,10 +4,11 @@ import { SUBMIT_INFO_AND_FETCH_PROFILE } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
-  username: '',
   email: '',
   firstName: '',
   lastName: '',
+  eiin: '',
+  institue: '',
   roles: [],
   authenticated: false,
   inProgress: false,

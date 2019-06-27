@@ -7,49 +7,54 @@
     <preConditions onFail="MARK_RAN" onError="MARK_RAN">
       <not>
         <tableExists tableName="role"/>
-        <tableExists tableName="user"/>
+        <tableExists tableName="users"/>
+        <tableExists tableName="user_role"/>
         <tableExists tableName="class"/>
         <tableExists tableName="subject"/>
         <tableExists tableName="chapter"/>
         <tableExists tableName="learning_outcome"/>
+        <tableExists tableName="institute" />
 
-        <foreignKeyConstraintExists foreignKeyName="user_role_user_id_fkey"/>
-        <foreignKeyConstraintExists foreignKeyName="user_role_role_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="users_role_user_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="users_role_role_id_fkey"/>
         <foreignKeyConstraintExists foreignKeyName="chapter_class_id_fkey"/>
         <foreignKeyConstraintExists foreignKeyName="chapter_subject_id_fkey"/>
         <foreignKeyConstraintExists foreignKeyName="learning_outcome_chapter_id_fkey"/>
+        <foreignKeyConstraintExists foreignKeyName="eiin_number_fkey"/>
       </not>
     </preConditions>
 
     <createTable tableName="role">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="role_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="role_id_pkey"/>
       </column>
       <column name="name" type="VARCHAR(50)">
         <constraints unique="true" uniqueConstraintName="role_name_unique"/>
       </column>
     </createTable>
 
-    <createTable tableName="user">
+    <createTable tableName="users">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="users_id_pkey"/>
       </column>
       <column name="email" type="VARCHAR(100)">
-        <constraints unique="true" uniqueConstraintName="user_email_unique"/>
+        <constraints unique="true" uniqueConstraintName="users_email_unique"/>
       </column>
-      <column name="password" type="VARCHAR(50)"/>
+      <column name="password" type="VARCHAR(100)"/>
       <column name="first_name" type="VARCHAR(50)"/>
       <column name="last_name" type="VARCHAR(50)"/>
       <column name="permanent_address" type="VARCHAR(100)"/>
       <column name="temp_address" type="VARCHAR(100)"/>
       <column name="birth_date" type="DATE"/>
       <column name="join_date" type="DATE"/>
-
+      <column name="eiin_number" type="INTEGER">
+        <constraints nullable="true"/>
+      </column>
     </createTable>
 
     <createTable tableName="user_role">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="user_role_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="user_role_id_pkey"/>
       </column>
       <column name="user_id" type="INTEGER">
         <constraints nullable="false"/>
@@ -63,45 +68,50 @@
 
     <createTable tableName="class">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="class_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="class_id_pkey"/>
       </column>
       <column name="name" type="VARCHAR(30)"/>
     </createTable>
 
     <createTable tableName="subject">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="subject_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="subject_id_pkey"/>
       </column>
       <column name="name" type="VARCHAR(50)"/>
     </createTable>
 
     <createTable tableName="chapter">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="chapter_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="chapter_id_pkey"/>
       </column>
       <column name="name" type="VARCHAR(50)"/>
-
       <column name="class_id" type="INTEGER">
         <constraints nullable="false"/>
       </column>
       <column name="subject_id" type="INTEGER">
         <constraints nullable="false"/>
       </column>
-
     </createTable>
 
     <createTable tableName="learning_outcome">
       <column autoIncrement="true" name="id" type="SERIAL">
-        <constraints primaryKey="true" primaryKeyName="learning_outcome_pkey"/>
+        <constraints primaryKey="true" primaryKeyName="learning_outcome_id_pkey"/>
       </column>
       <column name="outcome" type="VARCHAR(200)"/>
-
       <column name="chapter_id" type="INTEGER">
         <constraints nullable="false"/>
       </column>
-
     </createTable>
 
+    <createTable tableName="institute">
+      <column autoIncrement="true" name="id" type="SERIAL">
+        <constraints primaryKey="true" primaryKeyName="institute_id_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR(300)"/>
+      <column name="eiin_number" type="INTEGER">
+        <constraints unique="true" uniqueConstraintName="institute_eiin_unique"/>
+      </column>
+    </createTable>
 
     <addForeignKeyConstraint
       constraintName="user_role_user_id_fkey"
@@ -112,7 +122,7 @@
       onDelete="CASCADE"
       onUpdate="NO ACTION"
       referencedColumnNames="id"
-      referencedTableName="user"
+      referencedTableName="users"
       validate="true"/>
 
     <addForeignKeyConstraint
@@ -151,7 +161,6 @@
       referencedTableName="subject"
       validate="true"/>
 
-
     <addForeignKeyConstraint
       constraintName="learning-outcome_chapter_id_fkey"
       deferrable="false"
@@ -162,6 +171,18 @@
       onUpdate="NO ACTION"
       referencedColumnNames="id"
       referencedTableName="chapter"
+      validate="true"/>
+
+    <addForeignKeyConstraint
+      constraintName="eiin_number_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="eiin_number"
+      baseTableName="users"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="eiin_number"
+      referencedTableName="institute"
       validate="true"/>
 
   </changeSet>

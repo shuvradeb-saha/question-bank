@@ -1,74 +1,45 @@
 package spl.question.bank.security;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static java.util.stream.Collectors.toList;
+
+import java.util.stream.Collectors;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import spl.question.bank.database.client.UserMapper;
 import spl.question.bank.database.model.User;
-import spl.question.bank.model.AppUser;
+import spl.question.bank.service.UserService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private final UserMapper userMapper;
+  private final UserService userService;
   private final BCryptPasswordEncoder encoder;
   private final String ROLE_PREFIX = "ROLE_";
 
   @Autowired
   public UserDetailsServiceImpl(
-      final UserMapper userMapper,
+      final UserService userService,
       final BCryptPasswordEncoder encoder) {
-    this.userMapper = userMapper;
+    this.userService = userService;
     this.encoder = encoder;
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    /*
-    UserExample ex = new UserExample();
-    ex.createCriteria().andEmailEqualTo(username);
-    val users = userMapper.selectByExample(ex);
-    */
-    User u = new User();
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userService.getUserByEmail(email);
+    val roles = userService.getRolesByUser(user.getId());
 
-    List<String> role1 = new ArrayList<>();
-    role1.add("USER");
-    role1.add("ADMIN");
-    List<String> role2 = new ArrayList<>();
-    role2.add("USER");
+    val grantedAuthorities = roles
+        .stream()
+        .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role))
+        .collect(toList());
 
-    final List<AppUser> users = Arrays.asList(
-        new AppUser(1, "admin", encoder.encode("123456"), role1),
-        new AppUser(2, "saha", encoder.encode("12345"), role2)
-    );
-    for (AppUser appUser : users) {
-      if (appUser.getUsername().equals(username)) {
-
-        // Remember that Spring needs roles to be in this format: "ROLE_" + userRole (i.e. "ROLE_ADMIN")
-        // So, we need to set it to that format, so we can verify and compare roles (i.e. hasRole("ADMIN")).
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (String role : appUser.getRoles()) {
-          grantedAuthorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
-        }
-
-        // The "User" class is provided by Spring and represents a model class for user to be returned by UserDetailsService
-        // And used by auth manager to verify and check user authentication.
-        return new org.springframework.security.core.userdetails.User(appUser.getUsername(),
-            appUser.getPassword(), grantedAuthorities);
-      }
-    }
-
-    // If user not found. Throw this exception.
-    // throw new UsernameNotFoundException("Username: " + username + " not found");
-    throw new RuntimeException("Username: " + username + " not found");
-
+    return new org.springframework.security.core.userdetails.User(user.getEmail(),
+        user.getPassword(), grantedAuthorities);
   }
 }

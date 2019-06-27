@@ -13,7 +13,7 @@ class Login extends Component {
   };
 
   onSubmit = values => {
-    fetch('http://localhost:1515/auth', {
+   /*  fetch('http://localhost:1515/api/auth', {
       method: 'POST',
       headers: {
         Accept: 'application/x-www-form-urlencoded',
@@ -25,9 +25,9 @@ class Login extends Component {
       .then(response => console.log('Response ', response))
       .catch(() =>
         console.error('Please enter username and password correctly ')
-      );
+      ); */
 
-    //this.props.submitLoginInfo(values.toJS());
+    this.props.submitLoginInfo(values);
   };
 
   render() {
