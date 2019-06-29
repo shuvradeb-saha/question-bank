@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 import javax.servlet.http.HttpServletResponse;
+import spl.question.bank.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +29,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtConfig jwtConfig;
 
+  @Autowired
+  private UserService userService;
+
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -39,7 +43,8 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
         (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
         .and()
         .addFilter(
-            new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+            new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig,
+                userService))
         .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig),
             UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()

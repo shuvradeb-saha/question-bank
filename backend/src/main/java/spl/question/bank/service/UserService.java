@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import spl.question.bank.database.client.RoleMapper;
 import spl.question.bank.database.client.UserMapper;
 import spl.question.bank.database.client.UserRoleMapper;
+import spl.question.bank.database.model.Role;
 import spl.question.bank.database.model.User;
 import spl.question.bank.database.model.UserExample;
 import spl.question.bank.database.model.UserRole;
@@ -37,20 +38,45 @@ public class UserService {
   @Transactional
   public void saveUser(final UserDto userDto) {
     val user = userDto.getUser();
-    val roles = userDto.getRoleIds();
+    val roles = userDto.getRoles();
+
+    validateUser(user);
+
+    if (userMapper.insert(user) < 0) {
+      throw new RuntimeException("Cannot insert data");
+    }
+    //assign role then
+    assignRole(user.getId(), roles);
+  }
+
+  @Transactional
+  public void updateUser(final UserDto userDto) {
+    val user = userDto.getUser();
+    val roles = userDto.getRoles();
 
     validateUser(user);
 
     if (user.getId() != null) {
       userMapper.updateByPrimaryKey(user);
-    } else if (userMapper.insert(user) < 0) {
-      throw new RuntimeException("Cannot insert data");
+      updateRole(user.getId(), roles);
+    } else {
+      throw new RuntimeException("Unable to update user");
     }
-    //assign role then
+  }
+
+  private void updateRole(Integer userId, List<Role> updatedRoles) {
+    val example = new UserRoleExample();
+    example.createCriteria().andUserIdEqualTo(userId);
+    //delete previous roles
+    userRoleMapper.deleteByExample(example);
+    assignRole(userId, updatedRoles);
+  }
+
+  private void assignRole(Integer userId, List<Role> roles) {
     roles.forEach(role -> {
       val userRole = new UserRole();
       userRole.setRoleId(role.getId());
-      userRole.setUserId(user.getId());
+      userRole.setUserId(userId);
       userRoleMapper.insert(userRole);
     });
   }
@@ -58,6 +84,10 @@ public class UserService {
   private void validateUser(User user) {
     if (user.getId() == null && isEmailExist(user.getEmail())) {
       throw new RuntimeException("User already exists");
+    }
+
+    if (user.getEiinNumber() == null) {
+      throw new IllegalArgumentException("Must have to enter EIIN number");
     }
 
     if (isBlank(user.getEmail()) || isBlank(user.getFirstName()) ||
@@ -84,7 +114,7 @@ public class UserService {
     if (users == null) {
       throw new UsernameNotFoundException("No user found with the email " + email);
     }
-    //As email is unique only one user will be retrieved at atime
+    //As email is unique only one user will be retrieved at a time
     return users.get(0);
   }
 

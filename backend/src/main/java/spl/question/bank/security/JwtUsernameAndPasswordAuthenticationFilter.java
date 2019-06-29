@@ -1,11 +1,21 @@
 package spl.question.bank.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static java.util.stream.Collectors.toList;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.stream.Collectors;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.Data;
-
+import lombok.val;
+import lombok.var;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,27 +25,24 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.stream.Collectors;
+import spl.question.bank.model.UserDto;
 import spl.question.bank.model.login.LoginResponse;
+import spl.question.bank.service.UserService;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends
     UsernamePasswordAuthenticationFilter {
 
   private AuthenticationManager authenticationManager;
   private final JwtConfig jwtConfig;
+  private final UserService userService;
 
   public JwtUsernameAndPasswordAuthenticationFilter(
-      AuthenticationManager authenticationManager, JwtConfig jwtConfig) {
+      AuthenticationManager authenticationManager,
+      JwtConfig jwtConfig,
+      final UserService userService) {
     this.authenticationManager = authenticationManager;
     this.jwtConfig = jwtConfig;
+    this.userService = userService;
     this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getUri(),
         HttpMethod.POST.name()));
   }
@@ -62,22 +69,27 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
       HttpServletResponse response,
       FilterChain chain, Authentication auth) throws IOException {
     long now = System.currentTimeMillis();
-    String token = Jwts.builder()
+    val token = Jwts.builder()
         .setSubject(auth.getName())
-        // Convert to list of strings.
-        // This is important because it affects the way we get them back in the Gateway.
-        .claim("authorities", auth.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+        .claim("authorities", auth.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(toList()))
         .setIssuedAt(new Date(now))
         .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
         .compact();
 
-    LoginResponse loginResponse = new LoginResponse();
+    val user = userService.getUserByEmail(auth.getName());
+    user.setPassword("");
+    val roles = userService.getRolesByUser(user.getId());
+
+    var loginResponse = new LoginResponse();
     loginResponse
-        //    .setUser(auth.getName())
+        .setUser(user)
+        .setRoles(roles)
         .setToken(token);
-    //  .setRoles(null);
+
     response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
 

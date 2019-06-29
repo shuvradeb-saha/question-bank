@@ -56,7 +56,7 @@ dependencies {
     compile('org.liquibase:liquibase-core:3.6.3')
     compile 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
-
+    compile('org.springframework.boot:spring-boot-starter-actuator')
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 
 

@@ -1,0 +1,33 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet id="spl3-question-bank-2" author="shuvra">
+    <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+      <not>
+        <columnExists tableName="subject" columnName="subject_code"/>
+        <columnExists tableName="subject" columnName="class_id" />
+        <foreignKeyConstraintExists foreignKeyName="subject_class_id_fkey"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="subject">
+      <column name="subject_code" type="INTEGER"/>
+      <column name="class_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+
+    <addForeignKeyConstraint
+      constraintName="subject_class_id_fkey"
+      deferrable="false"
+      initiallyDeferred="false"
+      baseColumnNames="class_id"
+      baseTableName="subject"
+      onDelete="CASCADE"
+      onUpdate="NO ACTION"
+      referencedColumnNames="id"
+      referencedTableName="class"
+      validate="true"/>
+  </changeSet>
+</databaseChangeLog>
