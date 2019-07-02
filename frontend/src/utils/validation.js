@@ -1,4 +1,5 @@
 import { List } from 'immutable';
+import validator from 'validator';
 
 export const required = value =>
   value && (!List.isList(value) || value.size > 0) ? undefined : 'Required';
@@ -35,3 +36,15 @@ export const phoneNumber = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)
     ? 'Invalid phone number, must be 10 digits'
     : undefined;
+
+export const url = value => {
+  if (!value) return undefined;
+  const options = {
+    protocols: ['http', 'https'],
+    require_tld: false,
+    require_protocol: true,
+  };
+  return value && validator.isURL(value, options)
+    ? undefined
+    : 'Please enter a valid URL';
+};

@@ -1,5 +1,5 @@
 module.exports = {
-  parser: 'flow',
+  parser: 'babylon',
   singleQuote: true,
   trailingComma: 'es5',
 };

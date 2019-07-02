@@ -19,19 +19,11 @@ export class Api {
       baseURL: this.baseUrl,
       withCredentials: true,
     });
-
-    if (localStorage.getItem('user_token')) {
-      this.api.setHeader(
-        'Authorization',
-        'Bearer ' + localStorage.getItem('user_token')
-      );
-    }
   }
 
   getBaseUrl = () => this.baseUrl;
 
   getDataFromResponse = response => {
-    console.log('response ', response.status);
     if (response.ok && (response.status >= 200 && response.status < 300)) {
       return response.data;
     }
@@ -57,9 +49,7 @@ export class Api {
 
   post = async (uri, data, params) => {
     try {
-      console.log('camej djkf');
       const response = await this.api.post(uri, data, params);
-      console.log('Response in post', response.config);
       return this.getDataFromResponse(response);
     } catch (error) {
       console.error(error);

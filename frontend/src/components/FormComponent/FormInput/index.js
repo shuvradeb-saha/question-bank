@@ -22,10 +22,9 @@ class FormInput extends Component {
     const { type, label } = this.props;
 
     return (
-      <div>
+      <div className="form-group">
         <label htmlFor={input.name}>{label}</label>
-
-        <input {...input} type={type} />
+        <input className="form-control" {...input} type={type} />
       </div>
     );
   };
@@ -36,22 +35,14 @@ class FormInput extends Component {
     const parse = value =>
       value === undefined ? undefined : parseInt(value, 10);
     return (
-      <div>
-        <div>
-          <div>
-            <div>
-              <Field
-                name={name}
-                component={this.renderField}
-                label={label}
-                type={type}
-                validate={require ? [required] : []}
-                parse={type === 'number' ? parse : null}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Field
+        name={name}
+        component={this.renderField}
+        label={label}
+        type={type}
+        validate={require ? [required] : []}
+        parse={type === 'number' ? parse : null}
+      />
     );
   }
 }
