@@ -51,6 +51,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
         .antMatchers("/api/admin/**").hasRole("ADMIN")
         .antMatchers("/api/teacher/**").hasAnyRole("TEACHER", "HEADMASTER", "MODERATOR")
+        .antMatchers("/api/user/**").hasAnyRole("ADMIN", "TEACHER", "HEADMASTER", "MODERATOR")
         .antMatchers("/api/headmaster/**").hasAnyRole("HEADMASTER", "MODERATOR")
         .antMatchers("/api/moderator/**").hasRole("MODERATOR")
         .anyRequest().permitAll();

@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 
 // Import the SASS files
 import 'css/question-bank.css';
@@ -20,7 +20,7 @@ import { unregister } from './registerServiceWorker';
 
 // Create redux store with history
 const initialState = {};
-const history = createHistory();
+const history = createBrowserHistory();
 const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
 
@@ -63,6 +63,5 @@ if (!window.Intl) {
 } else {
   render();
 }
-
 
 unregister();

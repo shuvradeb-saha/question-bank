@@ -3,9 +3,15 @@ package spl.question.bank.service;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +24,8 @@ import spl.question.bank.database.model.UserExample;
 import spl.question.bank.database.model.UserRole;
 import spl.question.bank.database.model.UserRoleExample;
 import spl.question.bank.model.UserDto;
+import spl.question.bank.model.login.LoginResponse;
+import spl.question.bank.security.JwtConfig;
 
 @Service
 @Slf4j
@@ -26,13 +34,16 @@ public class UserService {
   private final UserMapper userMapper;
   private final UserRoleMapper userRoleMapper;
   private final RoleMapper roleMapper;
+  private final JwtConfig jwtConfig;
 
   public UserService(final UserMapper userMapper,
       final UserRoleMapper userRoleMapper,
-      final RoleMapper roleMapper) {
+      final RoleMapper roleMapper,
+      final JwtConfig jwtConfig) {
     this.userMapper = userMapper;
     this.userRoleMapper = userRoleMapper;
     this.roleMapper = roleMapper;
+    this.jwtConfig = jwtConfig;
   }
 
   @Transactional
@@ -132,4 +143,35 @@ public class UserService {
             .getName())
         .collect(toList());
   }
+
+
+  public LoginResponse createLoginResponse(final Authentication auth) {
+    val token = getToken(auth);
+    val user = getUserByEmail(auth.getName());
+    user.setPassword("");
+    val roles = getRolesByUser(user.getId());
+
+    var loginResponse = new LoginResponse();
+    loginResponse
+        .setUser(user)
+        .setRoles(roles)
+        .setToken(token);
+    return loginResponse;
+  }
+
+
+  public String getToken(Authentication auth) {
+    long now = System.currentTimeMillis();
+    return Jwts.builder()
+        .setSubject(auth.getName())
+        .claim("authorities", auth.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(toList()))
+        .setIssuedAt(new Date(now))
+        .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
+        .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
+        .compact();
+  }
+
 }

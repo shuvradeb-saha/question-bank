@@ -1,39 +1,36 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form/immutable';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
 
-import { FormInput } from '../../components';
-import { submitLoginInfo } from '../../state/login/action';
+import { userIsNotAuthenticated } from 'utils/reduxAuth';
+import { FormInput } from 'components';
+import { submitLoginInfo, fetchCurrentUserProfile } from 'state/login/action';
+import { makeAuthenticated } from 'state/login/selectors';
 
 class Login extends Component {
   static propTypes = {
     submitLoginInfo: PropTypes.func,
     handleSubmit: PropTypes.func.isRequired,
+
+    //  inProgress: PropTypes.bool.isRequired,
+    //  error: PropTypes.any,
   };
 
-  componentDidMount = () => {
-    const userCredentials = localStorage.getItem('user_cred');
-    console.log('usercred ', userCredentials);
-    if (userCredentials) {
-      console.log('usercred ', userCredentials);
-      this.props.submitLoginInfo(userCredentials);
-    }
+  static defaultProps = {
+    error: { message: '' },
   };
 
   onSubmit = values => {
+    // console.log('came ', values.toJS());
     this.props.submitLoginInfo(values);
   };
 
   render() {
     const { handleSubmit } = this.props;
-    /*  const userCredentials = localStorage.getItem('user_cred');
-    if (userCredentials) {
-      return <Redirect to="/homepage" />;
-    } */
 
     return (
       <div className="container h-100">
@@ -62,6 +59,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = null;
+
 const mapDispatchToProps = dispatch => ({
   submitLoginInfo: data => dispatch(submitLoginInfo(data)),
 });
@@ -72,6 +70,7 @@ const withConnect = connect(
 );
 
 export default compose(
+  userIsNotAuthenticated,
   withConnect,
   reduxForm({
     form: 'loginForm',

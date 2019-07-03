@@ -1,32 +1,25 @@
 package spl.question.bank.security;
 
-import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
-import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.val;
-import lombok.var;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import spl.question.bank.model.UserDto;
-import spl.question.bank.model.login.LoginResponse;
 import spl.question.bank.service.UserService;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends
@@ -68,29 +61,17 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
   protected void successfulAuthentication(HttpServletRequest request,
       HttpServletResponse response,
       FilterChain chain, Authentication auth) throws IOException {
-    long now = System.currentTimeMillis();
-    val token = Jwts.builder()
-        .setSubject(auth.getName())
-        .claim("authorities", auth.getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(toList()))
-        .setIssuedAt(new Date(now))
-        .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
-        .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
-        .compact();
 
-    val user = userService.getUserByEmail(auth.getName());
-    user.setPassword("");
-    val roles = userService.getRolesByUser(user.getId());
+    val loginResponse = userService.createLoginResponse(auth);
 
-    var loginResponse = new LoginResponse();
-    loginResponse
-        .setUser(user)
-        .setRoles(roles)
-        .setToken(token);
 
-    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+/*
+    val token = userService.getToken(auth);
+    val cookie = new Cookie("token", token);
+    response.addCookie(cookie);
+*/
+
+    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
 
   }
@@ -98,9 +79,9 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,
       HttpServletResponse response, AuthenticationException failed)
-      throws IOException, ServletException {
+      throws IOException {
     logger.error(failed.getMessage());
-    response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     response.getWriter().write(failed.getMessage());
   }

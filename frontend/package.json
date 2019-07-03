@@ -2,7 +2,7 @@
   "name": "question-bank-portal",
   "version": "0.0.1",
   "private": true,
-  "proxy": "http://localhost:8080/",
+  "proxy": "http://localhost:1515/",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
     "@fortawesome/fontawesome-free-solid": "^5.0.10",

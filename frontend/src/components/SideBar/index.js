@@ -81,10 +81,6 @@ const HeadMasterSidebar = () => (
 );
 
 class SideBar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const role = 'MODERATOR';
 
