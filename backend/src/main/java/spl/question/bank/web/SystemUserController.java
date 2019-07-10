@@ -1,6 +1,5 @@
 package spl.question.bank.web;
 
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -25,7 +24,7 @@ public class SystemUserController {
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public LoginResponse getUser(
-      final Authentication authentication) throws IOException {
+      final Authentication authentication) {
     return userService.createLoginResponse(authentication);
   }
 }

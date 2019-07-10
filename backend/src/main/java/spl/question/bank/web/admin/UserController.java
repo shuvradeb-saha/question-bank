@@ -1,15 +1,13 @@
-package spl.question.bank.web;
+package spl.question.bank.web.admin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import spl.question.bank.model.UserDto;
-import spl.question.bank.model.login.LoginResponse;
 import spl.question.bank.service.UserService;
 
 @RestController

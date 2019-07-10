@@ -1,4 +1,4 @@
-package spl.question.bank.web;
+package spl.question.bank.web.admin;
 
 
 import static org.apache.commons.lang3.StringUtils.isBlank;

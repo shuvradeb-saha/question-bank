@@ -1,4 +1,4 @@
-package spl.question.bank.web;
+package spl.question.bank.web.admin;
 
 
 import java.util.List;
