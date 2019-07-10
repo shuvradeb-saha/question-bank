@@ -1,4 +1,4 @@
-import { put, takeLatest, call, takeEvery } from 'redux-saga/effects';
+import { put, takeLatest, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
 import {

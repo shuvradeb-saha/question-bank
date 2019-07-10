@@ -4,20 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
-import { createStructuredSelector } from 'reselect';
 
 import { userIsNotAuthenticated } from 'utils/reduxAuth';
 import { FormInput } from 'components';
-import { submitLoginInfo, fetchCurrentUserProfile } from 'state/login/action';
-import { makeAuthenticated } from 'state/login/selectors';
+import { submitLoginInfo } from 'state/login/action';
+
 
 class Login extends Component {
   static propTypes = {
     submitLoginInfo: PropTypes.func,
     handleSubmit: PropTypes.func.isRequired,
-
-    //  inProgress: PropTypes.bool.isRequired,
-    //  error: PropTypes.any,
   };
 
   static defaultProps = {
@@ -25,7 +21,6 @@ class Login extends Component {
   };
 
   onSubmit = values => {
-    // console.log('came ', values.toJS());
     this.props.submitLoginInfo(values);
   };
 

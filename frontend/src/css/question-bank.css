@@ -16,23 +16,22 @@ li {
 }
 
 .sidebar {
-  background-color: #72787c;
+  background-color: #222522;
   padding-right: 20px;
   padding-top: 20px;
   min-height: calc(100vh - 50px);
+  color: white;
 }
 
 /* Sidebar navigation */
 .nav-sidebar {
-
   margin-right: -21px;
   margin-bottom: 20px;
   margin-left: -20px;
 }
 
 .nav-sidebar>li>a {
-  padding-right: 20px;
-  padding-left: 20px;
+  color: white;
 }
 
 .nav-sidebar>.active>a,
@@ -45,3 +44,7 @@ li {
 button {
   color: #fafafa
 }
+
+.dotted-border-bottom {
+    border-bottom: 1px solid rgb(174, 174, 194);
+} 

@@ -53,9 +53,9 @@ class App extends Component {
     return (
       <div>
         <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route path="/" component={userIsAuthenticated(HomePage)} />
-
+          <Route  path="/login" component={Login} />
+          <Route exact path="/" component={userIsAuthenticated(HomePage)} />
+          
           <Route path="" component={NOT_FOUND} />
         </Switch>
       </div>
