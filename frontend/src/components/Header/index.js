@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class Header extends Component {
+  static propTypes = {
+    username: PropTypes.string.isRequired,
+  };
+
+  static defaultProps = {
+    username: 'Username',
+  };
+
   render() {
     return (
       <div>
@@ -29,7 +37,7 @@ class Header extends Component {
                   id="navbardrop"
                   data-toggle="dropdown"
                 >
-                  Username
+                  {this.props.username}
                 </span>
                 <div className="dropdown-menu bg-dark">
                   <Link

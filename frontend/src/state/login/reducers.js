@@ -20,7 +20,7 @@ function reducer(state = initialState, { type, payload }) {
       return state.merge({ inProgress: true, error: '' });
     case SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS: {
       const { data } = payload;
-      console.log('came in reducer');
+
       const { roles, user } = data;
       return state
         .merge(fromJS({ roles, user }))

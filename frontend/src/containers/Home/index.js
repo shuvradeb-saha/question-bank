@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-
-import Header from '../Header';
-import SideBar from '../SideBar';
+import PropTypes from 'prop-types';
+import Header from 'components/Header';
+import { SideBar } from 'components';
 
 class HomePage extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header username={'shaishab saha'} />
         <div className="container-fluid">
           <div className="row">
             <SideBar />

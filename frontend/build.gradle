@@ -1,0 +1,57 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id "com.moowork.node" version "1.2.0"
+}
+
+apply plugin: 'base'
+apply plugin: 'eclipse'
+
+eclipse.project.name = "${rootProject.name}-${project.name}"
+
+// configure gradle-node-plugin
+node {
+    version = '9.5.0'
+    yarnVersion = '1.12.3'
+    npmVersion = '5.8.0'
+    download = true
+}
+
+def node_modules_dir = "node_modules"
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+task populate_node_modules(type: YarnTask) {
+    inputs.file(new File('package.json'))
+    inputs.file(new File('yarn.lock'))
+
+    outputs.dir(new File(node_modules_dir))
+
+    args = ['install']
+}
+
+task bundle(type: YarnTask) {
+    inputs.dir(new File('public'))
+    inputs.dir(new File('src'))
+    inputs.dir(new File(node_modules_dir))
+
+    outputs.dir(project.buildDir)
+
+    args = ['build']
+}
+bundle.dependsOn(populate_node_modules)
+assemble.dependsOn(bundle)
+
+clean {
+    delete node_modules_dir
+    delete project.buildDir
+}

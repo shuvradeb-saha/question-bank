@@ -9,8 +9,6 @@ import {
 import { fetchProfileSuccess } from './action';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
-  console.log('data in saga', data);
-
   const response = yield fetch('http://localhost:1515/api/auth', {
     method: 'POST',
     headers: {
@@ -22,7 +20,7 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
 
   if (response.ok) {
     const responseData = yield response.json();
-    console.log('token in localstorage = ', responseData.token);
+
     localStorage.setItem('token', responseData.token);
     yield put(fetchProfileSuccess(responseData));
     yield put(push('/homepage'));
@@ -35,7 +33,9 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
 export function* fetchCurrentProfile() {
   try {
     const token = localStorage.getItem('token');
-    console.log('current came fetch token ', token);
+    if (!token) {
+      return;
+    }
     const response = yield fetch('api/user', {
       method: 'GET',
       headers: new Headers({
@@ -44,11 +44,12 @@ export function* fetchCurrentProfile() {
       }),
     });
     if (response.ok) {
-      console.log('response from current ', response);
-      yield put(fetchProfileSuccess(response));
+      const responseData = yield response.json();
+      yield put(fetchProfileSuccess(responseData));
     }
   } catch (e) {
     console.log('Error in current user fetching: ', e);
+    return;
   }
 }
 
