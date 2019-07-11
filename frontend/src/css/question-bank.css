@@ -48,3 +48,8 @@ button {
 .dotted-border-bottom {
     border-bottom: 1px solid rgb(174, 174, 194);
 } 
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}

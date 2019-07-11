@@ -9,12 +9,23 @@ export const makeAuthenticated = () =>
     loginState => loginState.get('authenticated')
   );
 
-export const makeUserName = () => createSelector(selectLogin, loginState => {
-  console.log();
-  const user = loginState.get('user').toJS();
-  console.log(user);
-  return `${user.firstName} ${user.lastName}`;
-});
+export const makeUserName = () =>
+  createSelector(
+    selectLogin,
+    loginState => {
+      const user = loginState.get('user').toJS();
+      return `${user.firstName} ${user.lastName}`;
+    }
+  );
 
-export const makeRoles = () => 
-createSelector(selectLogin,  loginState => loginState.get('roles'));
+export const makeRoles = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('roles')
+  );
+
+export const makeInProgress = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('inProgress')
+  );

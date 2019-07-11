@@ -2,6 +2,7 @@ import {
   SUBMIT_INFO_AND_FETCH_PROFILE,
   SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS,
   FETCH_CURRENT_PROFILE,
+  FETCH_CURRENT_PROFILE_FAILURE,
 } from './constants';
 
 export function submitLoginInfo(data) {
@@ -14,4 +15,8 @@ export function fetchProfileSuccess(data) {
 
 export function fetchCurrentUserProfile() {
   return { type: FETCH_CURRENT_PROFILE };
+}
+
+export function fetchProfileFailure(error) {
+  return { type: FETCH_CURRENT_PROFILE_FAILURE, payload: { error } };
 }

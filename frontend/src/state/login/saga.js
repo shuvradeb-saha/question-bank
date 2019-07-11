@@ -6,7 +6,7 @@ import {
   FETCH_CURRENT_PROFILE,
 } from './constants';
 
-import { fetchProfileSuccess } from './action';
+import { fetchProfileSuccess, fetchProfileFailure } from './action';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
   const response = yield fetch('http://localhost:1515/api/auth', {
@@ -34,6 +34,7 @@ export function* fetchCurrentProfile() {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
+      yield put(fetchProfileFailure('Please login first'));
       return;
     }
     const response = yield fetch('api/user', {
@@ -49,7 +50,7 @@ export function* fetchCurrentProfile() {
     }
   } catch (e) {
     console.log('Error in current user fetching: ', e);
-    return;
+    yield put(fetchProfileFailure(e));
   }
 }
 
