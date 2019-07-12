@@ -8,3 +8,4 @@ export const SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS =
   'app/state/Login/SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS';
 export const FETCH_CURRENT_PROFILE_FAILURE =
   'app/state/Login/FETCH_CURRENT_PROFILE_FAILURE';
+export const LOGOUT_USER = 'app/state/Login/LOGOUT_USER';

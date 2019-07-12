@@ -1,0 +1,56 @@
+body {
+	height: 100%;
+}
+
+.min-h {
+	height: 100%;
+}
+
+li.active {
+	background-color: #428bca;
+}
+
+li {
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.sidebar {
+	background-color: #274627;
+	padding-right: 20px;
+	padding-top: 20px;
+	min-height: calc(100vh - 50px);
+	color: white;
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+	margin-right: -21px;
+	margin-bottom: 20px;
+	margin-left: -20px;
+}
+
+.nav-sidebar > li > a {
+	color: white;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+	color: #fff;
+	background-color: #428bca;
+}
+
+button {
+	color: #fafafa;
+}
+
+.dotted-border-bottom {
+	border-bottom: 1px solid rgb(174, 174, 194);
+}
+
+.my-auto {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+

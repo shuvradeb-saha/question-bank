@@ -16,11 +16,11 @@ const NOT_FOUND = () => <h1>Not Found</h1>;
 
 const PRE_LOGIN_LOADER = () => {
   return (
-    <div class="container h-100 mt-5">
-      <div class="row align-items-center h-100">
-        <div class="col mx-auto">
-          <div class="jumbotron">
-            <div class="jumbotron d-flex align-items-center flex-column justify-content-center h-100 text-white">
+    <div className="container-fluid h-100 mt-5">
+      <div className="row align-items-center h-100">
+        <div className="col mx-auto">
+          <div className="jumbotron">
+            <div className="jumbotron d-flex align-items-center flex-column justify-content-center h-100 text-white">
               <Loader type="Puff" color="#00BFFF" height="200" width="200" />
             </div>
           </div>

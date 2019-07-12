@@ -1,0 +1,25 @@
+@import 'form';
+@import 'home';
+
+.access-denied {
+	background: url("../static/access_denied.jpg") no-repeat center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover; 
+	width:700px;
+	height:450px;
+	margin: 8% 0% 0% 14%;
+}
+
+
+.not-found {
+	background: url("../static/not-found.jpg") no-repeat center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover; 
+	width:700px;
+	height:450px;
+	margin: 8% 0% 0% 14%;
+}

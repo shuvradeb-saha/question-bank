@@ -3,41 +3,48 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { makeAuthenticated } from 'state/login/selectors';
-import Login from '../containers/Login';
+import { makeAuthenticated, makeRoles } from 'state/login/selectors';
+
+const AccessDenied = () => {
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-12">
+          <div className="text-center access-denied"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const Authorization = (WrappedComponent, allowedRoles) => {
   class WithAuthorization extends React.Component {
     static propTypes = {
       authenticated: PropTypes.bool.isRequired,
+      roles: ImmutablePropTypes.list.isRequired,
     };
 
     static defaultProps = {
       authenticated: false,
+      roles: [],
     };
 
     render() {
-      const { authenticated } = this.props;
-      console.log('props in auth ', this.props);
-      console.log('auth ', authenticated);
+      const { roles } = this.props;
 
-      if (!authenticated) {
-        return <Login />;
-      } else {
-        return <div>welcome</div>;
-      }
-      /* console.log('allowed roles ', allowedRoles);
-      if (allowedRoles.some(r => role.indexOf(r) >= 0)) {
+      if (allowedRoles.some(r => roles.indexOf(r) >= 0)) {
         return <WrappedComponent {...this.props} />;
       } else {
-        return <h1>Access Denied</h1>;
-      } */
+        return <AccessDenied />;
+      }
     }
   }
 
   const mapStateToProps = createStructuredSelector({
     authenticated: makeAuthenticated(),
+    roles: makeRoles(),
   });
 
   const withConnect = connect(

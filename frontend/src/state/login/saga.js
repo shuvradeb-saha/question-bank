@@ -47,6 +47,9 @@ export function* fetchCurrentProfile() {
     if (response.ok) {
       const responseData = yield response.json();
       yield put(fetchProfileSuccess(responseData));
+    } else {
+      console.log('Not ok');
+      yield put(fetchProfileFailure('Error', response));
     }
   } catch (e) {
     console.log('Error in current user fetching: ', e);

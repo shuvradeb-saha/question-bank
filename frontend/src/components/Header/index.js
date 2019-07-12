@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 class Header extends Component {
   static propTypes = {
     username: PropTypes.string.isRequired,
+    onLogout: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -40,12 +41,12 @@ class Header extends Component {
                   {this.props.username}
                 </span>
                 <div className="dropdown-menu bg-dark">
-                  <Link
-                    to="/logout"
-                    className="dropdown-item text-light dropdown-link"
+                  <button
+                    onClick={this.props.onLogout}
+                    className="dropdown-item dropdown-link"
                   >
                     Logout
-                  </Link>
+                  </button>
                 </div>
               </li>
             </ul>
