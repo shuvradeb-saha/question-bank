@@ -76,6 +76,7 @@ class App extends Component {
             component={this.props.inProgress ? PRE_LOGIN_LOADER : Login}
           />
           <Route path="/" component={userIsAuthenticated(HomePage)} />
+
           <Route path="" component={NOT_FOUND} />
         </Switch>
       </div>

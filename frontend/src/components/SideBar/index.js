@@ -2,30 +2,30 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import {Roles} from 'containers/App/constants';
+import { Roles } from 'containers/App/constants';
 
 const AdminSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar" id="Navbar">
+  <div className="col-sm-3 col-md-2 sidebar">
     <div className="text-center bg-success p-2">Admin User</div>
     <ul className="nav nav-sidebar d-inline">
-      <li className="dotted-border-bottom" >
+      <li className="dotted-border-bottom">
         <Link to="/">Home</Link>
       </li>
-      
+
       <li className="dotted-border-bottom">
-        <Link to="../notes">Profile</Link>
+        <Link to="/profile">Profile</Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="../chat">Manage User</Link>
+        <Link to="/manage-user">Manage User</Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="../rss">Manage Institute</Link>
+        <Link to="/manage-institute">Manage Institute</Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="../rss">Manage Class</Link>
+        <Link to="/manage-class">Manage Class</Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="../rss">Manage Subject</Link>
+        <Link to="/manage-subject">Manage Subject</Link>
       </li>
     </ul>
   </div>
@@ -91,17 +91,16 @@ const HeadMasterSidebar = () => (
 );
 
 class SideBar extends Component {
-
   static propTypes = {
     roles: PropTypes.any,
-  }
+  };
 
   componentDidUpdate() {
-    console.log("cdu ",this.props.roles);
+    console.log('cdu ', this.props.roles);
   }
 
   render() {
-    const {roles} = this.props;
+    const { roles } = this.props;
 
     console.log(roles);
 
@@ -109,13 +108,12 @@ class SideBar extends Component {
       return <AdminSidebar />;
     } else if (roles.includes(Roles.MODERATOR)) {
       return <ModeratorSidebar />;
-      
     } else if (roles.includes(Roles.HEADMASTER)) {
       return <HeadMasterSidebar />;
-    } else if(roles.includes(Roles.TEACHER)){
+    } else if (roles.includes(Roles.TEACHER)) {
       return <TeacherSidebar />;
-    }else {
-      return (<h1>Access Denied</h1>);
+    } else {
+      return <h1>Access Denied</h1>;
     }
   }
 }

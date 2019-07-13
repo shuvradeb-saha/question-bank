@@ -4,21 +4,46 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
+import { UserRegister } from 'containers';
 
-const RSS = () => <h1>Rss</h1>;
-const CHAT = () => <h1>Chat</h1>;
+const Home = () => <h1>Home</h1>;
+const Profile = () => <h1>Profile</h1>;
+const UserInfo = () => <h1>User info</h1>;
+const InstituteInfo = () => <h1>InstituteInfo</h1>;
+const ClassInfo = () => <h1>ClassInfo</h1>;
+const SubjectInfo = () => <h1>SubjectInfo</h1>;
 
 class AdminContent extends Component {
   render() {
     return (
       <div>
         <Switch>
+          <Route exact path="/" component={Home} />
           <Route
             exact
-            path="/rss"
-            component={Authorization(RSS, [Roles.TEACHER])}
+            path="/profile"
+            component={Authorization(Profile, [Roles.ADMIN])}
           />
-          <Route exact path="/chat" component={CHAT} />
+          <Route
+            exact
+            path="/manage-user"
+            component={Authorization(UserRegister, [Roles.ADMIN])}
+          />
+          <Route
+            exact
+            path="/manage-institute"
+            component={Authorization(InstituteInfo, [Roles.ADMIN])}
+          />
+          <Route
+            exact
+            path="/manage-class"
+            component={Authorization(ClassInfo, [Roles.ADMIN])}
+          />
+          <Route
+            exact
+            path="/manage-subject"
+            component={Authorization(SubjectInfo, [Roles.ADMIN])}
+          />
           <Route path="" component={NotFound} />
         </Switch>
       </div>

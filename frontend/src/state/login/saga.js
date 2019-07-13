@@ -23,7 +23,7 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
 
     localStorage.setItem('token', responseData.token);
     yield put(fetchProfileSuccess(responseData));
-    yield put(push('/homepage'));
+    yield put(push('/'));
   } else {
     console.log('Incorrect username and/or password');
     return;

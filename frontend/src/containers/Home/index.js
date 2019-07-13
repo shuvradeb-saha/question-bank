@@ -6,9 +6,10 @@ import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 
 import Header from 'components/Header';
-import { SideBar, AdminContent } from 'components';
+import { SideBar, AdminContent, AccessDenied } from 'components';
 import { logout } from 'state/login/action';
 import { makeUserName, makeRoles } from 'state/login/selectors';
+import { Roles } from 'containers/App/constants';
 
 class HomePage extends Component {
   static propTypes = {
@@ -40,7 +41,11 @@ class HomePage extends Component {
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
               <div className="container mt-3">
                 <div>
-                  <AdminContent />
+                  {roles.toJS().includes(Roles.ADMIN) ? (
+                    <AdminContent />
+                  ) : (
+                    <AccessDenied />
+                  )}
                 </div>
               </div>
             </div>

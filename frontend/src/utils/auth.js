@@ -6,18 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { makeAuthenticated, makeRoles } from 'state/login/selectors';
-
-const AccessDenied = () => {
-  return (
-    <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <div className="text-center access-denied"></div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { AccessDenied } from 'components';
 
 export const Authorization = (WrappedComponent, allowedRoles) => {
   class WithAuthorization extends React.Component {
