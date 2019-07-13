@@ -55,3 +55,6 @@ button {
 	margin-bottom: auto;
 }
 
+tbody + thead{
+  display: none;
+}

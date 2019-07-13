@@ -43,6 +43,9 @@ button {
   margin-top: auto;
   margin-bottom: auto; }
 
+tbody + thead {
+  display: none; }
+
 .access-denied {
   background: url("../static/access_denied.jpg") no-repeat center;
   -webkit-background-size: cover;

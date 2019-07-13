@@ -1,4 +1,5 @@
 export { default as FormInput } from './FormComponent/FormInput';
+export { default as FormSelect } from './FormComponent/FormSelect';
 export { default as SideBar } from './SideBar';
 export { default as AdminContent } from './MainContent/Admin';
 export { default as NotFound } from './ErrorComponent/NotFound';

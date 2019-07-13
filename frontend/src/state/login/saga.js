@@ -48,7 +48,6 @@ export function* fetchCurrentProfile() {
       const responseData = yield response.json();
       yield put(fetchProfileSuccess(responseData));
     } else {
-      console.log('Not ok');
       yield put(fetchProfileFailure('Error', response));
     }
   } catch (e) {

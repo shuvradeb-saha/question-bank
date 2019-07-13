@@ -1,2 +1,2 @@
 export { default as Home } from './Home';
-export { default as UserRegister } from './UserInfo';
+export { default as UserInfo } from './UserInfo';

@@ -6,12 +6,11 @@ import { Roles } from 'containers/App/constants';
 
 const AdminSidebar = () => (
   <div className="col-sm-3 col-md-2 sidebar">
-    <div className="text-center bg-success p-2">Admin User</div>
+    <div className="text-center bg-dark p-2">Admin User</div>
     <ul className="nav nav-sidebar d-inline">
       <li className="dotted-border-bottom">
         <Link to="/">Home</Link>
       </li>
-
       <li className="dotted-border-bottom">
         <Link to="/profile">Profile</Link>
       </li>
@@ -95,14 +94,10 @@ class SideBar extends Component {
     roles: PropTypes.any,
   };
 
-  componentDidUpdate() {
-    console.log('cdu ', this.props.roles);
-  }
+  componentDidUpdate() {}
 
   render() {
     const { roles } = this.props;
-
-    console.log(roles);
 
     if (roles.includes(Roles.ADMIN)) {
       return <AdminSidebar />;

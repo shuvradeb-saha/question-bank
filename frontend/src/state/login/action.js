@@ -23,7 +23,5 @@ export function fetchProfileFailure(error) {
 }
 
 export function logout() {
-  console.log('logout intitiate');
-
   return { type: LOGOUT_USER };
 }

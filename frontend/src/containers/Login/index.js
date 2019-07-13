@@ -9,7 +9,6 @@ import { userIsNotAuthenticated } from 'utils/reduxAuth';
 import { FormInput } from 'components';
 import { submitLoginInfo } from 'state/login/action';
 
-
 class Login extends Component {
   static propTypes = {
     submitLoginInfo: PropTypes.func,
