@@ -168,7 +168,6 @@ public class UserService {
         return loginResponse;
     }
 
-
     public String getToken(Authentication auth) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
@@ -183,4 +182,11 @@ public class UserService {
                 .compact();
     }
 
+    public List<Role> getAllRoles() {
+        val roles = roleMapper.selectByExample(null);
+        if (Collections.isEmpty(roles)) {
+            throw new RuntimeException("No role available in Db");
+        }
+        return roles;
+    }
 }

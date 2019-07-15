@@ -54,7 +54,7 @@ public class InstituteController {
     return instituteMapper.selectByPrimaryKey(id);
   }
 
-  @RequestMapping(value = "/institute",
+  @RequestMapping(value = "/institutes",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<Institute> getAllInstitute() {

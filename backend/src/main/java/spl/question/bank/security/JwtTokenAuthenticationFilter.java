@@ -45,8 +45,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     //val token = retrieveTokenFromCookie(request);
 
-    logger.info("Token ---> in cookie = {}", token);
-
     try {
       Claims claims = Jwts.parser()
           .setSigningKey(jwtConfig.getSecret().getBytes())

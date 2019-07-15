@@ -12,7 +12,6 @@ export default {
   }),
   control: base => ({
     ...base,
-    width: 360,
   }),
   valueContainer: base => ({
     ...base,

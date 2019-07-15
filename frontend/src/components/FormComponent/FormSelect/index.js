@@ -33,24 +33,21 @@ export default class FormSelect extends Component {
     const { input, options, label, disabled } = field;
 
     return (
-      <div className="row">
-        <div className="ml-3 col text-center">
-          <label htmlFor={input.name}>{label}</label>
-
-          <Select
-            {...input}
-            value={input.value ? input.value.toJS() : null}
-            components={makeAnimated()}
-            onChange={value => {
-              input.onChange(fromJS(value));
-            }}
-            onBlur={() => input.onBlur(input.value)}
-            styles={customStyle}
-            options={options.toJS()}
-            isMulti={this.props.multi}
-            isDisabled={disabled}
-          />
-        </div>
+      <div className="form-group">
+        <label htmlFor={input.name}>{label}</label>
+        <Select
+          {...input}
+          value={input.value ? input.value.toJS() : null}
+          components={makeAnimated()}
+          onChange={value => {
+            input.onChange(fromJS(value));
+          }}
+          onBlur={() => input.onBlur(input.value)}
+          styles={customStyle}
+          options={options.toJS()}
+          isMulti={this.props.multi}
+          isDisabled={disabled}
+        />
       </div>
     );
   };
@@ -59,22 +56,14 @@ export default class FormSelect extends Component {
     const { name, label, require, options, disabled } = this.props;
 
     return (
-      <div style={{ marginBottom: 10 }}>
-        <div className="row">
-          <div className="column">
-            <div>
-              <Field
-                name={name}
-                component={this.renderField}
-                label={label}
-                options={options}
-                validate={require ? [required] : []}
-                disabled={disabled}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Field
+        name={name}
+        component={this.renderField}
+        label={label}
+        options={options}
+        validate={require ? [required] : []}
+        disabled={disabled}
+      />
     );
   }
 }

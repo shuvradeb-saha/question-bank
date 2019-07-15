@@ -9,7 +9,7 @@ import {
 import { fetchProfileSuccess, fetchProfileFailure } from './action';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
-  const response = yield fetch('http://localhost:1515/api/auth', {
+  const response = yield fetch('/api/auth', {
     method: 'POST',
     headers: {
       Accept: 'application/x-www-form-urlencoded',

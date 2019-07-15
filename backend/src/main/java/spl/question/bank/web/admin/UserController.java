@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import spl.question.bank.database.model.Role;
 import spl.question.bank.model.UserDto;
 import spl.question.bank.service.UserService;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -43,5 +46,12 @@ public class UserController {
   public String generatePassword() {
     return RandomStringUtils
         .randomAlphanumeric((int) (Math.random() * 4 + 8));
+  }
+
+  @RequestMapping(value = "/roles",
+          method = RequestMethod.GET,
+          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public List<Role> getRoles() {
+    return userService.getAllRoles();
   }
 }

@@ -4,12 +4,9 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
-import { UserInfo } from 'containers';
+import { UserInfo, InstituteInfo } from 'containers';
 
-const Home = () => <h1>Home</h1>;
 const Profile = () => <h1>Profile</h1>;
-
-const InstituteInfo = () => <h1>InstituteInfo</h1>;
 const ClassInfo = () => <h1>ClassInfo</h1>;
 const SubjectInfo = () => <h1>SubjectInfo</h1>;
 
@@ -18,7 +15,7 @@ class AdminContent extends Component {
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={UserInfo} />
           <Route
             exact
             path="/profile"

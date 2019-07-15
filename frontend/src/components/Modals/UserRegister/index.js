@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { reduxForm } from 'redux-form/immutable';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom';
 
 import { FormInput, FormSelect } from 'components';
-import { getRoleObject } from './Roles';
 
 class UserRegister extends Component {
   static propTypes = {
@@ -17,12 +17,19 @@ class UserRegister extends Component {
     valid: PropTypes.bool,
     submitting: PropTypes.bool,
     handleSubmit: PropTypes.func,
+    allRoles: PropTypes.object,
   };
 
   static defaultProps = {
     isOpen: false,
     isUpdate: false,
   };
+
+  prepareRoles = roles =>
+    roles.map(role => ({
+      label: role.get('name'),
+      value: role.get('id'),
+    }));
 
   render() {
     const {
@@ -34,7 +41,10 @@ class UserRegister extends Component {
       valid,
       submitting,
       handleSubmit,
+      allRoles,
     } = this.props;
+
+    const roleOptions = this.prepareRoles(allRoles);
 
     return (
       <div className="container-fluid">
@@ -49,9 +59,15 @@ class UserRegister extends Component {
                   <FormInput name="email" label="Email" />
                 </div>
                 <div className="col-6">
-                  <FormInput name="password" label="Password" />
+                  <div>
+                    <FormInput name="password" label="Password" />
+                  </div>
+                  <div style={{ marginTop: '-10px' }}>
+                    <Link to="/generate-password">Generate Password</Link>
+                  </div>
                 </div>
               </div>
+
               <div className="row">
                 <div className="col-6">
                   <FormInput name="firstName" label="First Name" />
@@ -60,6 +76,7 @@ class UserRegister extends Component {
                   <FormInput name="lastName" label="Last Name" />
                 </div>
               </div>
+
               <div className="row">
                 <div className="col-6">
                   <FormInput name="birthDate" label="Birth Date" type="date" />
@@ -70,24 +87,25 @@ class UserRegister extends Component {
               </div>
               <div className="row">
                 <div className="col-6">
+                  <FormSelect
+                    name="roles"
+                    label="Select Role"
+                    options={roleOptions}
+                    multi
+                  />
+                </div>
+                <div className="col-6">
                   <FormInput
                     name="eiinNumber"
                     label="EIIN Number"
                     type="number"
                   />
                 </div>
-                <div className="col-6">
-                  <FormSelect
-                    name="roles"
-                    label="Select Role"
-                    options={getRoleObject()}
-                    multi
-                  />
-                </div>
               </div>
 
               <FormInput name="permanentAddress" label="Parmanent Address" />
               <FormInput name="tempAddress" label="Present Address" />
+
               <Button disabled={!valid || pristine || submitting} type="submit">
                 Save
               </Button>

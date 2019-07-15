@@ -8,6 +8,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form/immutable';
 
 import * as Login from './login';
+import * as Admin from './admin';
 
 /*
  * routeReducer
@@ -45,5 +46,6 @@ export default function createReducer(injectedReducers) {
     route: routeReducer,
     form: formReducer,
     [Login.key]: Login.reducer,
+    [Admin.key]: Admin.reducer,
   });
 }

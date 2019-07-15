@@ -18,7 +18,12 @@ export class Api {
     this.api = create({
       baseURL: this.baseUrl,
       withCredentials: true,
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.api.setHeader('Authorization', `Bearer ${token}`);
+    }
   }
 
   getBaseUrl = () => this.baseUrl;
@@ -49,6 +54,8 @@ export class Api {
 
   post = async (uri, data, params) => {
     try {
+      console.log('Data in post', data);
+
       const response = await this.api.post(uri, data, params);
       return this.getDataFromResponse(response);
     } catch (error) {
