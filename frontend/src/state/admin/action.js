@@ -4,6 +4,8 @@ import {
   FETCH_DATA_FAILURE,
   FETCH_ALL_INSTITUTE,
   FETCH_ALL_INSTITUTE_SUCCESS,
+  FETCH_INSTITUTE,
+  FETCH_INSTITUTE_SUCCESS,
   SAVE_USER,
   SAVE_INSTITUTE,
 } from './constants';
@@ -22,6 +24,14 @@ export function fetchFailure(error) {
 
 export function fetchAllInstitute() {
   return { type: FETCH_ALL_INSTITUTE };
+}
+
+export function fetchInstitute(id) {
+  return { type: FETCH_INSTITUTE, payload: { id } };
+}
+
+export function fetchInstituteSuccess(data) {
+  return { type: FETCH_INSTITUTE_SUCCESS, payload: { data } };
 }
 
 export function fetchAllInstituteSuccess(data) {

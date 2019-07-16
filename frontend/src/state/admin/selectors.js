@@ -8,8 +8,15 @@ export const makeAllRoles = () =>
     selectAdmin,
     adminState => adminState.get('allRoles')
   );
+
 export const makeInstitutes = () =>
   createSelector(
     selectAdmin,
-    adminState => adminState.get('allInstitutes')
+    adminState => adminState.get('institute').get('allInstitutes')
+  );
+
+export const makeInstituteDetail = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('institute').get('details')
   );

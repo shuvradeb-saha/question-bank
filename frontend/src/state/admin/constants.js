@@ -8,3 +8,6 @@ export const SAVE_INSTITUTE = 'app/state/admin/SAVE_INSTITUTE';
 export const FETCH_ALL_INSTITUTE = 'app/state/admin/FETCH_ALL_INSTITUTE';
 export const FETCH_ALL_INSTITUTE_SUCCESS =
   'app/state/admin/FETCH_ALL_INSTITUTE_SUCCESS';
+export const FETCH_INSTITUTE = 'app/state/admin/FETCH_INSTITUTE';
+export const FETCH_INSTITUTE_SUCCESS =
+  'app/state/admin/FETCH_INSTITUTE_SUCCESS';

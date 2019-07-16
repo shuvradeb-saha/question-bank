@@ -8,13 +8,19 @@ import { MDBDataTable } from 'mdbreact';
 import { reset } from 'redux-form';
 
 import { InstituteRegisterModal } from 'components/Modals';
-import { fetchAllInstitute, saveInstitute } from 'state/admin/action';
-import { makeInstitutes } from 'state/admin/selectors';
+import {
+  fetchAllInstitute,
+  fetchInstitute,
+  saveInstitute,
+} from 'state/admin/action';
+import { makeInstitutes, makeInstituteDetail } from 'state/admin/selectors';
 
 class InstituteInfo extends Component {
   static propTypes = {
     fetchAllInstitute: PropTypes.func,
+    fetchInstitute: PropTypes.func,
     institutes: PropTypes.object,
+    instituteDetails: PropTypes.object,
     resetForm: PropTypes.func,
     saveInstitute: PropTypes.func,
   };
@@ -35,20 +41,20 @@ class InstituteInfo extends Component {
     this.props.saveInstitute(values.toJS());
   };
 
-  openModalToSubmitInstitute = () => {
+  onEditClick = id => {
+    this.props.fetchInstitute(id);
     this.props.resetForm();
     this.setState(prevState => ({
       modal: !prevState.modal,
+      edit: true,
     }));
   };
 
-  editInstituteInfo = id => {
-    //load user by id from the server
+  onCreateClick = () => {
     this.props.resetForm();
-    console.log('id');
     this.setState(prevState => ({
       modal: !prevState.modal,
-      edit: !prevState.edit,
+      edit: false,
     }));
   };
 
@@ -80,7 +86,7 @@ class InstituteInfo extends Component {
       action: (
         <button
           className="btn btn-sm btn-outline-info"
-          onClick={() => this.editInstituteInfo(institute.get('id'))}
+          onClick={() => this.onEditClick(institute.get('id'))}
         >
           Edit
         </button>
@@ -94,10 +100,7 @@ class InstituteInfo extends Component {
       <div>
         <div className="row">
           <div className="col">
-            <button
-              className="btn btn-primary"
-              onClick={this.openModalToSubmitInstitute}
-            >
+            <button className="btn btn-primary" onClick={this.onCreateClick}>
               Create Institute
             </button>
           </div>
@@ -115,9 +118,9 @@ class InstituteInfo extends Component {
         <InstituteRegisterModal
           isOpen={this.state.modal}
           isUpdate={false}
-          toggle={this.openModalToSubmitInstitute}
+          toggle={this.onCreateClick}
           onInstituteSubmit={this.onInstituteSubmit}
-          initialValues={this.state.edit ? 'initialValues' : {}}
+          initialValues={this.state.edit ? this.props.instituteDetails : {}}
         />
       </div>
     );
@@ -126,10 +129,12 @@ class InstituteInfo extends Component {
 
 const mapStateToProps = createStructuredSelector({
   institutes: makeInstitutes(),
+  instituteDetails: makeInstituteDetail(),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchAllInstitute: () => dispatch(fetchAllInstitute()),
+  fetchInstitute: id => dispatch(fetchInstitute(id)),
   resetForm: () => dispatch(reset('userForm')),
   saveInstitute: data => dispatch(saveInstitute(data)),
 });

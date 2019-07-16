@@ -3,11 +3,15 @@ import { fromJS } from 'immutable';
 import {
   FETCH_ALL_ROLES_SUCCESS,
   FETCH_ALL_INSTITUTE_SUCCESS,
+  FETCH_INSTITUTE_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
   allRoles: [],
-  allInstitutes: [],
+  institute: {
+    allInstitutes: [],
+    details: {},
+  },
   error: '',
 });
 
@@ -19,7 +23,15 @@ function reducer(state = initialState, { type, payload }) {
     }
     case FETCH_ALL_INSTITUTE_SUCCESS: {
       const { data } = payload;
-      return state.merge(fromJS({ allInstitutes: data }));
+      const institute = state.get('institute').toJS();
+      institute.allInstitutes = data;
+      return state.merge(fromJS({ institute }));
+    }
+    case FETCH_INSTITUTE_SUCCESS: {
+      const { data } = payload;
+      const institute = state.get('institute').toJS();
+      institute.details = data;
+      return state.merge(fromJS({ institute }));
     }
     default:
       return state;

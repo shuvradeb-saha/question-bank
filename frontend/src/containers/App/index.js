@@ -29,6 +29,20 @@ const PRE_LOGIN_LOADER = () => {
     </div>
   );
 };
+/* 
+const NO_Server = () => (
+  <div className="container-fluid h-100 mt-5">
+    <div className="row align-items-center h-100">
+      <div className="col mx-auto">
+        <div className="jumbotron">
+          <div className="jumbotron d-flex align-items-center flex-column justify-content-center h-100 text-white">
+            <h1>Cannot connect to the server</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+); */
 
 class App extends Component {
   static propTypes = {
