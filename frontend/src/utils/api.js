@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import 'whatwg-fetch';
 import { create } from 'apisauce';
 import URI from 'urijs';
@@ -15,16 +16,21 @@ function getFqdn(url) {
 export class Api {
   constructor(baseUrl) {
     this.baseUrl = getFqdn(baseUrl);
+
     this.api = create({
       baseURL: this.baseUrl,
       withCredentials: true,
       'Content-Type': 'application/x-www-form-urlencoded',
     });
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.api.setHeader('Authorization', `Bearer ${token}`);
-    }
+    this.setTokenInHeader();
   }
+
+  setTokenInHeader = async () => {
+    await this.api.setHeader(
+      'Authorization',
+      `Bearer ${localStorage.getItem('token')}`
+    );
+  };
 
   getBaseUrl = () => this.baseUrl;
 

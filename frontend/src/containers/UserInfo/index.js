@@ -7,15 +7,17 @@ import { MDBDataTable } from 'mdbreact';
 import { reset } from 'redux-form';
 
 import { UserRegisterModal } from 'components/Modals';
-import { fetchAllRoles, saveUser } from 'state/admin/action';
+import { fetchAllRoles, fetchEiinNumbers, saveUser } from 'state/admin/action';
 import { createStructuredSelector } from 'reselect';
-import { makeAllRoles } from 'state/admin/selectors';
+import { makeAllRoles, makeAllEiinNumbers } from 'state/admin/selectors';
 
 class UserInfo extends Component {
   static propTypes = {
-    resetForm: PropTypes.func,
-    fetchRoles: PropTypes.func,
     allRoles: PropTypes.object,
+    allEiinNumbers: PropTypes.object,
+    fetchRoles: PropTypes.func,
+    fetchEiinNumbers: PropTypes.func,
+    resetForm: PropTypes.func,
     saveUser: PropTypes.func,
   };
 
@@ -28,7 +30,9 @@ class UserInfo extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchRoles();
+    const { fetchRoles, fetchEiinNumbers } = this.props;
+    fetchRoles();
+    fetchEiinNumbers();
   }
 
   onUserDetailsSubmit = values => {
@@ -65,6 +69,7 @@ class UserInfo extends Component {
 
   render() {
     let initalValues = { firstName: 'Shuvra', birthDate: '1997-01-10' };
+    const { allEiinNumbers, allRoles } = this.props;
 
     const data = {
       columns: [
@@ -147,7 +152,8 @@ class UserInfo extends Component {
           isOpen={this.state.modal}
           isUpdate={false}
           toggle={this.openModalToCreateNewUser}
-          allRoles={this.props.allRoles}
+          allRoles={allRoles}
+          allEiinNumbers={allEiinNumbers}
           onUserDetailsSubmit={this.onUserDetailsSubmit}
           initialValues={this.state.edit ? initalValues : {}}
         />
@@ -158,11 +164,13 @@ class UserInfo extends Component {
 
 const mapStateToProps = createStructuredSelector({
   allRoles: makeAllRoles(),
+  allEiinNumbers: makeAllEiinNumbers(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  resetForm: () => dispatch(reset('userForm')),
   fetchRoles: () => dispatch(fetchAllRoles()),
+  fetchEiinNumbers: () => dispatch(fetchEiinNumbers()),
+  resetForm: () => dispatch(reset('userForm')),
   saveUser: data => dispatch(saveUser(data)),
 });
 

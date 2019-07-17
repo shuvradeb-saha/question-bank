@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { takeEvery, put, call, takeLatest } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
+//import { push } from 'react-router-redux';
 
 import {
   FETCH_ALL_ROLES,
@@ -8,6 +8,7 @@ import {
   SAVE_INSTITUTE,
   FETCH_ALL_INSTITUTE,
   FETCH_INSTITUTE,
+  FETCH_ALL_EIIN,
 } from './constants';
 import {
   fetchFailure,
@@ -15,6 +16,7 @@ import {
   fetchAllInstituteSuccess,
   fetchInstituteSuccess,
   fetchAllInstitute,
+  fetchEiinNumbersSuccess,
 } from './action';
 
 import API from 'utils/api';
@@ -61,7 +63,6 @@ export function* saveInstituteInfo({ payload: { data } }) {
 export function* fetchInstitutes() {
   try {
     const allInstitute = yield call(API.get, 'api/admin/institutes');
-
     yield put(fetchAllInstituteSuccess(allInstitute));
   } catch (e) {
     console.log('Error in All Roles fetching: ', e);
@@ -80,10 +81,21 @@ export function* fetchInstitute({ payload: { id } }) {
   }
 }
 
+export function* fetchEiinNumbers() {
+  try {
+    const allEiin = yield call(API.get, 'api/admin/institutes/eiin');
+    yield put(fetchEiinNumbersSuccess(allEiin));
+  } catch (e) {
+    console.log('Error in All EIIN fetching: ', e);
+    yield put(fetchFailure(e));
+  }
+}
+
 export default function* saga() {
   yield takeEvery(FETCH_ALL_ROLES, fetchAllRoles);
   yield takeLatest(SAVE_USER, saveUserInfo);
   yield takeLatest(SAVE_INSTITUTE, saveInstituteInfo);
   yield takeLatest(FETCH_ALL_INSTITUTE, fetchInstitutes);
   yield takeLatest(FETCH_INSTITUTE, fetchInstitute);
+  yield takeLatest(FETCH_ALL_EIIN, fetchEiinNumbers);
 }

@@ -9,15 +9,16 @@ import { FormInput, FormSelect } from 'components';
 
 class UserRegister extends Component {
   static propTypes = {
+    allRoles: PropTypes.object,
+    allEiinNumbers: PropTypes.object,
+    handleSubmit: PropTypes.func,
     isOpen: PropTypes.bool.isRequired,
     isUpdate: PropTypes.bool.isRequired,
-    toggle: PropTypes.func,
     onUserDetailsSubmit: PropTypes.func.isRequired,
     pristine: PropTypes.bool,
-    valid: PropTypes.bool,
     submitting: PropTypes.bool,
-    handleSubmit: PropTypes.func,
-    allRoles: PropTypes.object,
+    toggle: PropTypes.func,
+    valid: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -31,6 +32,9 @@ class UserRegister extends Component {
       value: role.get('id'),
     }));
 
+  prepareEiinNumbers = eiinNumbers =>
+    eiinNumbers.map(eiin => ({ label: eiin, value: eiin }));
+
   render() {
     const {
       isOpen,
@@ -42,9 +46,11 @@ class UserRegister extends Component {
       submitting,
       handleSubmit,
       allRoles,
+      allEiinNumbers,
     } = this.props;
 
     const roleOptions = this.prepareRoles(allRoles);
+    const eiinOptions = this.prepareEiinNumbers(allEiinNumbers);
 
     return (
       <div className="container-fluid">
@@ -95,10 +101,10 @@ class UserRegister extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <FormInput
+                  <FormSelect
                     name="eiinNumber"
                     label="EIIN Number"
-                    type="number"
+                    options={eiinOptions}
                   />
                 </div>
               </div>

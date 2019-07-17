@@ -6,6 +6,8 @@ import {
   FETCH_ALL_INSTITUTE_SUCCESS,
   FETCH_INSTITUTE,
   FETCH_INSTITUTE_SUCCESS,
+  FETCH_ALL_EIIN,
+  FETCH_ALL_EIIN_SUCCESS,
   SAVE_USER,
   SAVE_INSTITUTE,
 } from './constants';
@@ -36,6 +38,14 @@ export function fetchInstituteSuccess(data) {
 
 export function fetchAllInstituteSuccess(data) {
   return { type: FETCH_ALL_INSTITUTE_SUCCESS, payload: { data } };
+}
+
+export function fetchEiinNumbers() {
+  return { type: FETCH_ALL_EIIN };
+}
+
+export function fetchEiinNumbersSuccess(data) {
+  return { type: FETCH_ALL_EIIN_SUCCESS, payload: { data } };
 }
 
 export function saveUser(data) {

@@ -20,3 +20,9 @@ export const makeInstituteDetail = () =>
     selectAdmin,
     adminState => adminState.get('institute').get('details')
   );
+
+export const makeAllEiinNumbers = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('allEiinNumber')
+  );
