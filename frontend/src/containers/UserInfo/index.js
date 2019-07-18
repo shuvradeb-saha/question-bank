@@ -5,11 +5,21 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { MDBDataTable } from 'mdbreact';
 import { reset } from 'redux-form';
+import { change } from 'redux-form';
 
 import { UserRegisterModal } from 'components/Modals';
-import { fetchAllRoles, fetchEiinNumbers, saveUser } from 'state/admin/action';
+import {
+  fetchAllRoles,
+  fetchEiinNumbers,
+  fetchNewPassword,
+  saveUser,
+} from 'state/admin/action';
 import { createStructuredSelector } from 'reselect';
-import { makeAllRoles, makeAllEiinNumbers } from 'state/admin/selectors';
+import {
+  makeAllRoles,
+  makeAllEiinNumbers,
+  makeNewPassword,
+} from 'state/admin/selectors';
 
 class UserInfo extends Component {
   static propTypes = {
@@ -17,7 +27,9 @@ class UserInfo extends Component {
     allEiinNumbers: PropTypes.object,
     fetchRoles: PropTypes.func,
     fetchEiinNumbers: PropTypes.func,
+    password: PropTypes.string,
     resetForm: PropTypes.func,
+    setPassword: PropTypes.func,
     saveUser: PropTypes.func,
   };
 
@@ -30,40 +42,50 @@ class UserInfo extends Component {
   }
 
   componentDidMount() {
-    const { fetchRoles, fetchEiinNumbers } = this.props;
+    const { fetchRoles, fetchNewPassword, fetchEiinNumbers } = this.props;
     fetchRoles();
     fetchEiinNumbers();
+    fetchNewPassword();
   }
 
   onUserDetailsSubmit = values => {
     const roles = values.get('roles');
+    const eiin = values.get('eiinNumber');
     const newRole = roles.map(role => ({
       id: role.get('value'),
       name: role.get('label'),
     }));
-    const data = { ...values.toJS(), roles: newRole.toJS() };
-    console.log('data = ', data);
+    const newEiin = eiin.get('value');
+    const data = {
+      ...values.toJS(),
+      roles: newRole.toJS(),
+      eiinNumber: newEiin,
+    };
+    console.log('Data = ', data);
+
     this.props.saveUser(data);
   };
 
-  handleClick = id => {
-    console.log('clicked item', id);
+  generatePassword = () => {
+    const { fetchNewPassword, setPassword, password } = this.props;
+    fetchNewPassword();
+    setPassword(password);
   };
 
-  openModalToCreateNewUser = () => {
+  onCreateClick = () => {
     this.props.resetForm();
     this.setState(prevState => ({
       modal: !prevState.modal,
+      edit: false,
     }));
   };
 
-  editUserInfo = id => {
+  onEditClick = id => {
     //load user by id from the server
     this.props.resetForm();
-    console.log('id');
     this.setState(prevState => ({
       modal: !prevState.modal,
-      edit: !prevState.edit,
+      edit: true,
     }));
   };
 
@@ -71,89 +93,27 @@ class UserInfo extends Component {
     let initalValues = { firstName: 'Shuvra', birthDate: '1997-01-10' };
     const { allEiinNumbers, allRoles } = this.props;
 
-    const data = {
-      columns: [
-        {
-          label: 'Name',
-          field: 'name',
-          sort: 'asc',
-          width: 150,
-        },
-        {
-          label: 'Institute',
-          field: 'institute',
-          sort: 'asc',
-          width: 270,
-        },
-        {
-          label: 'EIIN',
-          field: 'eiin',
-          sort: 'asc',
-          width: 200,
-        },
-        {
-          label: 'Role',
-          field: 'role',
-          sort: 'asc',
-          width: 200,
-        },
-        {
-          label: 'Action',
-          field: 'action',
-          sort: 'asc',
-          width: 200,
-        },
-      ],
-      rows: [
-        {
-          name: 'Shuvradeb Saha',
-          institute: 'Zagla H. M. High School',
-          eiin: '11378995',
-          role: 'Headmaster, Teacher',
-          Action: (
-            <span>
-              <button
-                className="btn btn-sm btn-outline-info"
-                onClick={() => this.editUserInfo(5)}
-              >
-                Edit
-              </button>
-
-              <button
-                className="btn btn-sm btn-outline-success"
-                onClick={() => this.handleClick(6)}
-              >
-                Make Moderator
-              </button>
-            </span>
-          ),
-        },
-      ],
-    };
-
     return (
       <div>
         <div className="row">
           <div className="col">
-            <button
-              className="btn btn-primary"
-              onClick={this.openModalToCreateNewUser}
-            >
+            <button className="btn btn-primary" onClick={this.onCreateClick}>
               Create New User
             </button>
           </div>
         </div>
         <div className="row">
           <div className="col">
-            <MDBDataTable striped bordered small data={data} />
+            <MDBDataTable striped bordered small />
           </div>
         </div>
         <UserRegisterModal
           isOpen={this.state.modal}
           isUpdate={false}
-          toggle={this.openModalToCreateNewUser}
+          toggle={this.onCreateClick}
           allRoles={allRoles}
           allEiinNumbers={allEiinNumbers}
+          generatePassword={this.generatePassword}
           onUserDetailsSubmit={this.onUserDetailsSubmit}
           initialValues={this.state.edit ? initalValues : {}}
         />
@@ -165,11 +125,14 @@ class UserInfo extends Component {
 const mapStateToProps = createStructuredSelector({
   allRoles: makeAllRoles(),
   allEiinNumbers: makeAllEiinNumbers(),
+  password: makeNewPassword(),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchRoles: () => dispatch(fetchAllRoles()),
   fetchEiinNumbers: () => dispatch(fetchEiinNumbers()),
+  fetchNewPassword: () => dispatch(fetchNewPassword()),
+  setPassword: pass => dispatch(change('userForm', 'password', pass)),
   resetForm: () => dispatch(reset('userForm')),
   saveUser: data => dispatch(saveUser(data)),
 });

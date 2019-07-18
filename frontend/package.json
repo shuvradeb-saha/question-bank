@@ -4,6 +4,9 @@
 	"private": true,
 	"proxy": "http://localhost:1515/",
 	"dependencies": {
+		"@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/fontawesome-free-solid": "^5.0.10",
+    "@fortawesome/react-fontawesome": "^0.0.18",
 		"apisauce": "^0.14.3",
 		"classnames": "^2.2.5",
 		"history": "^4.7.2",

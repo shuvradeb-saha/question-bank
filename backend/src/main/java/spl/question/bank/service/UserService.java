@@ -11,20 +11,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spl.question.bank.database.client.InstituteMapper;
 import spl.question.bank.database.client.RoleMapper;
 import spl.question.bank.database.client.UserMapper;
 import spl.question.bank.database.client.UserRoleMapper;
 import spl.question.bank.database.model.*;
-import spl.question.bank.model.Roles;
-import spl.question.bank.model.UserDto;
+import spl.question.bank.model.admin.Roles;
+import spl.question.bank.model.admin.UserDto;
+import spl.question.bank.model.admin.UserInfo;
 import spl.question.bank.model.login.LoginResponse;
 import spl.question.bank.security.JwtConfig;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
@@ -34,15 +36,18 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRoleMapper userRoleMapper;
     private final RoleMapper roleMapper;
+    private final InstituteMapper instituteMapper;
     private final JwtConfig jwtConfig;
 
     public UserService(final UserMapper userMapper,
                        final UserRoleMapper userRoleMapper,
                        final RoleMapper roleMapper,
+                       final InstituteMapper instituteMapper,
                        final JwtConfig jwtConfig) {
         this.userMapper = userMapper;
         this.userRoleMapper = userRoleMapper;
         this.roleMapper = roleMapper;
+        this.instituteMapper = instituteMapper;
         this.jwtConfig = jwtConfig;
     }
 
@@ -188,5 +193,44 @@ public class UserService {
             throw new RuntimeException("No role available in Db");
         }
         return roles;
+    }
+
+    public List<UserInfo> getUsersInfo() {
+        val users = userMapper.selectByExample(null);
+
+        val eiinInstituteMap = getInstituteEiinMap(users
+                .stream()
+                .map(User::getEiinNumber)
+                .collect(Collectors.toSet()));
+
+        return users
+                .stream()
+                .map(user ->
+                new UserInfo()
+                        .setId(user.getId())
+                        .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
+                        .setEiinNumber(user.getEiinNumber())
+                        .setRoles(getRolesByUser(user.getId()))
+                        .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
+                        .setEmail(user.getEmail())).collect(toList());
+
+    }
+
+    private Map<Integer, String> getInstituteEiinMap(Set<Integer> eiinNumbers) {
+        val example = new InstituteExample();
+        example.createCriteria().andEiinNumberIn(new ArrayList<>(eiinNumbers));
+        val institutes = instituteMapper.selectByExample(example);
+
+        return institutes
+                .stream()
+                .collect(toMap(Institute::getEiinNumber, this::getInstituteName));
+    }
+
+    private String getInstituteName(Institute o) {
+        val example = new InstituteExample();
+        example.createCriteria().andEiinNumberEqualTo(o.getEiinNumber());
+        return instituteMapper.selectByExample(example)
+                .get(0)
+                .getName();
     }
 }

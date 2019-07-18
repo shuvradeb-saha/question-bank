@@ -1,4 +1,4 @@
-package spl.question.bank.model;
+package spl.question.bank.model.admin;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.io.Serializable;

@@ -13,3 +13,6 @@ export const FETCH_INSTITUTE_SUCCESS =
   'app/state/admin/FETCH_INSTITUTE_SUCCESS';
 export const FETCH_ALL_EIIN = 'app/state/admin/FETCH_ALL_EIIN';
 export const FETCH_ALL_EIIN_SUCCESS = 'app/state/admin/FETCH_ALL_EIIN_SUCCESS';
+export const FETCH_NEW_PASSWORD = 'app/state/admin/FETCH_NEW_PASSWORD';
+export const FETCH_NEW_PASSWORD_SUCCESS =
+  'app/state/admin/FETCH_NEW_PASSWORD_SUCCESS';

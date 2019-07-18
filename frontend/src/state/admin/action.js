@@ -8,8 +8,10 @@ import {
   FETCH_INSTITUTE_SUCCESS,
   FETCH_ALL_EIIN,
   FETCH_ALL_EIIN_SUCCESS,
+  FETCH_NEW_PASSWORD,
   SAVE_USER,
   SAVE_INSTITUTE,
+  FETCH_NEW_PASSWORD_SUCCESS,
 } from './constants';
 
 export function fetchAllRoles() {
@@ -47,7 +49,13 @@ export function fetchEiinNumbers() {
 export function fetchEiinNumbersSuccess(data) {
   return { type: FETCH_ALL_EIIN_SUCCESS, payload: { data } };
 }
+export function fetchNewPassword() {
+  return { type: FETCH_NEW_PASSWORD };
+}
 
+export function fetchNewPasswordSuccess(password) {
+  return { type: FETCH_NEW_PASSWORD_SUCCESS, payload: { password } };
+}
 export function saveUser(data) {
   return { type: SAVE_USER, payload: { data } };
 }

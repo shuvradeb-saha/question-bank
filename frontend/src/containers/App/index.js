@@ -8,7 +8,7 @@ import Loader from 'react-loader-spinner';
 import { userIsAuthenticated } from 'utils/reduxAuth';
 import HomePage from '../Home';
 import Login from '../Login';
-
+import { Toaster } from 'components';
 import { fetchCurrentUserProfile } from 'state/login/action';
 import { makeAuthenticated, makeInProgress } from 'state/login/selectors';
 

@@ -8,9 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import spl.question.bank.database.model.Role;
-import spl.question.bank.model.UserDto;
+import spl.question.bank.model.admin.UserDto;
+import spl.question.bank.model.admin.UserInfo;
 import spl.question.bank.service.UserService;
 
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -19,6 +23,7 @@ import java.util.List;
 public class UserController {
 
   private final UserService userService;
+  private final SecureRandom secureRandom = new SecureRandom();
 
   public UserController(final UserService userService) {
     this.userService = userService;
@@ -54,4 +59,23 @@ public class UserController {
   public List<Role> getRoles() {
     return userService.getAllRoles();
   }
+
+  @RequestMapping(value = "/users",
+          method = RequestMethod.GET,
+          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public List<UserInfo> getUsers() {
+    return userService.getUsersInfo();
+  }
+/*
+  //TODO => While implementing forgot password
+  @RequestMapping(value = "/generate-password",
+          method = RequestMethod.GET,
+          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public String generatePassword() {
+    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+    buffer.putLong(secureRandom.nextLong());
+    byte[] encodedBytes = Base64.getEncoder().encode(buffer.array());
+    return new String(encodedBytes);
+  }
+*/
 }

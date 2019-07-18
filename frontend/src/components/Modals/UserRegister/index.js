@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { reduxForm } from 'redux-form/immutable';
 import { compose } from 'redux';
-import { Link } from 'react-router-dom';
 
 import { FormInput, FormSelect } from 'components';
 
@@ -11,6 +10,7 @@ class UserRegister extends Component {
   static propTypes = {
     allRoles: PropTypes.object,
     allEiinNumbers: PropTypes.object,
+    generatePassword: PropTypes.func,
     handleSubmit: PropTypes.func,
     isOpen: PropTypes.bool.isRequired,
     isUpdate: PropTypes.bool.isRequired,
@@ -41,6 +41,7 @@ class UserRegister extends Component {
       isUpdate,
       toggle,
       onUserDetailsSubmit,
+      generatePassword,
       pristine,
       valid,
       submitting,
@@ -54,7 +55,7 @@ class UserRegister extends Component {
 
     return (
       <div className="container-fluid">
-        <Modal size="lg" isOpen={isOpen} toggle={toggle}>
+        <Modal size="lg" isOpen={isOpen} backdrop={false} toggle={toggle}>
           <ModalHeader toggle={toggle}>
             {isUpdate ? 'Update ' : 'Create '}User
           </ModalHeader>
@@ -68,8 +69,10 @@ class UserRegister extends Component {
                   <div>
                     <FormInput name="password" label="Password" />
                   </div>
-                  <div style={{ marginTop: '-10px' }}>
-                    <Link to="/generate-password">Generate Password</Link>
+                  <div style={{ marginTop: '-15px' }}>
+                    <button onClick={generatePassword} className="link-button">
+                      Generate Password
+                    </button>
                   </div>
                 </div>
               </div>
@@ -109,8 +112,17 @@ class UserRegister extends Component {
                 </div>
               </div>
 
-              <FormInput name="permanentAddress" label="Parmanent Address" />
-              <FormInput name="tempAddress" label="Present Address" />
+              <div className="row">
+                <div className="col-6">
+                  <FormInput
+                    name="permanentAddress"
+                    label="Parmanent Address"
+                  />
+                </div>
+                <div className="col-6">
+                  <FormInput name="tempAddress" label="Present Address" />
+                </div>
+              </div>
 
               <Button disabled={!valid || pristine || submitting} type="submit">
                 Save

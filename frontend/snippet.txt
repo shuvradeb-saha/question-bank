@@ -1,0 +1,11 @@
+"Create Action": {
+		"prefix": [
+			"act"
+		],
+		"body": [
+			"export function ${4:functionName}(${1:element}) {",
+			"		return {type: ${2:str}, payload:{${3:data}}}",
+			"}"
+		],
+		"description": "export func"
+}
