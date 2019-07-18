@@ -1,0 +1,68 @@
+.Toastify__toast-container.toaster {
+  top: 5em;
+  width: 400px;
+  z-index: 10001;
+
+  .toaster-success {
+    background-color: $confirmed;
+    border-radius: 3px;
+    .Toastify__close-button:hover {
+      color: $focus;
+    }
+  }
+
+  .toaster-info {
+    background-color: $focus;
+    border-radius: 3px;
+    color: $black;
+
+    .Toastify__close-button {
+      color: $black;
+    }
+  }
+
+  .toaster-error {
+    background-color: $error;
+    border-radius: 3px;
+    color: $color;
+
+    .Toastify__close-button:hover {
+      color: $singularity;
+    }
+
+    .error-message-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        margin-bottom: 3px;
+
+        &.message {
+          font-size: 1.1rem;
+        }
+
+        &.id {
+          font-size: 0.9rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .copy {
+          color: $black;
+          padding: 2rem 0;
+          padding-left: 2rem;
+
+          &:hover {
+            color: $focus;
+          }
+        }
+      }
+    }
+  }
+
+  .Toastify__close-button {
+    font-size: 1.2rem;
+    font-weight: normal;
+  }
+}

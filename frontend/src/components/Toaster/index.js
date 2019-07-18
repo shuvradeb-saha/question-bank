@@ -12,10 +12,12 @@ const DEFAULT_TOAST_TIMER = 5000;
  * @param {string} message - Message to show
  * @returns {number} Toast id
  */
-export const toastSuccess = message =>
+export const toastSuccess = message => {
+  console.log('toast success', message);
   toast.success(message, {
     className: 'toaster-success',
   });
+};
 
 /**
  * Toast info type message.
@@ -23,10 +25,13 @@ export const toastSuccess = message =>
  * @param {string} message - Message to show
  * @returns {number} Toast id
  */
-export const toastInfo = message =>
+export const toastInfo = message => {
+  console.log('toast info');
+
   toast.info(message, {
     className: 'toaster-info',
   });
+};
 
 /**
  * Toast error type message.

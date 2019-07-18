@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { takeEvery, put, call, takeLatest } from 'redux-saga/effects';
 //import { push } from 'react-router-redux';
-
 import { toastSuccess, toastError } from 'components/Toaster';
 import {
   FETCH_ALL_ROLES,
@@ -46,7 +45,7 @@ export function* saveUserInfo({ payload: { data } }) {
 export function* saveInstituteInfo({ payload: { data } }) {
   if (data.id) {
     try {
-      const response = yield call(API.put, `api/admin/institute`, data);
+      yield call(API.put, `api/admin/institute`, data);
       toastSuccess('Institute info updated successfully');
       yield put(fetchAllInstitute());
     } catch (error) {

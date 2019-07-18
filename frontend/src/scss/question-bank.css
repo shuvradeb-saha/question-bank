@@ -1,3 +1,4 @@
+/* Override react-select settings */
 .link-button {
   background: none !important;
   border: none;
@@ -53,6 +54,49 @@ button {
 
 tbody + thead {
   display: none; }
+
+.Toastify__toast-container.toaster {
+  top: 5em;
+  width: 400px;
+  z-index: 10001; }
+  .Toastify__toast-container.toaster .toaster-success {
+    background-color: #63ccb5;
+    border-radius: 3px; }
+    .Toastify__toast-container.toaster .toaster-success .Toastify__close-button:hover {
+      color: #ffcd64; }
+  .Toastify__toast-container.toaster .toaster-info {
+    background-color: #ffcd64;
+    border-radius: 3px;
+    color: #1c2026; }
+    .Toastify__toast-container.toaster .toaster-info .Toastify__close-button {
+      color: #1c2026; }
+  .Toastify__toast-container.toaster .toaster-error {
+    background-color: #e14164;
+    border-radius: 3px;
+    color: #d8d8d8; }
+    .Toastify__toast-container.toaster .toaster-error .Toastify__close-button:hover {
+      color: #ff8c6e; }
+    .Toastify__toast-container.toaster .toaster-error .error-message-wrapper {
+      display: flex;
+      flex-direction: column; }
+      .Toastify__toast-container.toaster .toaster-error .error-message-wrapper p {
+        margin-bottom: 3px; }
+        .Toastify__toast-container.toaster .toaster-error .error-message-wrapper p.message {
+          font-size: 1.1rem; }
+        .Toastify__toast-container.toaster .toaster-error .error-message-wrapper p.id {
+          font-size: 0.9rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between; }
+        .Toastify__toast-container.toaster .toaster-error .error-message-wrapper p .copy {
+          color: #1c2026;
+          padding: 2rem 0;
+          padding-left: 2rem; }
+          .Toastify__toast-container.toaster .toaster-error .error-message-wrapper p .copy:hover {
+            color: #ffcd64; }
+  .Toastify__toast-container.toaster .Toastify__close-button {
+    font-size: 1.2rem;
+    font-weight: normal; }
 
 .access-denied {
   background: url("../static/access_denied.jpg") no-repeat center;

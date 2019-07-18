@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 
 import Header from 'components/Header';
-import { Toaster, SideBar, AdminContent, AccessDenied } from 'components';
+import { SideBar, AdminContent, AccessDenied } from 'components';
 import { logout } from 'state/login/action';
 import { makeUserName, makeRoles } from 'state/login/selectors';
 import { Roles } from 'containers/App/constants';
@@ -51,7 +51,6 @@ class HomePage extends Component {
             </div>
           </div>
         </div>
-        <Toaster />
       </div>
     );
   }

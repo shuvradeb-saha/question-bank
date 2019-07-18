@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader-spinner';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { userIsAuthenticated } from 'utils/reduxAuth';
 import HomePage from '../Home';
@@ -91,6 +92,7 @@ class App extends Component {
 
           <Route path="" component={NOT_FOUND} />
         </Switch>
+        <Toaster />
       </div>
     );
   }

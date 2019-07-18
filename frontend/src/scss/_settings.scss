@@ -1,0 +1,48 @@
+// Enable the old flex grid.
+$flex: true;
+$xy-grid: false;
+$global-flex: true;
+
+$body-font-family: Helvetica, Roboto, Arial, sans-serif;
+$rem-base: 12px;
+$global-font-size: $rem-base;
+
+$primary: #00b9cd;
+$secondary: #87dceb;
+$focus: #ffcd64;
+$color: #d8d8d8;
+$error: #e14164;
+$confirmed: #63ccb5;
+$singularity: #ff8c6e;
+$shadesdarker: #939393;
+
+$background: #1c2026;
+$secondary_background: #16191e;
+
+$primary-color: $primary;
+$black: $background;
+
+$medium-black: #25292f;
+$light-black: #3a414e;
+
+$lighter-black: $secondary_background;
+$grey: $shadesdarker;
+$yellow: $focus;
+
+$topbar-background: $secondary-background;
+
+$form-label-color: $color;
+
+$callout-background: $secondary-background;
+$callout-background-fade: 0;
+
+/* Override react-select settings */
+$select-input-bg: #000;
+$select-input-bg-focus: $select-input-bg;
+$select-input-border-color: #000;
+$select-item-bg : $background;
+$select-item-border-color : $background;
+$select-item-color: $color;
+$select-item-gutter: 4px;
+$select-item-font-size: 11px;
+$select-input-height: 37px;

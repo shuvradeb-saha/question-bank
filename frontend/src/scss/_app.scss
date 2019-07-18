@@ -1,5 +1,7 @@
+@import 'settings';
 @import 'form';
 @import 'home';
+@import 'toaster';
 
 .access-denied {
 	background: url("../static/access_denied.jpg") no-repeat center;
