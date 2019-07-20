@@ -132,7 +132,9 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         UserExample ex = new UserExample();
-        ex.createCriteria().andEmailEqualTo(email);
+        ex.createCriteria()
+                .andEmailEqualTo(email)
+                .andEnabledEqualTo(true);
 
         val users = userMapper.selectByExample(ex);
 
@@ -146,9 +148,7 @@ public class UserService {
     public List<String> getRolesByUser(Integer userId) {
         UserRoleExample ex = new UserRoleExample();
         ex.createCriteria().andUserIdEqualTo(userId);
-
         val roles = userRoleMapper.selectByExample(ex);
-
         return roles
                 .stream()
                 .map(UserRole::getRoleId)
@@ -157,7 +157,6 @@ public class UserService {
                         .getName())
                 .collect(toList());
     }
-
 
     public LoginResponse createLoginResponse(final Authentication auth) {
         val token = getToken(auth);
@@ -173,7 +172,7 @@ public class UserService {
         return loginResponse;
     }
 
-    public String getToken(Authentication auth) {
+    private String getToken(Authentication auth) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setSubject(auth.getName())
@@ -196,6 +195,7 @@ public class UserService {
     }
 
     public List<UserInfo> getUsersInfo() {
+        val ex = new UserExample();
         val users = userMapper.selectByExample(null);
 
         val eiinInstituteMap = getInstituteEiinMap(users
@@ -205,15 +205,16 @@ public class UserService {
 
         return users
                 .stream()
+                .filter(user -> !getRolesByUser(user.getId()).contains("ADMIN"))
                 .map(user ->
-                new UserInfo()
-                        .setId(user.getId())
-                        .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
-                        .setEiinNumber(user.getEiinNumber())
-                        .setRoles(getRolesByUser(user.getId()))
-                        .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
-                        .setEmail(user.getEmail())).collect(toList());
-
+                        new UserInfo()
+                                .setId(user.getId())
+                                .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
+                                .setEiinNumber(user.getEiinNumber())
+                                .setRoles(getRolesByUser(user.getId()))
+                                .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
+                                .setEmail(user.getEmail()))
+                .collect(toList());
     }
 
     private Map<Integer, String> getInstituteEiinMap(Set<Integer> eiinNumbers) {
@@ -232,5 +233,24 @@ public class UserService {
         return instituteMapper.selectByExample(example)
                 .get(0)
                 .getName();
+    }
+
+    public UserDto getUserById(Integer id) {
+        val user = userMapper.selectByPrimaryKey(id);
+        user.setPassword("");
+        return new UserDto()
+                .setUser(user)
+                .setRoles(getRolesById(id));
+    }
+
+    private List<Role> getRolesById(Integer id) {
+        UserRoleExample ex = new UserRoleExample();
+        ex.createCriteria().andUserIdEqualTo(id);
+        val roles = userRoleMapper.selectByExample(ex);
+        return roles
+                .stream()
+                .map(UserRole::getRoleId)
+                .map(roleMapper::selectByPrimaryKey)
+                .collect(toList());
     }
 }

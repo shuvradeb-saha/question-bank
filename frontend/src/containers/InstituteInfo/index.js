@@ -60,8 +60,6 @@ class InstituteInfo extends Component {
 
   createDataForTable = () => {
     const { institutes } = this.props;
-    console.log('institute ', institutes.toJS());
-
     const columns = [
       {
         label: 'Institute Name',

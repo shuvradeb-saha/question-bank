@@ -25,3 +25,5 @@ insert into role (name) values ('HEADMASTER');
 */
 --insert into user_role (user_id, role_id) values (1,1);
 
+--UPDATE users SET enabled = true WHERE email = 'sahashaishab@gmail.com';
+

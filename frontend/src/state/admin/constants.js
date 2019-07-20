@@ -16,3 +16,8 @@ export const FETCH_ALL_EIIN_SUCCESS = 'app/state/admin/FETCH_ALL_EIIN_SUCCESS';
 export const FETCH_NEW_PASSWORD = 'app/state/admin/FETCH_NEW_PASSWORD';
 export const FETCH_NEW_PASSWORD_SUCCESS =
   'app/state/admin/FETCH_NEW_PASSWORD_SUCCESS';
+export const FETCH_ALL_USERS = 'app/state/admin/FETCH_ALL_USERS';
+export const FETCH_ALL_USERS_SUCCESS =
+  'app/state/admin/FETCH_ALL_USERS_SUCCESS';
+export const FETCH_USER = 'app/state/admin/FETCH_USER';
+export const FETCH_USER_SUCCESS = 'app/state/admin/FETCH_USER_SUCCESS';

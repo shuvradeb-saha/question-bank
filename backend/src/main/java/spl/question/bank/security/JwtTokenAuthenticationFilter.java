@@ -1,24 +1,21 @@
 package spl.question.bank.security;
 
-import static java.util.Objects.isNull;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -42,8 +39,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     String token = header.replace(jwtConfig.getPrefix(), "");
-
-    //val token = retrieveTokenFromCookie(request);
 
     try {
       Claims claims = Jwts.parser()
@@ -70,23 +65,4 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private String retrieveTokenFromCookie(HttpServletRequest request) {
-    val cookies = request.getCookies();
-    if (cookies == null || cookies.length < 1) {
-      throw new AuthenticationServiceException("Invalid Token");
-    }
-
-    Cookie tokenCookie = null;
-
-    for (Cookie cookie : cookies) {
-      if (cookie.getName().equals("token")) {
-        tokenCookie = cookie;
-      }
-    }
-
-    if (isNull(tokenCookie)) {
-      throw new AuthenticationServiceException("Token not found inside cookie");
-    }
-    return tokenCookie.getValue();
-  }
 }

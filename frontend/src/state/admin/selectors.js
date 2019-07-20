@@ -27,8 +27,20 @@ export const makeAllEiinNumbers = () =>
     adminState => adminState.get('allEiinNumber')
   );
 
+export const makeAllUsers = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('user').get('allUsers')
+  );
+
 export const makeNewPassword = () =>
   createSelector(
     selectAdmin,
     adminState => adminState.get('user').get('generatedPassword')
+  );
+
+export const makeUserDetails = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('user').get('details')
   );

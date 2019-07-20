@@ -7,7 +7,6 @@ function getFqdn(url) {
   if (!!url && url !== '/') {
     return url;
   }
-
   const windowUrl = URI(window.location.href);
   const baseUrl = `${windowUrl.protocol()}://${windowUrl.host()}/`;
   return baseUrl;
@@ -22,7 +21,6 @@ export class Api {
       withCredentials: true,
       'Content-Type': 'application/x-www-form-urlencoded',
     });
-    this.setTokenInHeader();
   }
 
   setTokenInHeader = async () => {
@@ -49,6 +47,7 @@ export class Api {
   };
 
   get = async (uri, params) => {
+    await this.setTokenInHeader();
     try {
       const response = await this.api.get(uri, params);
       return this.getDataFromResponse(response);
@@ -59,6 +58,7 @@ export class Api {
   };
 
   post = async (uri, data, params) => {
+    await this.setTokenInHeader();
     try {
       console.log('Data in post', data);
 
@@ -71,6 +71,7 @@ export class Api {
   };
 
   put = async (uri, data, params) => {
+    await this.setTokenInHeader();
     try {
       const response = await this.api.put(uri, data, params);
       return this.getDataFromResponse(response);
@@ -81,6 +82,7 @@ export class Api {
   };
 
   delete = async uri => {
+    await this.setTokenInHeader();
     try {
       const response = await this.api.delete(uri);
       return this.getDataFromResponse(response);

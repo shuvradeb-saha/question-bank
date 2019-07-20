@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { takeEvery, put, call, takeLatest } from 'redux-saga/effects';
-//import { push } from 'react-router-redux';
 import { toastSuccess, toastError } from 'components/Toaster';
 import {
   FETCH_ALL_ROLES,
@@ -10,6 +9,8 @@ import {
   FETCH_INSTITUTE,
   FETCH_ALL_EIIN,
   FETCH_NEW_PASSWORD,
+  FETCH_ALL_USERS,
+  FETCH_USER,
 } from './constants';
 import {
   fetchFailure,
@@ -19,6 +20,8 @@ import {
   fetchAllInstitute,
   fetchEiinNumbersSuccess,
   fetchNewPasswordSuccess,
+  fetchUsersSuccess,
+  fetchUserSuccess,
 } from './action';
 
 import API from 'utils/api';
@@ -34,11 +37,26 @@ export function* fetchAllRoles() {
 }
 
 export function* saveUserInfo({ payload: { data } }) {
-  try {
-    const response = yield call(API.post, 'api/admin/user', data);
-    console.log('Response', response);
-  } catch (error) {
-    console.log('Error: ', error);
+  if (data.id) {
+    console.log('data ', data.id);
+
+    try {
+      yield call(API.put, 'api/admin/user', data);
+      toastSuccess('User updated successfully');
+      yield put(fetchUsers());
+    } catch (error) {
+      console.log('Error: ', error);
+      toastSuccess('Unable to update user');
+    }
+  } else {
+    try {
+      yield call(API.post, 'api/admin/user', data);
+      toastSuccess('User saved successfully');
+      yield put(fetchUsers());
+    } catch (error) {
+      console.log('Error: ', error);
+      toastSuccess('Unable to save user');
+    }
   }
 }
 
@@ -104,6 +122,26 @@ export function* fetchNewPassword() {
   }
 }
 
+export function* fetchUsers() {
+  try {
+    const users = yield call(API.get, 'api/admin/users');
+    yield put(fetchUsersSuccess(users));
+  } catch (e) {
+    console.log('Error in All EIIN fetching: ', e);
+    yield put(fetchFailure(e));
+  }
+}
+
+export function* fetchUser({ payload: { id } }) {
+  try {
+    const userDetails = yield call(API.get, `api/admin/user/${id}`);
+    yield put(fetchUserSuccess(userDetails));
+  } catch (e) {
+    console.log('Error in fetching user ', e);
+    yield put(fetchFailure(e));
+  }
+}
+
 export default function* saga() {
   yield takeEvery(FETCH_ALL_ROLES, fetchAllRoles);
   yield takeLatest(SAVE_USER, saveUserInfo);
@@ -112,4 +150,6 @@ export default function* saga() {
   yield takeLatest(FETCH_INSTITUTE, fetchInstitute);
   yield takeLatest(FETCH_ALL_EIIN, fetchEiinNumbers);
   yield takeEvery(FETCH_NEW_PASSWORD, fetchNewPassword);
+  yield takeLatest(FETCH_ALL_USERS, fetchUsers);
+  yield takeEvery(FETCH_USER, fetchUser);
 }

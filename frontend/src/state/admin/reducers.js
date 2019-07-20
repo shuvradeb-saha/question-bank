@@ -6,6 +6,8 @@ import {
   FETCH_INSTITUTE_SUCCESS,
   FETCH_ALL_EIIN_SUCCESS,
   FETCH_NEW_PASSWORD_SUCCESS,
+  FETCH_ALL_USERS_SUCCESS,
+  FETCH_USER_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -13,7 +15,7 @@ const initialState = fromJS({
   allEiinNumber: [],
   user: {
     allUsers: [],
-    userDetails: {},
+    details: {},
     generatedPassword: '',
   },
   institute: {
@@ -29,7 +31,7 @@ function reducer(state = initialState, { type, payload }) {
       const { allRoles } = payload;
       return state.merge(fromJS({ allRoles }));
     }
-    
+
     case FETCH_ALL_INSTITUTE_SUCCESS: {
       const { data } = payload;
       const institute = state.get('institute').toJS();
@@ -55,6 +57,21 @@ function reducer(state = initialState, { type, payload }) {
       user.generatedPassword = password;
       return state.merge(fromJS({ user }));
     }
+
+    case FETCH_ALL_USERS_SUCCESS: {
+      const { data } = payload;
+      const user = state.get('user').toJS();
+      user.allUsers = data;
+      return state.merge(fromJS({ user }));
+    }
+
+    case FETCH_USER_SUCCESS: {
+      const { data } = payload;
+      const user = state.get('user').toJS();
+      user.details = data;
+      return state.merge(fromJS({ user }));
+    }
+
     default:
       return state;
   }

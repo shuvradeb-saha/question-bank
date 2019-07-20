@@ -8,6 +8,10 @@ import {
   FETCH_INSTITUTE_SUCCESS,
   FETCH_ALL_EIIN,
   FETCH_ALL_EIIN_SUCCESS,
+  FETCH_ALL_USERS,
+  FETCH_ALL_USERS_SUCCESS,
+  FETCH_USER,
+  FETCH_USER_SUCCESS,
   FETCH_NEW_PASSWORD,
   SAVE_USER,
   SAVE_INSTITUTE,
@@ -56,10 +60,28 @@ export function fetchNewPassword() {
 export function fetchNewPasswordSuccess(password) {
   return { type: FETCH_NEW_PASSWORD_SUCCESS, payload: { password } };
 }
+
+export function fetchUsers() {
+  return { type: FETCH_ALL_USERS };
+}
+
+export function fetchUsersSuccess(data) {
+  return { type: FETCH_ALL_USERS_SUCCESS, payload: { data } };
+}
+
+export function fetchUser(id) {
+  console.log('action ', id);
+
+  return { type: FETCH_USER, payload: { id } };
+}
+
+export function fetchUserSuccess(data) {
+  return { type: FETCH_USER_SUCCESS, payload: { data } };
+}
+
 export function saveUser(data) {
   return { type: SAVE_USER, payload: { data } };
 }
-
 export function saveInstitute(data) {
   return { type: SAVE_INSTITUTE, payload: { data } };
 }

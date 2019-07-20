@@ -64,13 +64,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends
 
     val loginResponse = userService.createLoginResponse(auth);
 
-
-/*
-    val token = userService.getToken(auth);
-    val cookie = new Cookie("token", token);
-    response.addCookie(cookie);
-*/
-
     response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
 
