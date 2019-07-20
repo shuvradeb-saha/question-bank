@@ -33,6 +33,7 @@ class UserInfo extends Component {
     fetchRoles: PropTypes.func,
     fetchEiinNumbers: PropTypes.func,
     fetchAllUsers: PropTypes.func,
+    fetchNewPassword: PropTypes.func,
     fetchUser: PropTypes.func,
     password: PropTypes.string,
     resetForm: PropTypes.func,
@@ -47,6 +48,59 @@ class UserInfo extends Component {
       edit: false,
     };
   }
+
+  componentDidMount() {
+    const {
+      fetchRoles,
+      fetchAllUsers,
+      fetchNewPassword,
+      fetchEiinNumbers,
+    } = this.props;
+    fetchAllUsers();
+    fetchRoles();
+    fetchEiinNumbers();
+    fetchNewPassword();
+  }
+
+  onEditClick = id => {
+    //load user by id from the server
+    this.props.fetchUser(id);
+    this.props.resetForm();
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+      edit: true,
+    }));
+  };
+
+  onUserDetailsSubmit = values => {
+    const roles = values.get('roles');
+    const eiin = values.get('eiinNumber');
+    const newRole = roles.map(role => ({
+      id: role.get('value'),
+      name: role.get('label'),
+    }));
+    const newEiin = eiin.get('value');
+    const data = {
+      ...values.toJS(),
+      roles: newRole.toJS(),
+      eiinNumber: newEiin,
+    };
+    this.props.saveUser(data);
+  };
+
+  onCreateClick = () => {
+    this.props.resetForm();
+    this.setState(prevState => ({
+      modal: !prevState.modal,
+      edit: false,
+    }));
+  };
+
+  generatePassword = () => {
+    const { fetchNewPassword, setPassword, password } = this.props;
+    fetchNewPassword();
+    setPassword(password);
+  };
 
   createDataForTable = users => {
     const columns = [
@@ -96,59 +150,6 @@ class UserInfo extends Component {
       ),
     }));
     return { columns, rows: rows.toJS() };
-  };
-
-  componentDidMount() {
-    const {
-      fetchRoles,
-      fetchAllUsers,
-      fetchNewPassword,
-      fetchEiinNumbers,
-    } = this.props;
-    fetchAllUsers();
-    fetchRoles();
-    fetchEiinNumbers();
-    fetchNewPassword();
-  }
-
-  onUserDetailsSubmit = values => {
-    const roles = values.get('roles');
-    const eiin = values.get('eiinNumber');
-    const newRole = roles.map(role => ({
-      id: role.get('value'),
-      name: role.get('label'),
-    }));
-    const newEiin = eiin.get('value');
-    const data = {
-      ...values.toJS(),
-      roles: newRole.toJS(),
-      eiinNumber: newEiin,
-    };
-    this.props.saveUser(data);
-  };
-
-  generatePassword = () => {
-    const { fetchNewPassword, setPassword, password } = this.props;
-    fetchNewPassword();
-    setPassword(password);
-  };
-
-  onCreateClick = () => {
-    this.props.resetForm();
-    this.setState(prevState => ({
-      modal: !prevState.modal,
-      edit: false,
-    }));
-  };
-
-  onEditClick = id => {
-    //load user by id from the server
-    this.props.fetchUser(id);
-    this.props.resetForm();
-    this.setState(prevState => ({
-      modal: !prevState.modal,
-      edit: true,
-    }));
   };
 
   prepareInitialValue = detail => {
