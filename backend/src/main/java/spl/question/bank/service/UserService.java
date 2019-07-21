@@ -9,6 +9,7 @@ import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spl.question.bank.database.client.InstituteMapper;
@@ -38,17 +39,20 @@ public class UserService {
     private final RoleMapper roleMapper;
     private final InstituteMapper instituteMapper;
     private final JwtConfig jwtConfig;
+    private final BCryptPasswordEncoder encoder;
 
     public UserService(final UserMapper userMapper,
                        final UserRoleMapper userRoleMapper,
                        final RoleMapper roleMapper,
                        final InstituteMapper instituteMapper,
-                       final JwtConfig jwtConfig) {
+                       final JwtConfig jwtConfig,
+                       final BCryptPasswordEncoder encoder) {
         this.userMapper = userMapper;
         this.userRoleMapper = userRoleMapper;
         this.roleMapper = roleMapper;
         this.instituteMapper = instituteMapper;
         this.jwtConfig = jwtConfig;
+        this.encoder = encoder;
     }
 
     @Transactional
@@ -58,6 +62,7 @@ public class UserService {
 
         validateUser(user);
 
+        //filter if the user has the headmaster role
         val headmaster = roles
                 .stream()
                 .filter(role -> role.getName().equals(Roles.HEADMASTER.name()))
@@ -66,7 +71,7 @@ public class UserService {
         if (!Collections.isEmpty(headmaster)) {
             user.setEnabled(true);
         }
-
+        user.setPassword(encoder.encode(user.getPassword()));
         if (userMapper.insert(user) < 0) {
             throw new RuntimeException("Cannot insert data");
         }
@@ -74,13 +79,14 @@ public class UserService {
         assignRole(user.getId(), roles);
     }
 
+
     @Transactional
     public void updateUser(final UserDto userDto) {
         val user = userDto.getUser();
         val roles = userDto.getRoles();
 
         validateUser(user);
-
+        user.setPassword(encoder.encode(user.getPassword()));
         if (user.getId() != null) {
             userMapper.updateByPrimaryKey(user);
             updateRole(user.getId(), roles);

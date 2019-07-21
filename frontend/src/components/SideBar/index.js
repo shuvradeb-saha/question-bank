@@ -6,7 +6,7 @@ import { Roles } from 'containers/App/constants';
 
 const AdminSidebar = () => (
   <div className="col-sm-3 col-md-2 sidebar">
-    <div className="text-center bg-dark p-2">Admin User</div>
+    <div className="text-center bg-dark p-2">Admin</div>
     <ul className="nav nav-sidebar d-inline">
       <li className="dotted-border-bottom">
         <Link to="/">Home</Link>
@@ -25,6 +25,26 @@ const AdminSidebar = () => (
       </li>
       <li className="dotted-border-bottom">
         <Link to="/manage-subject">Manage Subject</Link>
+      </li>
+    </ul>
+  </div>
+);
+
+const HeadMasterSidebar = () => (
+  <div className="col-sm-3 col-md-2 sidebar">
+    <div className="text-center bg-dark p-2">Headmaster</div>
+    <ul className="nav nav-sidebar d-inline">
+      <li className="dotted-border-bottom">
+        <Link to="/">Home</Link>
+      </li>
+      <li className="dotted-border-bottom">
+        <Link to="/profile">Profile</Link>
+      </li>
+      <li className="dotted-border-bottom">
+        <Link to="/manage-teacher">Manage Teacher</Link>
+      </li>
+      <li className="dotted-border-bottom">
+        <Link to="/create-question">Create Question</Link>
       </li>
     </ul>
   </div>
@@ -53,25 +73,6 @@ const TeacherSidebar = () => (
 const ModeratorSidebar = () => (
   <div className="col-sm-3 col-md-2 sidebar" id="Navbar">
     Moderator
-    <ul className="nav nav-sidebar d-inline">
-      <li className="active">
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="../notes">Notes</Link>
-      </li>
-      <li>
-        <Link to="../chat">Chat</Link>
-      </li>
-      <li>
-        <Link to="../rss">RSS</Link>
-      </li>
-    </ul>
-  </div>
-);
-
-const HeadMasterSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar" id="Navbar">
     <ul className="nav nav-sidebar d-inline">
       <li className="active">
         <Link to="/">Home</Link>
