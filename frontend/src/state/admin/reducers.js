@@ -8,6 +8,8 @@ import {
   FETCH_NEW_PASSWORD_SUCCESS,
   FETCH_ALL_USERS_SUCCESS,
   FETCH_USER_SUCCESS,
+  FETCH_CLASS_SUCCESS,
+  FETCH_ALL_CLASS_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -20,6 +22,10 @@ const initialState = fromJS({
   },
   institute: {
     allInstitutes: [],
+    details: {},
+  },
+  clasz: {
+    allClasses: [],
     details: {},
   },
   error: '',
@@ -70,6 +76,19 @@ function reducer(state = initialState, { type, payload }) {
       const user = state.get('user').toJS();
       user.details = data;
       return state.merge(fromJS({ user }));
+    }
+
+    case FETCH_CLASS_SUCCESS: {
+      const { detail } = payload;
+      const clasz = state.get('clasz').toJS();
+      clasz.details = detail;
+      return state.merge(fromJS({ clasz }));
+    }
+    case FETCH_ALL_CLASS_SUCCESS: {
+      const { classes } = payload;
+      const clasz = state.get('clasz').toJS();
+      clasz.allClasses = classes;
+      return state.merge(fromJS({ clasz }));
     }
 
     default:

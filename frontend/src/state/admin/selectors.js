@@ -44,3 +44,15 @@ export const makeUserDetails = () =>
     selectAdmin,
     adminState => adminState.get('user').get('details')
   );
+
+export const makeClasses = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('clasz').get('allClasses')
+  );
+
+export const makeClassDetail = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('clasz').get('details')
+  );

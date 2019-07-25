@@ -27,3 +27,5 @@ insert into role (name) values ('HEADMASTER');
 
 --UPDATE users SET enabled = true WHERE email = 'sahashaishab@gmail.com';
 
+-- DELETE FROM class
+-- WHERE name='Class 9-10';

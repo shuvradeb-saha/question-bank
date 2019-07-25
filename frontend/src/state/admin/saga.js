@@ -11,6 +11,9 @@ import {
   FETCH_NEW_PASSWORD,
   FETCH_ALL_USERS,
   FETCH_USER,
+  SAVE_CLASS,
+  FETCH_ALL_CLASS,
+  FETCH_CLASS,
 } from './constants';
 import {
   fetchFailure,
@@ -22,6 +25,9 @@ import {
   fetchNewPasswordSuccess,
   fetchUsersSuccess,
   fetchUserSuccess,
+  fetchAllClass,
+  fetchClassSuccess,
+  fetchAllClassSuccess,
 } from './action';
 
 import API from 'utils/api';
@@ -142,6 +148,49 @@ export function* fetchUser({ payload: { id } }) {
   }
 }
 
+export function* saveClass({ payload: { data } }) {
+  if (data.id) {
+    try {
+      yield call(API.put, `api/admin/class`, data);
+      toastSuccess('Class info updated successfully');
+      yield put(fetchAllClass());
+    } catch (error) {
+      console.log('Error: ', error);
+      toastError('Error updating the class');
+    }
+  } else {
+    try {
+      const response = yield call(API.post, 'api/admin/class', data);
+      console.log('Response: ', response);
+      yield put(fetchAllClass());
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  }
+}
+
+export function* fetchClasses() {
+  try {
+    const classes = yield call(API.get, 'api/admin/class');
+    yield put(fetchAllClassSuccess(classes));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchClass({ payload }) {
+  const { id } = payload;
+  try {
+    const classDetail = yield call(
+      API.get,
+      `api/admin/class/${parseInt(id, 10)}`
+    );
+    yield put(fetchClassSuccess(classDetail));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
 export default function* saga() {
   yield takeEvery(FETCH_ALL_ROLES, fetchAllRoles);
   yield takeLatest(SAVE_USER, saveUserInfo);
@@ -152,4 +201,7 @@ export default function* saga() {
   yield takeEvery(FETCH_NEW_PASSWORD, fetchNewPassword);
   yield takeLatest(FETCH_ALL_USERS, fetchUsers);
   yield takeEvery(FETCH_USER, fetchUser);
+  yield takeLatest(SAVE_CLASS, saveClass);
+  yield takeEvery(FETCH_ALL_CLASS, fetchClasses);
+  yield takeEvery(FETCH_CLASS, fetchClass);
 }

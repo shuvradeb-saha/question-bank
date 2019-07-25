@@ -39,6 +39,7 @@ class UserInfo extends Component {
     resetForm: PropTypes.func,
     setPassword: PropTypes.func,
     saveUser: PropTypes.func,
+    userDetails: PropTypes.object,
   };
 
   constructor(props) {
@@ -49,7 +50,7 @@ class UserInfo extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const {
       fetchRoles,
       fetchAllUsers,
@@ -60,11 +61,11 @@ class UserInfo extends Component {
     fetchRoles();
     fetchEiinNumbers();
     fetchNewPassword();
-  }
+  };
 
-  onEditClick = id => {
+  onEditClick = async id => {
     //load user by id from the server
-    this.props.fetchUser(id);
+    await this.props.fetchUser(id);
     this.props.resetForm();
     this.setState(prevState => ({
       modal: !prevState.modal,

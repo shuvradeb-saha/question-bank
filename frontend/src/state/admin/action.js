@@ -13,9 +13,14 @@ import {
   FETCH_USER,
   FETCH_USER_SUCCESS,
   FETCH_NEW_PASSWORD,
+  FETCH_NEW_PASSWORD_SUCCESS,
+  FETCH_ALL_CLASS,
+  FETCH_CLASS,
+  SAVE_CLASS,
   SAVE_USER,
   SAVE_INSTITUTE,
-  FETCH_NEW_PASSWORD_SUCCESS,
+  FETCH_CLASS_SUCCESS,
+  FETCH_ALL_CLASS_SUCCESS,
 } from './constants';
 
 export function fetchAllRoles() {
@@ -70,8 +75,6 @@ export function fetchUsersSuccess(data) {
 }
 
 export function fetchUser(id) {
-  console.log('action ', id);
-
   return { type: FETCH_USER, payload: { id } };
 }
 
@@ -84,4 +87,24 @@ export function saveUser(data) {
 }
 export function saveInstitute(data) {
   return { type: SAVE_INSTITUTE, payload: { data } };
+}
+
+export function saveClass(data) {
+  return { type: SAVE_CLASS, payload: { data } };
+}
+
+export function fetchClass(id) {
+  return { type: FETCH_CLASS, payload: { id } };
+}
+
+export function fetchClassSuccess(detail) {
+  return { type: FETCH_CLASS_SUCCESS, payload: { detail } };
+}
+
+export function fetchAllClass() {
+  return { type: FETCH_ALL_CLASS };
+}
+
+export function fetchAllClassSuccess(classes) {
+  return { type: FETCH_ALL_CLASS_SUCCESS, payload: { classes } };
 }

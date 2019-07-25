@@ -21,3 +21,9 @@ export const FETCH_ALL_USERS_SUCCESS =
   'app/state/admin/FETCH_ALL_USERS_SUCCESS';
 export const FETCH_USER = 'app/state/admin/FETCH_USER';
 export const FETCH_USER_SUCCESS = 'app/state/admin/FETCH_USER_SUCCESS';
+export const FETCH_ALL_CLASS = 'app/state/admin/FETCH_ALL_CLASS';
+export const FETCH_ALL_CLASS_SUCCESS =
+  'app/state/admin/FETCH_ALL_CLASS_SUCCESS';
+export const FETCH_CLASS = 'app/state/admin/FETCH_CLASS';
+export const FETCH_CLASS_SUCCESS = 'app/state/admin/FETCH_CLASS_SUCCESS';
+export const SAVE_CLASS = 'app/state/admin/SAVE_CLASS';
