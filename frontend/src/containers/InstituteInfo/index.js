@@ -135,7 +135,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   fetchAllInstitute: () => dispatch(fetchAllInstitute()),
   fetchInstitute: id => dispatch(fetchInstitute(id)),
-  resetForm: () => dispatch(reset('userForm')),
+  resetForm: () => dispatch(reset('instituteForm')),
   saveInstitute: data => dispatch(saveInstitute(data)),
 });
 

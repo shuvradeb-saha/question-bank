@@ -21,6 +21,11 @@ import {
   SAVE_INSTITUTE,
   FETCH_CLASS_SUCCESS,
   FETCH_ALL_CLASS_SUCCESS,
+  FETCH_ALL_SUBJECT,
+  FETCH_ALL_SUBJECT_SUCCESS,
+  FETCH_SUBJECT,
+  FETCH_SUBJECT_SUCCESS,
+  SAVE_SUBJECT,
 } from './constants';
 
 export function fetchAllRoles() {
@@ -107,4 +112,24 @@ export function fetchAllClass() {
 
 export function fetchAllClassSuccess(classes) {
   return { type: FETCH_ALL_CLASS_SUCCESS, payload: { classes } };
+}
+
+export function fetchAllsubject() {
+  return { type: FETCH_ALL_SUBJECT };
+}
+
+export function fetchAllsubjectSuccess(subjects) {
+  return { type: FETCH_ALL_SUBJECT_SUCCESS, payload: { subjects } };
+}
+
+export function fetchSubject(id) {
+  return { type: FETCH_SUBJECT, payload: { id } };
+}
+
+export function fetchSubjectSuccess(detail) {
+  return { type: FETCH_SUBJECT_SUCCESS, payload: { detail } };
+}
+
+export function saveSubject(data) {
+  return { type: SAVE_SUBJECT, payload: { data } };
 }

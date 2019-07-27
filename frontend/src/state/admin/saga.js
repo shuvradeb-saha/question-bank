@@ -14,6 +14,9 @@ import {
   SAVE_CLASS,
   FETCH_ALL_CLASS,
   FETCH_CLASS,
+  FETCH_ALL_SUBJECT,
+  FETCH_SUBJECT,
+  SAVE_SUBJECT,
 } from './constants';
 import {
   fetchFailure,
@@ -28,6 +31,9 @@ import {
   fetchAllClass,
   fetchClassSuccess,
   fetchAllClassSuccess,
+  fetchAllsubjectSuccess,
+  fetchSubjectSuccess,
+  fetchAllsubject,
 } from './action';
 
 import API from 'utils/api';
@@ -190,6 +196,46 @@ export function* fetchClass({ payload }) {
     console.log('Error: ', error);
   }
 }
+export function* fetchSubjects() {
+  try {
+    const subjects = yield call(API.get, 'api/admin/subject');
+    yield put(fetchAllsubjectSuccess(subjects));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchSubject({ payload }) {
+  try {
+    const { id } = payload;
+    const subjectDetails = yield call(API.get, `api/admin/subject/${id}`);
+    yield put(fetchSubjectSuccess(subjectDetails));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* saveSubject({ payload }) {
+  const { data } = payload;
+  if (data.id) {
+    try {
+      yield call(API.put, `api/admin/subject`, data);
+      toastSuccess('Subject info updated successfully');
+      yield put(fetchAllsubject());
+    } catch (error) {
+      console.log('Error: ', error);
+      toastError('Error updating the subject');
+    }
+  } else {
+    try {
+      yield call(API.post, 'api/admin/subject', data);
+      toastSuccess('New Subject added successfully');
+      yield put(fetchAllClass());
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  }
+}
 
 export default function* saga() {
   yield takeEvery(FETCH_ALL_ROLES, fetchAllRoles);
@@ -204,4 +250,7 @@ export default function* saga() {
   yield takeLatest(SAVE_CLASS, saveClass);
   yield takeEvery(FETCH_ALL_CLASS, fetchClasses);
   yield takeEvery(FETCH_CLASS, fetchClass);
+  yield takeEvery(FETCH_ALL_SUBJECT, fetchSubjects);
+  yield takeEvery(FETCH_SUBJECT, fetchSubject);
+  yield takeLatest(SAVE_SUBJECT, saveSubject);
 }

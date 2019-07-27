@@ -27,3 +27,9 @@ export const FETCH_ALL_CLASS_SUCCESS =
 export const FETCH_CLASS = 'app/state/admin/FETCH_CLASS';
 export const FETCH_CLASS_SUCCESS = 'app/state/admin/FETCH_CLASS_SUCCESS';
 export const SAVE_CLASS = 'app/state/admin/SAVE_CLASS';
+export const FETCH_ALL_SUBJECT = 'app/state/admin/FETCH_ALL_SUBJECT';
+export const FETCH_ALL_SUBJECT_SUCCESS =
+  'app/state/admin/FETCH_ALL_SUBJECT_SUCCESS';
+export const FETCH_SUBJECT = 'app/state/admin/FETCH_SUBJECT';
+export const FETCH_SUBJECT_SUCCESS = 'app/state/admin/FETCH_SUBJECT_SUCCESS';
+export const SAVE_SUBJECT = 'app/state/admin/SAVE_SUBJECT';

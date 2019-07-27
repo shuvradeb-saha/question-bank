@@ -4,11 +4,10 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
-import { UserInfo, InstituteInfo, ClassInfo } from 'containers';
+import { UserInfo, InstituteInfo, ClassInfo, SubjectInfo } from 'containers';
 
 const Home = () => <h1 className="text-center">Welcome to your Portal</h1>;
 const Profile = () => <h1>Profile</h1>;
-const SubjectInfo = () => <h1>SubjectInfo</h1>;
 
 class AdminContent extends Component {
   render() {

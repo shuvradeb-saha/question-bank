@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { reduxForm } from 'redux-form/immutable';
 import { compose } from 'redux';
-import { FormInput } from 'components';
+import { FormInput, FormSelect } from 'components';
 
-class InstituteRegister extends Component {
+class SubjectRegister extends Component {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func,
     isOpen: PropTypes.bool.isRequired,
     isUpdate: PropTypes.bool.isRequired,
-    onInstituteSubmit: PropTypes.func.isRequired,
+    onSubjectSubmit: PropTypes.func.isRequired,
     pristine: PropTypes.bool,
     submitting: PropTypes.bool,
     toggle: PropTypes.func,
@@ -22,12 +23,18 @@ class InstituteRegister extends Component {
     isUpdate: false,
   };
 
+  prepareClasses = classes =>
+    classes.map(cls => ({
+      label: cls.get('name'),
+      value: cls.get('id'),
+    }));
+
   render() {
     const {
       isOpen,
       isUpdate,
       toggle,
-      onInstituteSubmit,
+      onSubjectSubmit,
       pristine,
       valid,
       submitting,
@@ -38,12 +45,21 @@ class InstituteRegister extends Component {
       <div className="container-fluid">
         <Modal isOpen={isOpen} toggle={toggle}>
           <ModalHeader toggle={toggle}>
-            {isUpdate ? 'Update ' : 'Create '}Institute
+            {isUpdate ? 'Update ' : 'Create '}Subject
           </ModalHeader>
           <ModalBody>
-            <form onSubmit={handleSubmit(onInstituteSubmit)}>
-              <FormInput name="name" label="Institute Name" />
-              <FormInput name="eiinNumber" label="EIIN Number" type="number" />
+            <form onSubmit={handleSubmit(onSubjectSubmit)}>
+              <FormInput name="name" label="Subject Name" />
+              <FormInput
+                name="subjectCode"
+                label="Subject Code"
+                type="number"
+              />
+              <FormSelect
+                name="class"
+                label="Select Class"
+                options={this.prepareClasses(this.props.classes)}
+              />
 
               <Button disabled={!valid || pristine || submitting} type="submit">
                 Save
@@ -58,8 +74,8 @@ class InstituteRegister extends Component {
 
 export default compose(
   reduxForm({
-    form: 'instituteForm',
+    form: 'subjectForm',
     enableReinitialize: true,
     destroyOnUnmount: true,
   })
-)(InstituteRegister);
+)(SubjectRegister);

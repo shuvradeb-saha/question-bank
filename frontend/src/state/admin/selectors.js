@@ -56,3 +56,15 @@ export const makeClassDetail = () =>
     selectAdmin,
     adminState => adminState.get('clasz').get('details')
   );
+
+export const makeSubjects = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('subject').get('allSubjects')
+  );
+
+export const makeSubjectDetail = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('subject').get('details')
+  );

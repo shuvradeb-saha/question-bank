@@ -13,7 +13,6 @@ const DEFAULT_TOAST_TIMER = 5000;
  * @returns {number} Toast id
  */
 export const toastSuccess = message => {
-  console.log('toast success', message);
   toast.success(message, {
     className: 'toaster-success',
   });
@@ -26,8 +25,6 @@ export const toastSuccess = message => {
  * @returns {number} Toast id
  */
 export const toastInfo = message => {
-  console.log('toast info');
-
   toast.info(message, {
     className: 'toaster-info',
   });
