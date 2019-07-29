@@ -4,10 +4,17 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
-import { UserInfo, InstituteInfo, ClassInfo, SubjectInfo } from 'containers';
+import {
+  UserInfo,
+  InstituteInfo,
+  ClassInfo,
+  SubjectInfo,
+  ChapterInfo,
+} from 'containers';
 
 const Home = () => <h1 className="text-center">Welcome to your Portal</h1>;
 const Profile = () => <h1>Profile</h1>;
+//const Chapter = () => <h1>Manage Chapter</h1>;
 
 class AdminContent extends Component {
   render() {
@@ -39,6 +46,11 @@ class AdminContent extends Component {
             exact
             path="/manage-subject"
             component={Authorization(SubjectInfo, [Roles.ADMIN])}
+          />
+          <Route
+            exact
+            path="/manage-chapter"
+            component={Authorization(ChapterInfo, [Roles.ADMIN])}
           />
           <Route path="" component={NotFound} />
         </Switch>

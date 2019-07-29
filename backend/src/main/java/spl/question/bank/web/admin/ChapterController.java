@@ -45,7 +45,7 @@ public class ChapterController {
     return chapterService.getChapter(chapterId);
   }
 
-  @RequestMapping(value = "/chapter}",
+  @RequestMapping(value = "/chapter",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<Chapter> getAllChapter() {

@@ -26,6 +26,9 @@ const AdminSidebar = () => (
       <li className="dotted-border-bottom">
         <Link to="/manage-subject">Manage Subject</Link>
       </li>
+      <li className="dotted-border-bottom">
+        <Link to="/manage-chapter">Manage Chapter</Link>
+      </li>
     </ul>
   </div>
 );
