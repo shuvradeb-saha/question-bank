@@ -68,3 +68,15 @@ export const makeSubjectDetail = () =>
     selectAdmin,
     adminState => adminState.get('subject').get('details')
   );
+
+export const makeAllChapters = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('chapters').get('allChapters')
+  );
+
+export const makeChapter = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('chapters').get('details')
+  );

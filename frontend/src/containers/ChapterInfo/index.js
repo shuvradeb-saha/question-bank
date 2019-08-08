@@ -5,28 +5,46 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { MDBDataTable } from 'mdbreact';
+import { formValueSelector } from 'redux-form/immutable';
 import { reset } from 'redux-form';
 
 import { ChapterRegisterModal } from 'components/Modals';
-import { fetchAllsubject, fetchAllClass } from 'state/admin/action';
-import { makeClasses, makeSubjects } from 'state/admin/selectors';
+import {
+  fetchAllsubject,
+  fetchAllClass,
+  fetchAllChapters,
+  fetchChapter,
+  saveChapter,
+} from 'state/admin/action';
 
+import {
+  makeClasses,
+  makeSubjects,
+  makeChapter,
+  makeAllChapters,
+} from 'state/admin/selectors';
+
+const selector = formValueSelector('chapterForm');
 class ChapterInfo extends Component {
   static propTypes = {
+    allChapters: PropTypes.object,
     chapterDetails: PropTypes.object,
-    chapters: PropTypes.object,
     classes: PropTypes.object,
     fetchAllClass: PropTypes.func,
     fetchAllSubject: PropTypes.func,
     fetchInstitute: PropTypes.func,
+    fetchAllChapters: PropTypes.func,
+    fetchChapter: PropTypes.func,
     resetForm: PropTypes.func,
     saveChapter: PropTypes.func,
     subjects: PropTypes.object,
+    selectedClass: PropTypes.object,
   };
 
   static defaultProps = {
     classes: [],
     subjects: [],
+    allChapters: [],
   };
 
   constructor(props) {
@@ -38,17 +56,34 @@ class ChapterInfo extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchAllClass();
-    this.props.fetchAllSubject();
+    const { fetchAllClass, fetchAllChapters, fetchAllSubject } = this.props;
+    fetchAllChapters();
+    fetchAllClass();
+    fetchAllSubject();
   }
 
   onChapterSubmit = values => {
-    console.log('values => ', values.toJS());
-    //this.props.saveInstitute(values.toJS());
+    const chapterData = values.toJS();
+    let learningOutcome = [];
+    console.log('chapter data', chapterData);
+
+    const learningOutcomes = chapterData.learningOutcomes;
+    if (learningOutcomes) {
+      learningOutcomes.forEach(l => learningOutcome.push(l));
+    }
+
+    const dataToSave = {
+      classId: parseInt(chapterData.class.value, 10),
+      subjectId: parseInt(chapterData.subject.value, 10),
+      chapterName: chapterData.name,
+      learningOutcome,
+    };
+
+    this.props.saveChapter(dataToSave);
   };
 
   onEditClick = id => {
-    this.props.fetchInstitute(id);
+    this.props.fetchChapter(id);
     this.props.resetForm();
     this.setState(prevState => ({
       modal: !prevState.modal,
@@ -64,20 +99,34 @@ class ChapterInfo extends Component {
     }));
   };
 
+  getNameById = (id, data) => {
+    const filteredItem = data.filter(item => item.get('id') === id);
+    return filteredItem && filteredItem.size > 0
+      ? filteredItem.get(0).toJS().name
+      : '';
+  };
+
   createDataForTable = () => {
-    const { chapters } = this.props;
+    const { allChapters, subjects, classes } = this.props;
+
     const columns = [
       {
-        label: 'Institute Name',
-        field: 'instituteName',
+        label: 'Chapter Name',
+        field: 'chapterName',
         sort: 'asc',
         width: 150,
       },
       {
-        label: 'EIIN Number',
-        field: 'eiinNumber',
+        label: 'Class ',
+        field: 'className',
         sort: 'asc',
         width: 270,
+      },
+      {
+        label: 'Subject',
+        field: 'subject',
+        sort: 'asc',
+        width: 200,
       },
       {
         label: 'Action',
@@ -86,52 +135,77 @@ class ChapterInfo extends Component {
         width: 200,
       },
     ];
-    const rows = chapters.map(institute => ({
-      instituteName: institute.get('name'),
-      eiinNumber: institute.get('eiinNumber'),
-      action: (
-        <button
-          className="btn btn-sm btn-outline-info"
-          onClick={() => this.onEditClick(institute.get('id'))}
-        >
-          Edit
-        </button>
-      ),
-    }));
+    const rows = allChapters.map(chapter => {
+      return {
+        chapterName: chapter.get('chapterName'),
+        className: this.getNameById(chapter.get('classId'), classes),
+        subject: this.getNameById(chapter.get('subjectId'), subjects),
+        action: (
+          <button
+            className="btn btn-sm btn-outline-info"
+            onClick={() => this.onEditClick(chapter.get('id'))}
+          >
+            Edit
+          </button>
+        ),
+      };
+    });
     return { columns, rows: rows.toJS() };
   };
 
-  render() {
-    const { classes, subjects } = this.props;
-    console.log('classes', classes.toJS());
+  prepareInitialValues = data => {
+    const chapterDetails = data.toJS();
+    const clasz = {
+      label: this.getNameById(chapterDetails.classId, this.props.classes),
+      value: chapterDetails.classId || '',
+    };
+    const subject = {
+      label: this.getNameById(chapterDetails.subjectId, this.props.subjects),
+      value: chapterDetails.subjectId || '',
+    };
 
+    return {
+      class: clasz,
+      subject,
+      name: chapterDetails.chapterName,
+      learningOutcomes: chapterDetails.learningOutcome,
+    };
+  };
+
+  render() {
+    const { classes, subjects, selectedClass } = this.props;
     return (
       <div>
         <div className="row">
           <div className="col">
             <button className="btn btn-primary" onClick={this.onCreateClick}>
-              Create Institute
+              Create Chapter
             </button>
           </div>
         </div>
         <div className="row">
           <div className="col">
-            {/*   <MDBDataTable
+            <MDBDataTable
               striped
               bordered
               small
-              data={''} //this.createDataForTable()
-            /> */}
+              data={this.createDataForTable()}
+            />
           </div>
         </div>
         <ChapterRegisterModal
           classes={classes}
           subjects={subjects}
+          selectedClass={selectedClass}
           isOpen={this.state.modal}
           isUpdate={false}
           toggle={this.onCreateClick}
           onSubmit={this.onChapterSubmit}
-          initialValues={this.state.edit ? this.props.chapterDetails : {}}
+          initialValues={
+            this.state.edit
+              ? this.prepareInitialValues(this.props.chapterDetails)
+              : {}
+          }
         />
       </div>
     );
@@ -139,14 +213,20 @@ class ChapterInfo extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
+  allChapters: makeAllChapters(),
   classes: makeClasses(),
+  chapterDetails: makeChapter(),
   subjects: makeSubjects(),
+  selectedClass: state => selector(state, 'class'),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchAllClass: () => dispatch(fetchAllClass()),
   fetchAllSubject: () => dispatch(fetchAllsubject()),
+  fetchAllChapters: () => dispatch(fetchAllChapters()),
+  fetchChapter: id => dispatch(fetchChapter(id)),
   resetForm: () => dispatch(reset('chapterForm')),
+  saveChapter: data => dispatch(saveChapter(data)),
 });
 
 const withConnect = connect(

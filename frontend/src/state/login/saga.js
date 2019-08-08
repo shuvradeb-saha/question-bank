@@ -22,7 +22,6 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
 
   if (response.ok) {
     const responseData = yield response.json();
-
     localStorage.setItem('token', responseData.token);
     yield put(fetchProfileSuccess(responseData));
     yield put(push('/'));

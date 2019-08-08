@@ -33,3 +33,9 @@ export const FETCH_ALL_SUBJECT_SUCCESS =
 export const FETCH_SUBJECT = 'app/state/admin/FETCH_SUBJECT';
 export const FETCH_SUBJECT_SUCCESS = 'app/state/admin/FETCH_SUBJECT_SUCCESS';
 export const SAVE_SUBJECT = 'app/state/admin/SAVE_SUBJECT';
+export const SAVE_CHAPTER = 'app/state/admin/SAVE_CHAPTER';
+export const FETCH_ALL_CHAPTER = 'app/state/admin/FETCH_ALL_CHAPTER';
+export const FETCH_ALL_CHAPTER_SUCCESS =
+  'app/state/admin/FETCH_ALL_CHAPTER_SUCCESS';
+export const FETCH_CHAPTER = 'app/state/admin/FETCH_CHAPTER';
+export const FETCH_CHAPTER_SUCCESS = 'app/state/admin/FETCH_CHAPTER_SUCCESS';

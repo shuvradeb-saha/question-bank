@@ -17,6 +17,9 @@ import {
   FETCH_ALL_SUBJECT,
   FETCH_SUBJECT,
   SAVE_SUBJECT,
+  SAVE_CHAPTER,
+  FETCH_ALL_CHAPTER,
+  FETCH_CHAPTER,
 } from './constants';
 import {
   fetchFailure,
@@ -34,6 +37,8 @@ import {
   fetchAllsubjectSuccess,
   fetchSubjectSuccess,
   fetchAllsubject,
+  fetchAllChaptersSuccess,
+  fetchChapterSuccess,
 } from './action';
 
 import API from 'utils/api';
@@ -237,6 +242,34 @@ export function* saveSubject({ payload }) {
   }
 }
 
+export function* savechapterInfo({ payload: { data } }) {
+  try {
+    yield call(API.post, 'api/admin/chapter', data);
+    toastSuccess('New Chapter added successfully');
+    yield put(fetchAllChapter());
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchAllChapter() {
+  try {
+    const allChapters = yield call(API.get, 'api/admin/chapters');
+    yield put(fetchAllChaptersSuccess(allChapters));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchChapterById({ payload: { id } }) {
+  try {
+    const chapterDetail = yield call(API.get, `api/admin/chapters/${id}`);
+    yield put(fetchChapterSuccess(chapterDetail));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
 export default function* saga() {
   yield takeEvery(FETCH_ALL_ROLES, fetchAllRoles);
   yield takeLatest(SAVE_USER, saveUserInfo);
@@ -253,4 +286,7 @@ export default function* saga() {
   yield takeEvery(FETCH_ALL_SUBJECT, fetchSubjects);
   yield takeEvery(FETCH_SUBJECT, fetchSubject);
   yield takeLatest(SAVE_SUBJECT, saveSubject);
+  yield takeLatest(SAVE_CHAPTER, savechapterInfo);
+  yield takeEvery(FETCH_CHAPTER, fetchChapterById);
+  yield takeEvery(FETCH_ALL_CHAPTER, fetchAllChapter);
 }

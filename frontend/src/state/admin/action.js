@@ -26,6 +26,11 @@ import {
   FETCH_SUBJECT,
   FETCH_SUBJECT_SUCCESS,
   SAVE_SUBJECT,
+  SAVE_CHAPTER,
+  FETCH_CHAPTER,
+  FETCH_CHAPTER_SUCCESS,
+  FETCH_ALL_CHAPTER,
+  FETCH_ALL_CHAPTER_SUCCESS,
 } from './constants';
 
 export function fetchAllRoles() {
@@ -132,4 +137,24 @@ export function fetchSubjectSuccess(detail) {
 
 export function saveSubject(data) {
   return { type: SAVE_SUBJECT, payload: { data } };
+}
+
+export function saveChapter(data) {
+  return { type: SAVE_CHAPTER, payload: { data } };
+}
+
+export function fetchAllChapters() {
+  return { type: FETCH_ALL_CHAPTER };
+}
+
+export function fetchAllChaptersSuccess(data) {
+  return { type: FETCH_ALL_CHAPTER_SUCCESS, payload: { data } };
+}
+
+export function fetchChapter(id) {
+  return { type: FETCH_CHAPTER, payload: { id } };
+}
+
+export function fetchChapterSuccess(data) {
+  return { type: FETCH_CHAPTER_SUCCESS, payload: { data } };
 }

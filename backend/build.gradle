@@ -12,15 +12,16 @@ buildscript {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
     }
 }
-
-plugins {
-    id 'org.springframework.boot' version '2.1.4.RELEASE'
-    id 'java'
-}
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'com.arenagod.gradle.MybatisGenerator'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.arenagod.gradle.MybatisGenerator'
+apply plugin: "com.github.ben-manes.versions"
+
+eclipse.project.name = "${rootProject.name}-${project.name}"
+
+bootRun.systemProperties = System.properties
 
 group = 'spl'
 version = '0.0.1-SNAPSHOT'
@@ -44,7 +45,11 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'
@@ -59,14 +64,18 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 
-
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
-
 
 mybatisGenerator {
     verbose = true
     configFile = 'db/mybatis/mybatisGenerator.xml'
 }
+
+task copyReactApp(type: Copy, dependsOn: ':frontend:assemble') {
+    from project(':frontend').buildDir
+    into "${sourceSets.main.output.resourcesDir}/static"
+}
+
+processResources.dependsOn copyReactApp

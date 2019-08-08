@@ -16,6 +16,7 @@ export default class FormSelect extends Component {
     require: PropTypes.bool,
     multi: PropTypes.bool,
     disabled: PropTypes.bool,
+    placeholder: PropTypes.string,
     options: PropTypes.oneOfType([
       ImmutablePropTypes.list.isRequired,
       PropTypes.array.isRequired,
@@ -47,6 +48,7 @@ export default class FormSelect extends Component {
           options={options.toJS()}
           isMulti={this.props.multi}
           isDisabled={disabled}
+          placeholder={this.props.placeholder}
         />
       </div>
     );

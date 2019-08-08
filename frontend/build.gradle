@@ -16,7 +16,7 @@ eclipse.project.name = "${rootProject.name}-${project.name}"
 // configure gradle-node-plugin
 node {
     version = '9.5.0'
-    yarnVersion = '1.12.3'
+    yarnVersion = '1.16.0'
     npmVersion = '5.8.0'
     download = true
 }

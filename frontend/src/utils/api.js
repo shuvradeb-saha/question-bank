@@ -60,8 +60,6 @@ export class Api {
   post = async (uri, data, params) => {
     await this.setTokenInHeader();
     try {
-      console.log('Data in post', data);
-
       const response = await this.api.post(uri, data, params);
       return this.getDataFromResponse(response);
     } catch (error) {

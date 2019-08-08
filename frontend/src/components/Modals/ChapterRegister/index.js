@@ -3,17 +3,19 @@ import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { reduxForm, FieldArray } from 'redux-form/immutable';
 import { compose } from 'redux';
+
 import { FormInput, FormSelect } from 'components';
 
 class ChapterRegister extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    subjects: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func,
     isOpen: PropTypes.bool.isRequired,
     isUpdate: PropTypes.bool.isRequired,
     pristine: PropTypes.bool,
     submitting: PropTypes.bool,
+    subjects: PropTypes.object.isRequired,
+    selectedClass: PropTypes.object,
     toggle: PropTypes.func,
     valid: PropTypes.bool,
   };
@@ -29,18 +31,25 @@ class ChapterRegister extends Component {
       value: cls.get('id'),
     }));
 
-  prepareSubjects = subjects =>
-    subjects.map(subject => ({
-      label: subject.get('name'),
-      value: subject.get('id'),
-    }));
+  prepareSubjects = subjects => {
+    const { selectedClass } = this.props;
+    return subjects
+      .filter(
+        subject =>
+          selectedClass && subject.get('classId') === selectedClass.get('value')
+      )
+      .map(subject => ({
+        label: subject.get('name'),
+        value: subject.get('id'),
+      }));
+  };
 
   renderLearningOutcomes = ({ fields }) => (
     <div>
       {fields.map((learningOutcome, index) => (
         <div key={index}>
           <FormInput
-            name={`${learningOutcome}.learningOutcome`}
+            name={learningOutcome}
             label={`Learning Outcome #${index + 1}`}
           />
           <button
@@ -71,6 +80,7 @@ class ChapterRegister extends Component {
       valid,
       submitting,
       handleSubmit,
+      selectedClass,
     } = this.props;
 
     return (
@@ -89,6 +99,10 @@ class ChapterRegister extends Component {
               <FormSelect
                 name="subject"
                 label="Select Subject"
+                placeholder={
+                  selectedClass ? 'Select Subject' : 'Please Select Class First'
+                }
+                disabled={selectedClass ? false : true}
                 options={this.prepareSubjects(this.props.subjects)}
               />
               <FormInput name="name" label="Chapter Name" />
