@@ -9,25 +9,46 @@ const AdminSidebar = () => (
     <div className="text-center bg-dark p-2">Admin</div>
     <ul className="nav nav-sidebar d-inline">
       <li className="dotted-border-bottom">
-        <Link to="/">Home</Link>
+        <Link to="/">
+          <i className="fa fa-home" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Home</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/profile">Profile</Link>
+        <Link to="/profile">
+          <i className="fa fa-user" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Profile</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-user">Manage User</Link>
+        <Link to="/manage-user">
+          <i className="fa fa-users" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage User</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-institute">Manage Institute</Link>
+        <Link to="/manage-institute">
+          <i className="fa fa-university" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage Institute</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-class">Manage Class</Link>
+        <Link to="/manage-class">
+          <i className="fa fa-address-card" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage Class</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-subject">Manage Subject</Link>
+        <Link to="/manage-subject">
+          <i className="fa fa-book" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage Subject</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-chapter">Manage Chapter</Link>
+        <Link to="/manage-chapter">
+          <i className="fa fa-object-group" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage Chapter</span>
+        </Link>
       </li>
     </ul>
   </div>
@@ -38,16 +59,34 @@ const HeadMasterSidebar = () => (
     <div className="text-center bg-dark p-2">Headmaster</div>
     <ul className="nav nav-sidebar d-inline">
       <li className="dotted-border-bottom">
-        <Link to="/">Home</Link>
+        <Link to="/">
+          <i className="fa fa-home" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Home</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/profile">Profile</Link>
+        <Link to="/profile">
+          <i className="fa fa-user" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Profile</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/manage-teacher">Manage Teacher</Link>
+        <Link to="/manage-teacher">
+          <i className="fa fa-tasks" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Manage Teacher</span>
+        </Link>
       </li>
       <li className="dotted-border-bottom">
-        <Link to="/create-question">Create Question</Link>
+        <Link to="/create-question">
+          <i className="fa fa-plus-square" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Create Question</span>
+        </Link>
+      </li>
+      <li className="dotted-border-bottom">
+        <Link to="/create-question">
+          <i className="fa fa-eye" aria-hidden="true"></i>
+          <span style={{ marginLeft: 10 }}>Question Status</span>
+        </Link>
       </li>
     </ul>
   </div>

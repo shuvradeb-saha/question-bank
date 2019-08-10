@@ -40,19 +40,22 @@ public class UserService {
     private final InstituteMapper instituteMapper;
     private final JwtConfig jwtConfig;
     private final BCryptPasswordEncoder encoder;
+    private final MailService mailService;
 
     public UserService(final UserMapper userMapper,
                        final UserRoleMapper userRoleMapper,
                        final RoleMapper roleMapper,
                        final InstituteMapper instituteMapper,
                        final JwtConfig jwtConfig,
-                       final BCryptPasswordEncoder encoder) {
+                       final BCryptPasswordEncoder encoder,
+                       final MailService mailService) {
         this.userMapper = userMapper;
         this.userRoleMapper = userRoleMapper;
         this.roleMapper = roleMapper;
         this.instituteMapper = instituteMapper;
         this.jwtConfig = jwtConfig;
         this.encoder = encoder;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -73,12 +76,22 @@ public class UserService {
         }
         user.setPassword(encoder.encode(user.getPassword()));
         if (userMapper.insert(user) < 0) {
-            throw new RuntimeException("Cannot insert data");
+            throw new RuntimeException("Cannot insert user data");
         }
         //assign role then
-        assignRole(user.getId(), roles);
-    }
+        final Integer id = user.getId();
+        assignRole(id, roles);
+        // if everything is done send the password to the email
+        boolean isMailSucceed = mailService
+                .sendMailWithCredentials(user.getEmail(), user.getFirstName(), user.getPassword());
 
+        if (!isMailSucceed) {
+            // delete the new user
+            deleteRolesById(id);
+            userMapper.deleteByPrimaryKey(id);
+            throw new RuntimeException("Unable to insert new user for technical problem.");
+        }
+    }
 
     @Transactional
     public void updateUser(final UserDto userDto) {
@@ -96,11 +109,15 @@ public class UserService {
     }
 
     private void updateRole(Integer userId, List<Role> updatedRoles) {
+        deleteRolesById(userId);
+        assignRole(userId, updatedRoles);
+    }
+
+    private void deleteRolesById(Integer userId) {
         val example = new UserRoleExample();
         example.createCriteria().andUserIdEqualTo(userId);
         //delete previous roles
         userRoleMapper.deleteByExample(example);
-        assignRole(userId, updatedRoles);
     }
 
     private void assignRole(Integer userId, List<Role> roles) {
