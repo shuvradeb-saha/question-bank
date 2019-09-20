@@ -1,0 +1,70 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="spl3-question-bank-6" author="shuvra">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="moderator_question"/>
+                <columnExists tableName="learning_outcome" columnName="subject_id"/>
+                <columnExists tableName="learning_outcome" columnName="class_id"/>
+
+                <foreignKeyConstraintExists foreignKeyName="learning_outcome_class_id_fkey"/>
+                <foreignKeyConstraintExists foreignKeyName="learning_outcome_subject_id_fkey"/>
+                <foreignKeyConstraintExists foreignKeyName="moderator_question_user_id_fkey"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="moderator_question">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="moderator_question_id_pkey"/>
+            </column>
+            <column name="question_id" type="INTEGER" />
+            <column name="question_type" type="VARCHAR(15)" />
+            <column name="moderator_id" type="INTEGER" />
+            <column name="assigned_date" type="TIMESTAMP WITH TIME ZONE" />
+        </createTable>
+
+        <addColumn tableName="learning_outcome">
+            <column name="subject_id" type="INTEGER"/>
+            <column name="class_id" type="INTEGER"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                constraintName="learning_outcome_class_id_fkey"
+                deferrable="false"
+                initiallyDeferred="false"
+                baseColumnNames="class_id"
+                baseTableName="learning_outcome"
+                onDelete="CASCADE"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="class"
+                validate="true"/>
+
+
+        <addForeignKeyConstraint
+                constraintName="learning_outcome_subject_id_fkey"
+                deferrable="false"
+                initiallyDeferred="false"
+                baseColumnNames="subject_id"
+                baseTableName="learning_outcome"
+                onDelete="CASCADE"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="subject"
+                validate="true"/>
+
+        <addForeignKeyConstraint
+                constraintName="moderator_question_user_id_fkey"
+                deferrable="false"
+                initiallyDeferred="false"
+                baseColumnNames="moderator_id"
+                baseTableName="moderator_question"
+                onDelete="CASCADE"
+                onUpdate="NO ACTION"
+                referencedColumnNames="id"
+                referencedTableName="users"
+                validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -73,12 +73,20 @@ class ClassInfo extends Component {
     const rows = classes.map(cls => ({
       clsName: cls.get('name'),
       action: (
-        <button
-          className="btn btn-sm btn-outline-info"
-          onClick={() => this.onEditClick(cls.get('id'))}
-        >
-          Edit
-        </button>
+        <span>
+          <button
+            className="btn btn-sm btn-outline-info"
+            onClick={() => this.onEditClick(cls.get('id'))}
+          >
+            Edit
+          </button>
+          {/*  <button
+            className="btn btn-sm btn-outline-danger"
+            onClick={() => this.onEditClick(cls.get('id'))}
+          >
+            Remove+{cls.get('id')}
+          </button> */}
+        </span>
       ),
     }));
     return { columns, rows: rows.toJS() };

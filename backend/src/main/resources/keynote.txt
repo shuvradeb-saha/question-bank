@@ -1,0 +1,3 @@
+Monday, 16, september ->
+question_paper table er type dia id gula nia question retrieve kora lagbo
+question_paper_question table

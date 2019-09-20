@@ -41,34 +41,39 @@ public class ChapterService {
 
         if (chapterDto.getId() == null) {
             chapterMapper.insert(chapter);
-            saveAllLearningOutcome(learningOutComes, chapter.getId());
+            saveAllLearningOutcome(learningOutComes, chapter);
         } else {
             chapterMapper.updateByPrimaryKey(chapter);
-            updateLearningOutCome(learningOutComes, chapter.getId());
+            updateLearningOutCome(learningOutComes, chapter);
         }
     }
 
-    private void updateLearningOutCome(List<String> learningOutComes, Integer chapterId) {
+    private void updateLearningOutCome(List<String> learningOutComes, Chapter chapter) {
         val ex = new LearningOutcomeExample();
-        ex.createCriteria().andChapterIdEqualTo(chapterId);
+        ex.createCriteria()
+                .andChapterIdEqualTo(chapter.getId())
+                .andSubjectIdEqualTo(chapter.getSubjectId())
+                .andClassIdEqualTo(chapter.getClassId());
         learningOutcomeMapper.deleteByExample(ex);
-        saveAllLearningOutcome(learningOutComes, chapterId);
+        saveAllLearningOutcome(learningOutComes, chapter);
     }
 
-    private void saveAllLearningOutcome(List<String> learningOutComes, Integer chapterId) {
+    private void saveAllLearningOutcome(List<String> learningOutComes, Chapter chapter) {
         if (learningOutComes.size() > 0) {
             learningOutComes.forEach(learningOutCome -> {
                 LearningOutcome outcome = new LearningOutcome();
-                outcome.setChapterId(chapterId);
+                outcome.setChapterId(chapter.getId());
                 outcome.setOutcome(learningOutCome);
-                saveLearningOutcome(outcome);
+                outcome.setClassId(chapter.getClassId());
+                outcome.setSubjectId(chapter.getSubjectId());
+                learningOutcomeMapper.insert(outcome);
             });
         }
     }
 
     public ChapterDto getChapter(Integer chapterId) {
         val chapter = chapterMapper.selectByPrimaryKey(chapterId);
-        val learningOutComes = getLearningOutcomesByChapter(chapterId);
+        val learningOutComes = getLearningOutcomesByChapter(chapter);
         return new ChapterDto()
                 .setId(chapter.getId())
                 .setClassId(chapter.getClassId())
@@ -77,33 +82,25 @@ public class ChapterService {
                 .setLearningOutcome(learningOutComes);
     }
 
-    private List<String> getLearningOutcomesByChapter(Integer chapterId) {
+    private List<String> getLearningOutcomesByChapter(Chapter chapter) {
         val ex = new LearningOutcomeExample();
-        ex.createCriteria().andChapterIdEqualTo(chapterId);
+        ex.createCriteria()
+                .andChapterIdEqualTo(chapter.getId())
+                .andSubjectIdEqualTo(chapter.getSubjectId())
+                .andClassIdEqualTo(chapter.getClassId());
 
         return learningOutcomeMapper.selectByExample(ex)
                 .stream()
-                .map(learningOutcome -> learningOutcome.getOutcome())
+                .map(LearningOutcome::getOutcome)
                 .collect(toList());
     }
 
     public List<ChapterDto> getAllChapter() {
-        val chapters =  chapterMapper.selectByExample(null);
+        val chapters = chapterMapper.selectByExample(null);
         return chapters
                 .stream()
                 .map(chapter -> getChapter(chapter.getId()))
                 .collect(Collectors.toList());
-    }
-
-    public void saveLearningOutcome(LearningOutcome learningOutcome) {
-        if (isBlank(learningOutcome.getOutcome()) || learningOutcome.getChapterId() == null) {
-            throw new IllegalArgumentException("Learning outcome and chapter id must not blank");
-        }
-        if (learningOutcome.getId() == null) {
-            learningOutcomeMapper.insert(learningOutcome);
-        } else {
-            learningOutcomeMapper.updateByPrimaryKey(learningOutcome);
-        }
     }
 
     public LearningOutcome getLearingOutcome(Integer id) {

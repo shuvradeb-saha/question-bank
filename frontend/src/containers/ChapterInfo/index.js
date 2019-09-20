@@ -64,8 +64,8 @@ class ChapterInfo extends Component {
 
   onChapterSubmit = values => {
     const chapterData = values.toJS();
+
     let learningOutcome = [];
-    console.log('chapter data', chapterData);
 
     const learningOutcomes = chapterData.learningOutcomes;
     if (learningOutcomes) {
@@ -73,6 +73,7 @@ class ChapterInfo extends Component {
     }
 
     const dataToSave = {
+      id: chapterData.id || null,
       classId: parseInt(chapterData.class.value, 10),
       subjectId: parseInt(chapterData.subject.value, 10),
       chapterName: chapterData.name,
@@ -141,12 +142,14 @@ class ChapterInfo extends Component {
         className: this.getNameById(chapter.get('classId'), classes),
         subject: this.getNameById(chapter.get('subjectId'), subjects),
         action: (
-          <button
-            className="btn btn-sm btn-outline-info"
-            onClick={() => this.onEditClick(chapter.get('id'))}
-          >
-            Edit
-          </button>
+          <span>
+            <button
+              className="btn btn-sm btn-outline-info"
+              onClick={() => this.onEditClick(chapter.get('id'))}
+            >
+              Edit
+            </button>
+          </span>
         ),
       };
     });
@@ -155,6 +158,7 @@ class ChapterInfo extends Component {
 
   prepareInitialValues = data => {
     const chapterDetails = data.toJS();
+
     const clasz = {
       label: this.getNameById(chapterDetails.classId, this.props.classes),
       value: chapterDetails.classId || '',
@@ -165,6 +169,7 @@ class ChapterInfo extends Component {
     };
 
     return {
+      id: chapterDetails.id,
       class: clasz,
       subject,
       name: chapterDetails.chapterName,

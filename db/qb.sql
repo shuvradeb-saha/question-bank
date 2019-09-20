@@ -29,4 +29,5 @@ insert into role (name) values ('HEADMASTER');
 
 -- DELETE FROM class
 -- WHERE name='Class 9-10';
-DELETE from subject where id=1;
+-- DELETE from class where id>1;
+DELETE from learning_outcome;

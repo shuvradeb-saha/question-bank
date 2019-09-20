@@ -39,6 +39,7 @@ import {
   fetchAllsubject,
   fetchAllChaptersSuccess,
   fetchChapterSuccess,
+  fetchAllChapters,
 } from './action';
 
 import API from 'utils/api';
@@ -171,10 +172,11 @@ export function* saveClass({ payload: { data } }) {
     }
   } else {
     try {
-      const response = yield call(API.post, 'api/admin/class', data);
-      console.log('Response: ', response);
+      yield call(API.post, 'api/admin/class', data);
+      toastSuccess('New class added successfully');
       yield put(fetchAllClass());
     } catch (error) {
+      toastError('Error updating the class');
       console.log('Error: ', error);
     }
   }
@@ -235,7 +237,7 @@ export function* saveSubject({ payload }) {
     try {
       yield call(API.post, 'api/admin/subject', data);
       toastSuccess('New Subject added successfully');
-      yield put(fetchAllClass());
+      yield put(fetchAllsubject());
     } catch (error) {
       console.log('Error: ', error);
     }
@@ -243,12 +245,19 @@ export function* saveSubject({ payload }) {
 }
 
 export function* savechapterInfo({ payload: { data } }) {
-  try {
-    yield call(API.post, 'api/admin/chapter', data);
-    toastSuccess('New Chapter added successfully');
-    yield put(fetchAllChapter());
-  } catch (error) {
-    console.log('Error: ', error);
+  console.log('data', data);
+  if (data.id) {
+    yield call(API.put, 'api/admin/chapter', data);
+    
+  } else {
+    try {
+      yield call(API.post, 'api/admin/chapter', data);
+      toastSuccess('New Chapter added successfully');
+      yield put(fetchAllChapters());
+    } catch (error) {
+      console.log('Error: ', error);
+      toastError('Error in saving chapter');
+    }
   }
 }
 

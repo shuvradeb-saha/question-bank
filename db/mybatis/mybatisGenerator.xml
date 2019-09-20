@@ -46,34 +46,66 @@
                           identity="true"/>
         </table>
 
-      <table tableName="class" domainObjectName="Class">
-        <generatedKey column="id"
-          sqlStatement="select currval('class_id_seq')"
-          identity="true"/>
-      </table>
+        <table tableName="class" domainObjectName="Class">
+            <generatedKey column="id"
+                          sqlStatement="select currval('class_id_seq')"
+                          identity="true"/>
+        </table>
 
-      <table tableName="subject" domainObjectName="Subject">
-        <generatedKey column="id"
-          sqlStatement="select currval('subject_id_seq')"
-          identity="true"/>
-      </table>
+        <table tableName="subject" domainObjectName="Subject">
+            <generatedKey column="id"
+                          sqlStatement="select currval('subject_id_seq')"
+                          identity="true"/>
+        </table>
 
-      <table tableName="chapter" domainObjectName="Chapter">
-        <generatedKey column="id"
-          sqlStatement="select currval('chapter_id_seq')"
-          identity="true"/>
-      </table>
+        <table tableName="chapter" domainObjectName="Chapter">
+            <generatedKey column="id"
+                          sqlStatement="select currval('chapter_id_seq')"
+                          identity="true"/>
+        </table>
 
-      <table tableName="learning_outcome" domainObjectName="LearningOutcome">
-        <generatedKey column="id"
-          sqlStatement="select currval('learning_outcome_id_seq')"
-          identity="true"/>
-      </table>
+        <table tableName="learning_outcome" domainObjectName="LearningOutcome">
+            <generatedKey column="id"
+                          sqlStatement="select currval('learning_outcome_id_seq')"
+                          identity="true"/>
+        </table>
 
-      <table tableName="institute" domainObjectName="Institute">
-        <generatedKey column="id"
-          sqlStatement="select currval('institute_id_seq')"
-          identity="true"/>
-      </table>
+        <table tableName="institute" domainObjectName="Institute">
+            <generatedKey column="id"
+                          sqlStatement="select currval('institute_id_seq')"
+                          identity="true"/>
+        </table>
+        <table tableName="cq_question" domainObjectName="CQQuestion">
+            <generatedKey column="id"
+                          sqlStatement="select currval('cq_question_id_seq')"
+                          identity="true"/>
+        </table>
+        <table tableName="mcq_question" domainObjectName="MCQQuestion">
+            <generatedKey column="id"
+                          sqlStatement="select currval('mcq_question_id_seq')"
+                          identity="true"/>
+
+            <columnOverride
+                    column="base_question"
+                    javaType="java.lang.String"
+                    typeHandler="spl.question.bank.database.handler.JsonTypeHandler"/>
+        </table>
+        <table tableName="teacher_subject" domainObjectName="TeacherSubject">
+            <generatedKey column="id"
+                          sqlStatement="select currval('teacher_subject_id_seq')"
+                          identity="true"/>
+        </table>
+
+        <table tableName="question_paper" domainObjectName="QuestionPaper">
+            <generatedKey column="id"
+                          sqlStatement="select currval('question_paper_id_seq')"
+                          identity="true"/>
+        </table>
+        <table tableName="question_paper_question" domainObjectName="QuestionPaperQuestion">
+            <generatedKey column="id"
+                          sqlStatement="select currval('question_paper_question_id_seq')"
+                          identity="true"/>
+        </table>
+
     </context>
 </generatorConfiguration>
