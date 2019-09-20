@@ -5,8 +5,6 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,8 +72,5 @@ public class InstituteController {
                 .map(Institute::getEiinNumber)
                 .collect(toList());
     }
-
-
-
 }
 
