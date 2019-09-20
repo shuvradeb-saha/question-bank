@@ -1,5 +1,5 @@
 package spl.question.bank.model.question.mcq;
 
-public class PolynomialMCQ {
+public class PolynomialMCQDetail {
 
 }
