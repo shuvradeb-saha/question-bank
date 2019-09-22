@@ -98,8 +98,9 @@ public class UserService {
         val user = userDto.getUser();
         val roles = userDto.getRoles();
 
+        val oldInfo = userMapper.selectByPrimaryKey(user.getId());
+        user.setPassword(oldInfo.getPassword());
         validateUser(user);
-        user.setPassword(encoder.encode(user.getPassword()));
         if (user.getId() != null) {
             userMapper.updateByPrimaryKey(user);
             updateRole(user.getId(), roles);

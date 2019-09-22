@@ -50,6 +50,8 @@ class UserRegister extends Component {
       allEiinNumbers,
     } = this.props;
 
+    console.log('ini', this.props.initialValues.toJS());
+
     const roleOptions = this.prepareRoles(allRoles);
     const eiinOptions = this.prepareEiinNumbers(allEiinNumbers);
 
@@ -62,19 +64,24 @@ class UserRegister extends Component {
           <ModalBody>
             <form onSubmit={handleSubmit(onUserDetailsSubmit)}>
               <div className="row">
-                <div className="col-6">
+                <div className="col">
                   <FormInput name="email" label="Email" />
                 </div>
-                <div className="col-6">
-                  <div>
-                    <FormInput name="password" label="Password" />
+                {!isUpdate && (
+                  <div className="col-6">
+                    <div>
+                      <FormInput name="password" label="Password" />
+                    </div>
+                    <div style={{ marginTop: '-15px' }}>
+                      <button
+                        onClick={generatePassword}
+                        className="link-button"
+                      >
+                        Generate Password
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ marginTop: '-15px' }}>
-                    <button onClick={generatePassword} className="link-button">
-                      Generate Password
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
 
               <div className="row">

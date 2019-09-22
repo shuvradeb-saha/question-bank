@@ -17,7 +17,7 @@ class Header extends Component {
       <div>
         <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
           <Link className="navbar-brand" to="/">
-            Question Bank Portal
+            <div className="qb-png"></div>
           </Link>
           <button
             className="navbar-toggler"
@@ -34,16 +34,18 @@ class Header extends Component {
             <ul className="navbar-nav">
               <li className="nav-item dropdown">
                 <span
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle btn btn-outline-info"
                   id="navbardrop"
                   data-toggle="dropdown"
                 >
+                  <i className="fa fa-user" aria-hidden="true"></i>
+                  &nbsp;&nbsp;
                   {this.props.username}
                 </span>
-                <div className="dropdown-menu bg-dark">
+                <div className="dropdown-menu ">
                   <button
                     onClick={this.props.onLogout}
-                    className="dropdown-item dropdown-link"
+                    className="dropdown-item"
                   >
                     Logout
                   </button>

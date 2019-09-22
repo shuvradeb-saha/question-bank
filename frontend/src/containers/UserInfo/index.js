@@ -86,9 +86,7 @@ class UserInfo extends Component {
       roles: newRole.toJS(),
       eiinNumber: newEiin,
     };
-    console.log('data', data);
-
-    // this.props.saveUser(data);
+    this.props.saveUser(data);
   };
 
   onCreateClick = () => {

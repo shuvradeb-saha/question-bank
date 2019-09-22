@@ -102,12 +102,4 @@ public class ChapterService {
                 .map(chapter -> getChapter(chapter.getId()))
                 .collect(Collectors.toList());
     }
-
-    public LearningOutcome getLearingOutcome(Integer id) {
-        return learningOutcomeMapper.selectByPrimaryKey(id);
-    }
-
-    public List<LearningOutcome> getAllLearningOutcome() {
-        return learningOutcomeMapper.selectByExample(null);
-    }
 }
