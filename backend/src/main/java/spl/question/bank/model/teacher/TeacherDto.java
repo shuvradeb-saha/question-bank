@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Data
-public class PendingTeacher {
+public class TeacherDto {
     private Integer id;
     private String fullName;
     private String email;

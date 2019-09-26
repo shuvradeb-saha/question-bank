@@ -9,6 +9,7 @@ import { reducer as formReducer } from 'redux-form/immutable';
 
 import * as Login from './login';
 import * as Admin from './admin';
+import * as Headmaster from './headmaster';
 
 /*
  * routeReducer
@@ -47,5 +48,6 @@ export default function createReducer(injectedReducers) {
     form: formReducer,
     [Login.key]: Login.reducer,
     [Admin.key]: Admin.reducer,
+    [Headmaster.key]: Headmaster.reducer,
   });
 }

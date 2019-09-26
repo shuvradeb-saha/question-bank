@@ -4,6 +4,7 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
+import { TeacherManagement } from 'containers';
 
 const Home = () => <h1>Home</h1>;
 const Profile = () => <h1>Profile</h1>;
@@ -66,7 +67,7 @@ class AdminContent extends Component {
           <Route
             exact
             path="/manage-teacher"
-            component={Authorization(ManageTeacher, [Roles.HEADMASTER])}
+            component={Authorization(TeacherManagement, [Roles.HEADMASTER])}
           />
           <Route
             exact

@@ -4,3 +4,4 @@ export { default as InstituteInfo } from './InstituteInfo';
 export { default as ClassInfo } from './ClassInfo';
 export { default as SubjectInfo } from './SubjectInfo';
 export { default as ChapterInfo } from './ChapterInfo';
+export { default as TeacherManagement } from './TeacherManagement';

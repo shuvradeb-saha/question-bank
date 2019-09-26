@@ -7,14 +7,14 @@ import spl.question.bank.database.client.TeacherSubjectMapper;
 import spl.question.bank.database.client.UserMapper;
 import spl.question.bank.database.model.TeacherSubject;
 import spl.question.bank.database.model.TeacherSubjectExample;
-import spl.question.bank.database.model.User;
 import spl.question.bank.database.model.UserExample;
-import spl.question.bank.model.teacher.PendingTeacher;
+import spl.question.bank.model.teacher.TeacherDto;
+import spl.question.bank.web.teacher.TeacherController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static spl.question.bank.web.teacher.TeacherController.TeacherListType.PENDING;
 
 @Slf4j
 @Service
@@ -29,7 +29,8 @@ public class TeacherService {
         this.teacherSubjectMapper = teacherSubjectMapper;
     }
 
-    public List<PendingTeacher> getUnallocatedTeachers(final Integer eiinNumber) {
+    public List<TeacherDto> getTeachersList(final Integer eiinNumber,
+                                            final TeacherController.TeacherListType listType) {
         val example = new UserExample();
         example.createCriteria().andEiinNumberEqualTo(eiinNumber);
         val allUsers = userMapper.selectByExample(example);
@@ -38,18 +39,29 @@ public class TeacherService {
                 .filter(user -> {
                     val teacherSubjectExample = new TeacherSubjectExample();
                     teacherSubjectExample.createCriteria().andTeacherIdEqualTo(user.getId());
-                    return teacherSubjectMapper.countByExample(teacherSubjectExample) > 0;
-                }).map(user -> new PendingTeacher()
+                    long count = teacherSubjectMapper.countByExample(teacherSubjectExample);
+
+                    if (listType.equals(PENDING))
+                        return count <= 0;
+                    else return count > 0;
+                }).map(user -> new TeacherDto()
                         .setId(user.getId())
                         .setEmail(user.getEmail())
                         .setFullName(user.getFirstName() + " " + user.getLastName()))
                 .collect(toList());
     }
 
-    public void allocateSubjects(Integer teacherId, Integer subjectId) {
-        val teacherSubject = new TeacherSubject();
-        teacherSubject.setSubjectId(subjectId);
-        teacherSubject.setTeacherId(teacherId);
+    public void allocateSubjects(final TeacherSubject teacherSubject) {
         teacherSubjectMapper.insert(teacherSubject);
     }
+
+    public void unallocateSubject(Integer teacherId, Integer subjectId) {
+        val teacherSubjectEx = new TeacherSubjectExample();
+        teacherSubjectEx
+                .createCriteria()
+                .andTeacherIdEqualTo(teacherId)
+                .andSubjectIdEqualTo(subjectId);
+        teacherSubjectMapper.deleteByExample(teacherSubjectEx);
+    }
+
 }

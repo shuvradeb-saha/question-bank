@@ -245,10 +245,8 @@ export function* saveSubject({ payload }) {
 }
 
 export function* savechapterInfo({ payload: { data } }) {
-  console.log('data', data);
   if (data.id) {
     yield call(API.put, 'api/admin/chapter', data);
-    
   } else {
     try {
       yield call(API.post, 'api/admin/chapter', data);

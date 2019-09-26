@@ -29,3 +29,9 @@ export const makeInProgress = () =>
     selectLogin,
     loginState => loginState.get('inProgress')
   );
+
+export const makeEiin = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('user').get('eiinNumber')
+  );

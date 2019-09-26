@@ -50,8 +50,6 @@ class UserRegister extends Component {
       allEiinNumbers,
     } = this.props;
 
-    console.log('ini', this.props.initialValues.toJS());
-
     const roleOptions = this.prepareRoles(allRoles);
     const eiinOptions = this.prepareEiinNumbers(allEiinNumbers);
 
