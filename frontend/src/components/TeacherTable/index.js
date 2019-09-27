@@ -57,12 +57,6 @@ export default class TeacherTable extends Component {
               >
                 Allocate Subject
               </button>
-              <button
-                className="btn btn-sm btn-warning"
-                //onClick={() => this.onEditClick(teacher.get('id'))}
-              >
-                Reject
-              </button>
             </span>
           )}
           {type === TableType.APPROVED && (

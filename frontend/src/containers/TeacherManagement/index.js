@@ -30,7 +30,6 @@ class TeacherManagement extends Component {
     super(props);
     this.state = {
       modal: false,
-      view: false,
       teacherDetails: '',
     };
   }

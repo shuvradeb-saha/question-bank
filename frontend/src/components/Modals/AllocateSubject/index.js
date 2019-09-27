@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { reduxForm, FieldArray } from 'redux-form/immutable';
+import { reduxForm } from 'redux-form/immutable';
 import { compose } from 'redux';
 
-import { FormInput, FormSelect } from 'components';
+import { FormSelect } from 'components';
 
 class AllocateSubject extends Component {
   static propTypes = {
@@ -43,33 +43,6 @@ class AllocateSubject extends Component {
         value: subject.get('id'),
       }));
   };
-
-  renderLearningOutcomes = ({ fields }) => (
-    <div>
-      {fields.map((learningOutcome, index) => (
-        <div key={index}>
-          <FormInput
-            name={learningOutcome}
-            label={`Learning Outcome #${index + 1}`}
-          />
-          <button
-            className="btn btn-danger btn-sm"
-            type="button"
-            onClick={() => fields.remove(index)}
-          >
-            <i className="fa fa-trash" />
-          </button>
-        </div>
-      ))}
-      <button
-        className="btn btn-success btn-sm"
-        type="button"
-        onClick={() => fields.push()}
-      >
-        Add Learning Outcome
-      </button>
-    </div>
-  );
 
   render() {
     const {

@@ -55,7 +55,13 @@ class UserRegister extends Component {
 
     return (
       <div className="container-fluid">
-        <Modal size="lg" isOpen={isOpen} backdrop={false} toggle={toggle}>
+        <Modal
+          centered
+          size="lg"
+          isOpen={isOpen}
+          backdrop={false}
+          toggle={toggle}
+        >
           <ModalHeader toggle={toggle}>
             {isUpdate ? 'Update ' : 'Create '}User
           </ModalHeader>

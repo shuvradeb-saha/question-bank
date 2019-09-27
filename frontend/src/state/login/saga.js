@@ -49,12 +49,12 @@ export function* fetchCurrentProfile() {
       const responseData = yield response.json();
       yield put(fetchProfileSuccess(responseData));
     } else {
-      toastError('Could not fetch the user');
+      // toastError('Could not fetch the user');
       yield put(fetchProfileFailure('Error', response));
     }
   } catch (e) {
     console.log('Error in current user fetching: ', e);
-    toastError('Could not fetch the user');
+    // toastError('Could not fetch the user');
     yield put(fetchProfileFailure(e));
   }
 }

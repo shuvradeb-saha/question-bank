@@ -36,7 +36,7 @@ class InstituteRegister extends Component {
 
     return (
       <div className="container-fluid">
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal centered isOpen={isOpen} toggle={toggle}>
           <ModalHeader toggle={toggle}>
             {isUpdate ? 'Update ' : 'Create '}Institute
           </ModalHeader>
