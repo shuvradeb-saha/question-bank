@@ -50,6 +50,29 @@ button {
 	border-bottom: 1px solid rgb(174, 174, 194);
 }
 
+.nav__submenu {
+  display: none;
+}
+
+.dotted-border-bottom:hover {
+  .nav__submenu {
+    display: block;
+  }
+}
+
+.nav__submenu {
+  font-weight: 300;
+  text-transform: none;
+  display: none;
+}
+    
+.nav__submenu-item {
+  &:hover {
+    background: rgba(#000, 0.1);
+  }
+}
+
+
 .my-auto {
 	margin-top: auto;
 	margin-bottom: auto;

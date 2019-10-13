@@ -1,14 +1,24 @@
 /* eslint-disable no-console */
-import { put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { put, call, takeLatest, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import { toastError } from 'components/Toaster';
 
+import API from 'utils/api';
 import {
   SUBMIT_INFO_AND_FETCH_PROFILE,
   FETCH_CURRENT_PROFILE,
+  FETCH_ALL_CLASS,
+  FETCH_ALL_SUBJECT,
+  FETCH_ALL_CHAPTER,
 } from './constants';
 
-import { fetchProfileSuccess, fetchProfileFailure } from './action';
+import {
+  fetchProfileSuccess,
+  fetchProfileFailure,
+  fetchAllClassSuccess,
+  fetchAllsubjectSuccess,
+  fetchAllChaptersSuccess,
+} from './action';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
   const response = yield fetch('/api/auth', {
@@ -59,7 +69,37 @@ export function* fetchCurrentProfile() {
   }
 }
 
+export function* fetchAllClasses() {
+  try {
+    const classes = yield call(API.get, 'api/user/class');
+    yield put(fetchAllClassSuccess(classes));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchAllSubjects() {
+  try {
+    const subjects = yield call(API.get, 'api/user/subject');
+    yield put(fetchAllsubjectSuccess(subjects));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchAllChapter() {
+  try {
+    const allChapters = yield call(API.get, 'api/user/chapters');
+    yield put(fetchAllChaptersSuccess(allChapters));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
 export default function* saga() {
   yield takeLatest(SUBMIT_INFO_AND_FETCH_PROFILE, submitInfoForAuthentication);
   yield takeEvery(FETCH_CURRENT_PROFILE, fetchCurrentProfile);
+  yield takeEvery(FETCH_ALL_CLASS, fetchAllClasses);
+  yield takeEvery(FETCH_ALL_SUBJECT, fetchAllSubjects);
+  yield takeEvery(FETCH_ALL_CHAPTER, fetchAllChapter);
 }

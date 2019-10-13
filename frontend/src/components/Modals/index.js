@@ -4,3 +4,4 @@ export { default as ClassRegisterModal } from './ClassRegister';
 export { default as SubjectRegisterModal } from './SubjectRegister';
 export { default as ChapterRegisterModal } from './ChapterRegister';
 export { default as UserInformationModal } from './UserDetails';
+export { default as SubjectAllocationModal } from './AllocateSubject';

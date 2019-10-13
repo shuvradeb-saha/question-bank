@@ -13,6 +13,11 @@ import {
   AccessDenied,
 } from 'components';
 import { logout } from 'state/login/action';
+import {
+  fetchAllClass,
+  fetchAllChapters,
+  fetchAllSubject,
+} from 'state/login/action';
 import { makeUserName, makeRoles } from 'state/login/selectors';
 import { Roles } from 'containers/App/constants';
 
@@ -21,12 +26,21 @@ class HomePage extends Component {
     username: PropTypes.string.isRequired,
     roles: ImmutablePropTypes.list.isRequired,
     logout: PropTypes.func.isRequired,
+    fetchAllClass: PropTypes.func.isRequired,
+    fetchAllSubject: PropTypes.func.isRequired,
+    fetchAllChapter: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     username: 'User',
     roles: [],
   };
+
+  componentDidMount() {
+    this.props.fetchAllClass();
+    this.props.fetchAllSubject();
+    this.props.fetchAllChapter();
+  }
 
   onLogout = () => {
     const { logout } = this.props;
@@ -69,6 +83,9 @@ const mapStateToProps = createStructuredSelector({
 });
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout()),
+  fetchAllClass: () => dispatch(fetchAllClass()),
+  fetchAllSubject: () => dispatch(fetchAllSubject()),
+  fetchAllChapter: () => dispatch(fetchAllChapters()),
 });
 
 const withConnect = connect(

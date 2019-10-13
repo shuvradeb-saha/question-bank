@@ -51,8 +51,16 @@ public class TeacherService {
                 .collect(toList());
     }
 
-    public void allocateSubjects(final TeacherSubject teacherSubject) {
+    public boolean allocateSubjects(final TeacherSubject teacherSubject) {
+        val ex = new TeacherSubjectExample();
+        ex.createCriteria()
+                .andTeacherIdEqualTo(teacherSubject.getTeacherId())
+                .andSubjectIdEqualTo(teacherSubject.getSubjectId());
+        if (teacherSubjectMapper.countByExample(ex) > 0) {
+            return false;
+        }
         teacherSubjectMapper.insert(teacherSubject);
+        return true;
     }
 
     public void unallocateSubject(Integer teacherId, Integer subjectId) {
@@ -64,4 +72,19 @@ public class TeacherService {
         teacherSubjectMapper.deleteByExample(teacherSubjectEx);
     }
 
+    public void removeAllAllocation(Integer teacherId) {
+        val ex = new TeacherSubjectExample();
+        ex.createCriteria().andTeacherIdEqualTo(teacherId);
+        teacherSubjectMapper.deleteByExample(ex);
+    }
+
+    public List<Integer> getAllocatedSubject(Integer teacherId) {
+        val ex = new TeacherSubjectExample();
+        ex.createCriteria().andTeacherIdEqualTo(teacherId);
+        return teacherSubjectMapper
+                .selectByExample(ex)
+                .stream()
+                .map(TeacherSubject::getSubjectId)
+                .collect(toList());
+    }
 }

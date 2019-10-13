@@ -163,7 +163,7 @@ export function* fetchUser({ payload: { id } }) {
 export function* saveClass({ payload: { data } }) {
   if (data.id) {
     try {
-      yield call(API.put, `api/admin/class`, data);
+      yield call(API.put, `api/user/class`, data);
       toastSuccess('Class info updated successfully');
       yield put(fetchAllClass());
     } catch (error) {
@@ -172,7 +172,7 @@ export function* saveClass({ payload: { data } }) {
     }
   } else {
     try {
-      yield call(API.post, 'api/admin/class', data);
+      yield call(API.post, 'api/user/class', data);
       toastSuccess('New class added successfully');
       yield put(fetchAllClass());
     } catch (error) {
@@ -184,7 +184,7 @@ export function* saveClass({ payload: { data } }) {
 
 export function* fetchClasses() {
   try {
-    const classes = yield call(API.get, 'api/admin/class');
+    const classes = yield call(API.get, 'api/user/class');
     yield put(fetchAllClassSuccess(classes));
   } catch (error) {
     console.log('Error: ', error);
@@ -196,7 +196,7 @@ export function* fetchClass({ payload }) {
   try {
     const classDetail = yield call(
       API.get,
-      `api/admin/class/${parseInt(id, 10)}`
+      `api/user/class/${parseInt(id, 10)}`
     );
     yield put(fetchClassSuccess(classDetail));
   } catch (error) {
@@ -205,7 +205,7 @@ export function* fetchClass({ payload }) {
 }
 export function* fetchSubjects() {
   try {
-    const subjects = yield call(API.get, 'api/admin/subject');
+    const subjects = yield call(API.get, 'api/user/subject');
     yield put(fetchAllsubjectSuccess(subjects));
   } catch (error) {
     console.log('Error: ', error);
@@ -215,7 +215,7 @@ export function* fetchSubjects() {
 export function* fetchSubject({ payload }) {
   try {
     const { id } = payload;
-    const subjectDetails = yield call(API.get, `api/admin/subject/${id}`);
+    const subjectDetails = yield call(API.get, `api/user/subject/${id}`);
     yield put(fetchSubjectSuccess(subjectDetails));
   } catch (error) {
     console.log('Error: ', error);
@@ -226,7 +226,7 @@ export function* saveSubject({ payload }) {
   const { data } = payload;
   if (data.id) {
     try {
-      yield call(API.put, `api/admin/subject`, data);
+      yield call(API.put, `api/user/subject`, data);
       toastSuccess('Subject info updated successfully');
       yield put(fetchAllsubject());
     } catch (error) {
@@ -235,7 +235,7 @@ export function* saveSubject({ payload }) {
     }
   } else {
     try {
-      yield call(API.post, 'api/admin/subject', data);
+      yield call(API.post, 'api/user/subject', data);
       toastSuccess('New Subject added successfully');
       yield put(fetchAllsubject());
     } catch (error) {
@@ -246,10 +246,10 @@ export function* saveSubject({ payload }) {
 
 export function* savechapterInfo({ payload: { data } }) {
   if (data.id) {
-    yield call(API.put, 'api/admin/chapter', data);
+    yield call(API.put, 'api/user/chapter', data);
   } else {
     try {
-      yield call(API.post, 'api/admin/chapter', data);
+      yield call(API.post, 'api/user/chapter', data);
       toastSuccess('New Chapter added successfully');
       yield put(fetchAllChapters());
     } catch (error) {
@@ -261,7 +261,7 @@ export function* savechapterInfo({ payload: { data } }) {
 
 export function* fetchAllChapter() {
   try {
-    const allChapters = yield call(API.get, 'api/admin/chapters');
+    const allChapters = yield call(API.get, 'api/user/chapters');
     yield put(fetchAllChaptersSuccess(allChapters));
   } catch (error) {
     console.log('Error: ', error);
@@ -270,7 +270,7 @@ export function* fetchAllChapter() {
 
 export function* fetchChapterById({ payload: { id } }) {
   try {
-    const chapterDetail = yield call(API.get, `api/admin/chapters/${id}`);
+    const chapterDetail = yield call(API.get, `api/user/chapters/${id}`);
     yield put(fetchChapterSuccess(chapterDetail));
   } catch (error) {
     console.log('Error: ', error);

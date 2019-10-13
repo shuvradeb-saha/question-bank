@@ -35,3 +35,21 @@ export const makeEiin = () =>
     selectLogin,
     loginState => loginState.get('user').get('eiinNumber')
   );
+
+export const makeAllSubjects = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('subject').get('allSubjects')
+  );
+
+export const makeAllClasses = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('clasz').get('allClasses')
+  );
+
+export const makeAllChapters = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('chapters').get('allChapters')
+  );

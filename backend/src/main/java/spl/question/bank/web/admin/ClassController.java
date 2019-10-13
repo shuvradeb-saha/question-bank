@@ -18,7 +18,7 @@ import spl.question.bank.database.model.ClassExample;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user")
 public class ClassController {
 
     private final ClassMapper classMapper;

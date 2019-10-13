@@ -15,15 +15,16 @@ import {
 } from 'state/headmaster/action';
 
 import API from 'utils/api';
+import { toastError } from 'components/Toaster';
 
 class TeacherManagement extends Component {
   static propTypes = {
+    type: PropTypes.symbol.isRequired,
     eiin: PropTypes.number,
     pendingTeachers: PropTypes.object,
     approvedTeachers: PropTypes.object,
     fetchPendingList: PropTypes.func,
     fetchApprovedList: PropTypes.func,
-    fetchTeacherInfo: PropTypes.func,
   };
 
   constructor(props) {
@@ -31,6 +32,7 @@ class TeacherManagement extends Component {
     this.state = {
       modal: false,
       teacherDetails: '',
+      viewInProgress: { id: -1, status: false },
     };
   }
 
@@ -47,30 +49,44 @@ class TeacherManagement extends Component {
   };
 
   viewUserInformation = async id => {
+    this.setState({ viewInProgress: { id: id, status: true } });
+    this.onToggle();
     const user = await API.get(`/api/headmaster/teacher/${id}`);
     if (user) {
-      this.setState({ teacherDetails: user });
+      this.setState({
+        teacherDetails: user,
+        viewInProgress: { id: -1, status: false },
+      });
+    } else {
+      toastError(`Unable to load user with id ${id}`);
+      this.onToggle();
+      return;
     }
-    this.onToggle();
   };
 
-  render() {
-    const { pendingTeachers, approvedTeachers } = this.props;
+  PendingInfo = () => (
+    <TeacherTable
+      type={TableType.PENDING}
+      teacherList={this.props.pendingTeachers}
+      onViewClick={this.viewUserInformation}
+      viewInProgress={this.state.viewInProgress}
+    />
+  );
 
+  ApprovedInfo = () => (
+    <TeacherTable
+      type={TableType.APPROVED}
+      teacherList={this.props.approvedTeachers}
+      onViewClick={this.viewUserInformation}
+      viewInProgress={this.state.viewInProgress}
+    />
+  );
+
+  render() {
     return (
       <div>
-        <TeacherTable
-          type={TableType.PENDING}
-          teacherList={pendingTeachers}
-          onViewClick={this.viewUserInformation}
-        />
-        <br />
-        <TeacherTable
-          type={TableType.APPROVED}
-          teacherList={approvedTeachers}
-          onViewClick={this.viewUserInformation}
-        />
-
+        {this.props.type === TableType.APPROVED && <this.ApprovedInfo />}
+        {this.props.type === TableType.PENDING && <this.PendingInfo />}
         <UserInformationModal
           details={this.state.teacherDetails}
           isOpen={this.state.modal}

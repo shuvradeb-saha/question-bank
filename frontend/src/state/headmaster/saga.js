@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-import { put, takeLatest, takeEvery, call } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import { toastError } from 'components/Toaster';
 
 import { FETCH_APPROVED_TEACHERS, FETCH_PENDING_TEACHERS } from './constants';

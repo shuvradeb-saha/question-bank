@@ -14,7 +14,7 @@ export default class UserDetails extends Component {
     const { isOpen, toggle, details } = this.props;
 
     return (
-      <div className="jumbotron">
+      <div>
         <Modal
           size="md"
           isOpen={isOpen}

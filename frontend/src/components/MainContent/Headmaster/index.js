@@ -5,10 +5,10 @@ import { Authorization } from 'utils/auth';
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
 import { TeacherManagement } from 'containers';
+import { TableType } from 'containers/TeacherManagement/TableType';
 
 const Home = () => <h1>Home</h1>;
 const Profile = () => <h1>Profile</h1>;
-const ManageTeacher = () => <h1>Manage Teacher</h1>;
 const CreateQuestions = () => (
   <div className="jumbotron">
     <div>
@@ -53,7 +53,7 @@ const CreateQuestions = () => (
 );
 const Download = () => <h1>Download</h1>;
 
-class AdminContent extends Component {
+class HeadmasterContent extends Component {
   render() {
     return (
       <div>
@@ -66,9 +66,26 @@ class AdminContent extends Component {
           />
           <Route
             exact
-            path="/manage-teacher"
-            component={Authorization(TeacherManagement, [Roles.HEADMASTER])}
+            path="/approved-teacher"
+            component={Authorization(
+              () => (
+                <TeacherManagement type={TableType.APPROVED} />
+              ),
+              [Roles.HEADMASTER]
+            )}
           />
+
+          <Route
+            exact
+            path="/pending-teacher"
+            component={Authorization(
+              () => (
+                <TeacherManagement type={TableType.PENDING} />
+              ),
+              [Roles.HEADMASTER]
+            )}
+          />
+
           <Route
             exact
             path="/create-question"
@@ -86,4 +103,4 @@ class AdminContent extends Component {
   }
 }
 
-export default withRouter(AdminContent);
+export default withRouter(HeadmasterContent);

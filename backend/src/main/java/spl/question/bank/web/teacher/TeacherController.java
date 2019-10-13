@@ -45,15 +45,26 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/teacher-subject/{actionType}", method = POST)
-    public void allocateSubjects(final @RequestBody TeacherSubject teacherSubject,
-                                 final @PathVariable("actionType") SubjectActionType actionType) {
+    public boolean allocateSubjects(final @RequestBody TeacherSubject teacherSubject,
+                                    final @PathVariable("actionType") SubjectActionType actionType) {
         if (actionType.equals(ALLOCATE)) {
-            teacherService.allocateSubjects(teacherSubject);
+            return teacherService.allocateSubjects(teacherSubject);
         } else if (actionType.equals(UNALLOCATE)) {
             teacherService.unallocateSubject(teacherSubject.getTeacherId(), teacherSubject.getSubjectId());
+            return true;
         } else {
             throw new IllegalArgumentException("Must provide valid type");
         }
+    }
+
+    @RequestMapping(value = "/allocation/{teacherId}", method = GET)
+    public List<Integer> getAllocatedSubject(final @PathVariable("teacherId") Integer teacherId) {
+        return teacherService.getAllocatedSubject(teacherId);
+    }
+
+    @RequestMapping(value = "/allocation/remove/{teacherId}", method = POST)
+    public void removeAllAllocation(final @PathVariable("teacherId") Integer teacherId) {
+        teacherService.removeAllAllocation(teacherId);
     }
 
     @GetMapping(value = "/teacher/{id}", produces = APPLICATION_JSON_UTF8_VALUE)

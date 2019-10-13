@@ -3,7 +3,6 @@ package spl.question.bank.web.admin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import spl.question.bank.database.model.LearningOutcome;
 import spl.question.bank.model.admin.ChapterDto;
 import spl.question.bank.service.ChapterService;
 
@@ -13,7 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user")
 public class ChapterController {
 
     private final ChapterService chapterService;

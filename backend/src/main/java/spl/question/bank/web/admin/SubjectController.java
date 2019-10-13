@@ -16,7 +16,7 @@ import spl.question.bank.database.model.Subject;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user")
 public class SubjectController {
 
     private final SubjectMapper subjectMapper;

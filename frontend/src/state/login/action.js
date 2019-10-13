@@ -4,6 +4,12 @@ import {
   FETCH_CURRENT_PROFILE,
   FETCH_CURRENT_PROFILE_FAILURE,
   LOGOUT_USER,
+  FETCH_ALL_CLASS,
+  FETCH_ALL_CLASS_SUCCESS,
+  FETCH_ALL_CHAPTER,
+  FETCH_ALL_CHAPTER_SUCCESS,
+  FETCH_ALL_SUBJECT,
+  FETCH_ALL_SUBJECT_SUCCESS,
 } from './constants';
 
 export function submitLoginInfo(data) {
@@ -24,4 +30,28 @@ export function fetchProfileFailure(error) {
 
 export function logout() {
   return { type: LOGOUT_USER };
+}
+
+export function fetchAllClass() {
+  return { type: FETCH_ALL_CLASS };
+}
+
+export function fetchAllClassSuccess(classes) {
+  return { type: FETCH_ALL_CLASS_SUCCESS, payload: { classes } };
+}
+
+export function fetchAllSubject() {
+  return { type: FETCH_ALL_SUBJECT };
+}
+
+export function fetchAllsubjectSuccess(subjects) {
+  return { type: FETCH_ALL_SUBJECT_SUCCESS, payload: { subjects } };
+}
+
+export function fetchAllChapters() {
+  return { type: FETCH_ALL_CHAPTER };
+}
+
+export function fetchAllChaptersSuccess(data) {
+  return { type: FETCH_ALL_CHAPTER_SUCCESS, payload: { data } };
 }

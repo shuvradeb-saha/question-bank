@@ -6,6 +6,9 @@ import {
   FETCH_CURRENT_PROFILE,
   FETCH_CURRENT_PROFILE_FAILURE,
   LOGOUT_USER,
+  FETCH_ALL_CLASS_SUCCESS,
+  FETCH_ALL_SUBJECT_SUCCESS,
+  FETCH_ALL_CHAPTER_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -14,6 +17,18 @@ const initialState = fromJS({
   authenticated: false,
   inProgress: false,
   error: '',
+  clasz: {
+    allClasses: [],
+    details: {},
+  },
+  subject: {
+    allSubjects: [],
+    details: {},
+  },
+  chapters: {
+    allChapters: [],
+    details: {},
+  },
 });
 
 function reducer(state = initialState, { type, payload }) {
@@ -45,6 +60,27 @@ function reducer(state = initialState, { type, payload }) {
         inProgress: false,
         error: '',
       });
+    }
+
+    case FETCH_ALL_CLASS_SUCCESS: {
+      const { classes } = payload;
+      const clasz = state.get('clasz').toJS();
+      clasz.allClasses = classes;
+      return state.merge(fromJS({ clasz }));
+    }
+
+    case FETCH_ALL_SUBJECT_SUCCESS: {
+      const { subjects } = payload;
+      const subject = state.get('subject').toJS();
+      subject.allSubjects = subjects;
+      return state.merge(fromJS({ subject }));
+    }
+
+    case FETCH_ALL_CHAPTER_SUCCESS: {
+      const { data } = payload;
+      const chapters = state.get('chapters').toJS();
+      chapters.allChapters = data;
+      return state.merge(fromJS({ chapters }));
     }
 
     default:

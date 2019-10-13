@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import { Roles } from 'containers/App/constants';
 
 const AdminSidebar = () => (
@@ -54,6 +53,21 @@ const AdminSidebar = () => (
   </div>
 );
 
+const TeacherManager = () => (
+  <ul className="nav__submenu">
+    <li>
+      <Link to="/pending-teacher" style={{ textDecoration: 'none' }}>
+        <span style={{ marginLeft: 10, color: 'white' }}>Pending list</span>
+      </Link>
+    </li>
+    <li>
+      <Link to="/approved-teacher">
+        <span style={{ marginLeft: 10, color: 'white' }}>Approved list</span>
+      </Link>
+    </li>
+  </ul>
+);
+
 const HeadMasterSidebar = () => (
   <div className="col-sm-3 col-md-2 sidebar">
     <div className="text-center bg-dark p-2">Headmaster</div>
@@ -70,12 +84,20 @@ const HeadMasterSidebar = () => (
           <span style={{ marginLeft: 10 }}>Profile</span>
         </Link>
       </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-teacher">
+
+      <li className="nav__menu-item dotted-border-bottom">
+        <span>
           <i className="fa fa-tasks" aria-hidden="true"></i>
           <span style={{ marginLeft: 10 }}>Manage Teacher</span>
-        </Link>
+          <i
+            style={{ marginLeft: '20%' }}
+            className="fa fa-angle-down"
+            aria-hidden="true"
+          ></i>
+        </span>
+        <TeacherManager />
       </li>
+
       <li className="dotted-border-bottom">
         <Link to="/create-question">
           <i className="fa fa-plus-square" aria-hidden="true"></i>
@@ -157,3 +179,39 @@ class SideBar extends Component {
 }
 
 export default SideBar;
+
+/* <div className="col-sm-3 col-md-2 sidebar">
+  <div className="text-center bg-dark p-2">Headmaster</div>
+  <ul className="nav nav-sidebar d-inline">
+    <li className="dotted-border-bottom">
+      <Link to="/">
+        <i className="fa fa-home" aria-hidden="true"></i>
+        <span style={{ marginLeft: 10 }}>Home</span>
+      </Link>
+    </li>
+    <li className="dotted-border-bottom">
+      <Link to="/profile">
+        <i className="fa fa-user" aria-hidden="true"></i>
+        <span style={{ marginLeft: 10 }}>Profile</span>
+      </Link>
+    </li>
+    <li className="dotted-border-bottom">
+      <Link to="/manage-teacher">
+        <i className="fa fa-tasks" aria-hidden="true"></i>
+        <span style={{ marginLeft: 10 }}>Manage Teacher</span>
+      </Link>
+    </li>
+    <li className="dotted-border-bottom">
+      <Link to="/create-question">
+        <i className="fa fa-plus-square" aria-hidden="true"></i>
+        <span style={{ marginLeft: 10 }}>Create Question</span>
+      </Link>
+    </li>
+    <li className="dotted-border-bottom">
+      <Link to="/create-question">
+        <i className="fa fa-eye" aria-hidden="true"></i>
+        <span style={{ marginLeft: 10 }}>Question Status</span>
+      </Link>
+    </li>
+  </ul>
+</div> */
