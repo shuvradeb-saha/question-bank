@@ -7,6 +7,18 @@
   text-decoration: none;
   cursor: pointer; }
 
+.bg-teacher-list {
+  color: #ffffff;
+  background-color: #3c6b4f !important; }
+
+.btn-rmv {
+  background-color: #9c4951 !important;
+  color: #fff !important; }
+
+.btn-view {
+  background-color: #435b82 !important;
+  color: #fff !important; }
+
 body {
   height: 100%; }
 

@@ -4,18 +4,28 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 @Data
 @Accessors(chain = true)
-public class GeneralMCQDto implements MCQDto{
+public class GeneralMCQDto implements MCQDto {
 
-  private int id;
+  private Integer id;
   private MCQType mcqType;
+  private int weight;
+  private Integer subjectId;
+  private Integer chapterId;
+  private Integer createdBy;
+  private Integer approvedBy;
+  private String status;
+  private Date createdAt;
+  private Date approvedAt;
 
   @JsonUnwrapped
   private GeneralMCQDetail generalMCQDetail;
 
   @Override
-  public MCQType getMCQType() {
+  public MCQType getMcqType() {
     return MCQType.GENERAL;
   }
 }

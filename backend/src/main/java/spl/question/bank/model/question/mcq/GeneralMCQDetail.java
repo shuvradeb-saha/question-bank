@@ -11,5 +11,4 @@ public class GeneralMCQDetail {
   private String option3;
   private String option4;
   private int answer;
-
 }

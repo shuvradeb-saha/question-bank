@@ -50,7 +50,7 @@ class TeacherManagement extends Component {
 
   viewUserInformation = async id => {
     this.setState({ viewInProgress: { id: id, status: true } });
-    this.onToggle();
+
     const user = await API.get(`/api/headmaster/teacher/${id}`);
     if (user) {
       this.setState({
@@ -62,6 +62,7 @@ class TeacherManagement extends Component {
       this.onToggle();
       return;
     }
+    this.onToggle();
   };
 
   PendingInfo = () => (

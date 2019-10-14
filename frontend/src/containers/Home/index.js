@@ -64,6 +64,9 @@ class HomePage extends Component {
                     <AdminContent />
                   ) : roles.toJS().includes(Roles.HEADMASTER) ? (
                     <HeadmasterContent />
+                  ) : roles.toJS().includes(Roles.HEADMASTER) ||
+                    roles.toJS().includes(Roles.TEACHER) ? (
+                    <HeadmasterContent />
                   ) : (
                     <AccessDenied />
                   )}

@@ -11,5 +11,6 @@ public class LoginResponse {
 
   private User user;
   private List<String> roles;
+  private List<Integer> allocatedSubjects;
   private String token;
 }

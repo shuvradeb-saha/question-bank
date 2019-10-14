@@ -162,7 +162,7 @@ class TeacherTable extends Component {
         <span key={i}>
           {this.props.viewInProgress.id === teacher.get('id') &&
           this.props.viewInProgress.status ? (
-            <button className="btn btn-primary btn-sm" type="button" disabled>
+            <button className="btn btn-view btn-sm" type="button" disabled>
               <span
                 className="spinner-border spinner-border-sm"
                 role="status"
@@ -172,7 +172,7 @@ class TeacherTable extends Component {
             </button>
           ) : (
             <button
-              className="btn btn-sm btn-primary"
+              className="btn btn-sm btn-view"
               onClick={() => onViewClick(teacher.get('id'))}
             >
               View
@@ -192,7 +192,7 @@ class TeacherTable extends Component {
           {type === TableType.APPROVED && (
             <span>
               <button
-                className="btn btn-sm btn-danger"
+                className="btn btn-sm btn-rmv"
                 onClick={() => this.onRemove(teacher.get('id'))}
               >
                 Remove
@@ -225,12 +225,12 @@ class TeacherTable extends Component {
 
   render() {
     const { type, classes, subjects, selectedClass } = this.props;
-    const classOfHeader = type === TableType.PENDING ? 'bg-info' : 'bg-success';
+    // const classOfHeader = type === TableType.PENDING ? 'bg-info' : 'bg-success';
 
     return (
       <span>
         <div className="card">
-          <div className={`card-header ${classOfHeader}`}>
+          <div className={`card-header bg-teacher-list`}>
             <b>
               {type === TableType.PENDING
                 ? TableType.PENDING.description

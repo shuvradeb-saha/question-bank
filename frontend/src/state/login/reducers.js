@@ -16,6 +16,7 @@ const initialState = fromJS({
   roles: [],
   authenticated: false,
   inProgress: false,
+  allocatedSubjects: [],
   error: '',
   clasz: {
     allClasses: [],
@@ -38,10 +39,11 @@ function reducer(state = initialState, { type, payload }) {
 
     case SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS: {
       const { data } = payload;
-      const { roles, user } = data;
+
+      const { roles, user, allocatedSubjects } = data;
 
       return state
-        .merge(fromJS({ roles, user }))
+        .merge(fromJS({ roles, user, allocatedSubjects }))
         .merge({ authenticated: true, inProgress: false, error: '' });
     }
 

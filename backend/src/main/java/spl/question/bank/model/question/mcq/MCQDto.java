@@ -4,6 +4,8 @@ package spl.question.bank.model.question.mcq;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.Date;
+
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     property = "mcqType")
@@ -14,8 +16,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public interface MCQDto {
 
-  MCQType getMCQType();
-  int getId();
-
-
+  MCQType getMcqType();
+  Integer getId();
+  int getWeight();
+  int getCreatedBy();
+  int getSubjectId();
+  int getChapterId();
+  Date getCreatedAt();
+  int getApprovedBy();
+  Date getApprovedAt();
+  String getStatus();
 }

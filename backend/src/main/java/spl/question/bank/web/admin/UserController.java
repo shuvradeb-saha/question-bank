@@ -68,6 +68,11 @@ public class UserController {
     return userService.getAllRoles();
   }
 
+  @RequestMapping(value = "/teacher/new-moderator/{id}", method = RequestMethod.POST)
+  public boolean makeModerator(final @PathVariable("id") Integer id) {
+    return userService.addModerator(id);
+  }
+
 /*
   //TODO => While implementing forgot password
   @RequestMapping(value = "/generate-password",
