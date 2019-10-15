@@ -19,11 +19,11 @@ public interface MCQDto {
   MCQType getMcqType();
   Integer getId();
   int getWeight();
-  int getCreatedBy();
-  int getSubjectId();
-  int getChapterId();
+  Integer getCreatedBy();
+  Integer getSubjectId();
+  Integer getChapterId();
   Date getCreatedAt();
-  int getApprovedBy();
+  Integer getApprovedBy();
   Date getApprovedAt();
   String getStatus();
 }
