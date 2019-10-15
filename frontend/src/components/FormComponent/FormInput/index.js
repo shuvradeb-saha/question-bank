@@ -18,13 +18,32 @@ class FormInput extends Component {
   };
 
   renderField = field => {
-    const { input } = field;
+    const { input, meta } = field;
     const { type, label } = this.props;
 
+    const fieldErrorClass =
+      meta.touched && meta.error ? 'border border-danger' : '';
+    const labelErrorClass = meta.touched && meta.error ? 'text-danger' : '';
     return (
       <div className="form-group">
-        <label htmlFor={input.name}>{label}</label>
-        <input className="form-control" {...input} type={type} />
+        <label className={labelErrorClass} htmlFor={input.name}>
+          {label}
+        </label>
+        {type === 'textarea' ? (
+          <textarea
+            className={`form-control ${fieldErrorClass}`}
+            {...input}
+          ></textarea>
+        ) : (
+          <input
+            className={`form-control ${fieldErrorClass}`}
+            {...input}
+            type={type}
+          />
+        )}
+        {!meta.active && meta.touched && meta.error && (
+          <span className={labelErrorClass}>{meta.error}</span>
+        )}
       </div>
     );
   };

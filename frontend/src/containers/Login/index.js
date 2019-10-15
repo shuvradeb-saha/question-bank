@@ -27,8 +27,16 @@ class Login extends Component {
     const { handleSubmit } = this.props;
 
     return (
-      <div className="container h-100">
-        <div className="row align-items-center h-100" style={{ marginTop: 80 }}>
+      <div className="container h-100" style={{ marginTop: 80 }}>
+        {/* <div
+          className="text-center rounded text-light"
+          style={{ backgroundColor: 'rgb(59, 128, 139)', height: '100px' }}
+        >
+          <div className="rounded p-3">
+            <h1>Welcome to Question Bank</h1>
+          </div>
+        </div> */}
+        <div className="row align-items-center h-100">
           <div className="col-6 mx-auto">
             <form className="jumbotron" onSubmit={handleSubmit(this.onSubmit)}>
               <h1 className="text-center">Login Here</h1>

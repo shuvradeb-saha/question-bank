@@ -104,9 +104,13 @@ class AllocateSubject extends Component {
                 >
                   Submit
                 </Button>
-                <Button size="sm" color="secondary" onClick={this.props.toggle}>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={this.props.toggle}
+                  type="button"
+                >
                   Cancel
-                </Button>
+                </button>
               </span>
             </form>
           </ModalBody>

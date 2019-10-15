@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
-import { Link, Route, Switch, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class CreateQuestion extends Component {
   render() {
-    return (
+    const isSubjectEmpty = false;
+    return isSubjectEmpty ? (
+      <div className="alert alert-danger">
+        <p>
+          <h3>
+            <b>
+              <i className="fa fa-frown-o" aria-hidden="true"></i>
+              {'   '}দুঃখিত!!
+            </b>{' '}
+            আপনাকে কোন বিষয় প্রদান করা হয়নি। এই মুহুর্তে আপনি কোন প্রশ্ন তৈরী
+            করতে পারছেন না। বিষয় নির্ধারনের জন্য আপনার প্রতিষ্ঠান প্রধানের সাথে
+            যোগাযোগ করুন।
+          </h3>
+        </p>
+      </div>
+    ) : (
       <div className="container">
         <div className="card text-white">
           <div className="card-header" style={{ backgroundColor: '#3b808b' }}>
@@ -19,7 +34,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/general-mcq">
+                  <Link to="/general-mcq" className="text-dark">
                     General MCQ (সাধারণ বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -28,7 +43,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/polynomial-mcq">
+                  <Link to="/polynomial-mcq" className="text-dark">
                     Polynomial MCQ (বহুপদীসমাপ্তিসূচক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -37,7 +52,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/stem-mcq">
+                  <Link to="/stem-mcq" className="text-dark">
                     Stem Based MCQ (উদ্দীপকভিত্তিক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -59,7 +74,9 @@ class CreateQuestion extends Component {
                 <span style={{ marginRight: 10 }}>
                   <i className="fa fa-check-square" aria-hidden="true"></i>
                 </span>
-                <Link to="/cq">Create CQ Question</Link>
+                <Link to="/cq" className="text-dark">
+                  Create CQ Question
+                </Link>
               </li>
             </ul>
           </div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, ModalFooter, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { ModalFooter, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import moment from 'moment';
 
 export default class UserDetails extends Component {
@@ -14,7 +14,7 @@ export default class UserDetails extends Component {
     const { isOpen, toggle, details } = this.props;
 
     return (
-      <div>
+      <div className="bg-primary">
         <Modal
           size="md"
           isOpen={isOpen}
@@ -69,9 +69,9 @@ export default class UserDetails extends Component {
             </table>
           </ModalBody>
           <ModalFooter>
-            <Button size="sm" color="danger" onClick={toggle}>
+            <button className="btn btn-sm btn-outline-danger" onClick={toggle}>
               Cancel
-            </Button>
+            </button>
           </ModalFooter>
         </Modal>
       </div>
