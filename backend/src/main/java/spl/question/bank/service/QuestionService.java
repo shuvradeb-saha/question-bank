@@ -4,16 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.model.MCQQuestion;
+import spl.question.bank.model.question.Difficulty;
+import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.mcq.*;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -30,17 +32,17 @@ public class QuestionService {
     this.objectMapper = new ObjectMapper();
   }
 
-  public MCQDto saveMcq(final MCQDto mcqDto) throws JsonProcessingException {
+  public MCQQuestion saveMcq(final MCQDto mcqDto) throws JsonProcessingException {
     val mcqQuestion = new MCQQuestion();
 
-    mcqQuestion.setApprovedAt(mcqDto.getApprovedAt());
-    mcqQuestion.setApprovedBy(mcqDto.getApprovedBy());
-    mcqQuestion.setCreatedAt(mcqDto.getCreatedAt());
+    mcqQuestion.setCreatedAt(new Date(System.currentTimeMillis()));
     mcqQuestion.setCreatedBy(mcqDto.getCreatedBy());
     mcqQuestion.setSubjectId(mcqDto.getSubjectId());
     mcqQuestion.setWeight(mcqDto.getWeight());
     mcqQuestion.setChapterId(mcqDto.getChapterId());
     mcqQuestion.setType(mcqDto.getMcqType().name());
+    mcqQuestion.setDifficulty(mcqDto.getDifficulty().name());
+    mcqQuestion.setStatus(QuestionStatus.pending.name());
 
     if (mcqDto instanceof GeneralMCQDto) {
       val generalDetail = ((GeneralMCQDto) mcqDto).getGeneralMCQDetail();
@@ -57,12 +59,12 @@ public class QuestionService {
     }
 
     if (mcqDto.getId() == null) {
-      // mcqMapper.insert(mcqQuestion);
+      mcqMapper.insert(mcqQuestion);
     } else {
       mcqQuestion.setId(mcqDto.getId());
       // mcqMapper.updateByPrimaryKey(mcqQuestion);
     }
-    return mcqDto;
+    return mcqQuestion;
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {
@@ -98,8 +100,63 @@ public class QuestionService {
       generalMcqs.forEach(this::validateGeneralMcq);
     }
 
-    if(!isEmpty(polynomialMcqs)) {
+    if (!isEmpty(polynomialMcqs)) {
       polynomialMcqs.forEach(this::validatePolynomial);
     }
+  }
+
+  public MCQDto getMcqById(Integer mcqId) throws IOException {
+    val mcqQuestion = mcqMapper.selectByPrimaryKey(mcqId);
+    if (isNull(mcqQuestion)) {
+      throw new IllegalArgumentException("No MCQ found with id => " + mcqId);
+    }
+    MCQDto mcqDto = null;
+    if (mcqQuestion.getType().equals(MCQType.GENERAL.name())) {
+      mcqDto = extractGeneralDto(mcqQuestion);
+    } else if (mcqQuestion.getType().equals(MCQType.POLYNOMIAL.name())) {
+      mcqDto = extractPolynomialDto(mcqQuestion);
+    } else {
+      mcqDto = extractStemDto(mcqQuestion);
+    }
+    return mcqDto;
+  }
+
+  private MCQDto extractGeneralDto(MCQQuestion mcq) throws IOException {
+    GeneralMCQDto dto = new GeneralMCQDto();
+    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+        .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
+        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+
+    dto.setGeneralMCQDetail(objectMapper.readValue(mcq.getBaseQuestion(), GeneralMCQDetail.class));
+    return dto;
+  }
+
+  private MCQDto extractPolynomialDto(MCQQuestion mcq) throws IOException {
+    PolynomialMCQDto dto = new PolynomialMCQDto();
+    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+        .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
+        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+
+    dto.setPolynomialMCQDetail(objectMapper.readValue(mcq.getBaseQuestion(), PolynomialMCQDetail.class));
+    return dto;
+  }
+
+  private MCQDto extractStemDto(MCQQuestion mcq) throws IOException {
+    StemBasedMCQDto dto = new StemBasedMCQDto();
+    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+        .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
+        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+
+    dto.setStemBasedMCQDetail(objectMapper.readValue(mcq.getBaseQuestion(), StemBasedMCQDetail.class));
+    return dto;
   }
 }

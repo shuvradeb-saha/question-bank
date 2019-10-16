@@ -3,6 +3,7 @@ package spl.question.bank.model.question.mcq;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import spl.question.bank.model.question.Difficulty;
 
 import java.util.Date;
 
@@ -23,7 +24,8 @@ public interface MCQDto {
   Integer getSubjectId();
   Integer getChapterId();
   Date getCreatedAt();
-  Integer getApprovedBy();
-  Date getApprovedAt();
+  Integer getModeratedBy();
+  Date getModeratedAt();
   String getStatus();
+  Difficulty getDifficulty();
 }

@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="spl3-question-bank-8" author="shuvra">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="mcq_question" columnName="difficulty"/>
+                <columnExists tableName="cq_question" columnName="difficulty"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="mcq_question">
+            <column name="difficulty" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="cq_question">
+            <column name="difficulty" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <renameColumn tableName="mcq_question" oldColumnName="approved_by" newColumnName="moderated_by" />
+        <renameColumn tableName="mcq_question" oldColumnName="approved_at" newColumnName="moderated_at" />
+        <renameColumn tableName="cq_question" oldColumnName="approved_by" newColumnName="moderated_by" />
+        <renameColumn tableName="cq_question" oldColumnName="approved_at" newColumnName="moderated_at" />
+
+    </changeSet>
+</databaseChangeLog>

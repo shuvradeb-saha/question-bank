@@ -4,6 +4,8 @@ package spl.question.bank.model.question.mcq;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import spl.question.bank.model.question.Difficulty;
+
 import java.util.Date;
 
 @Data
@@ -16,10 +18,11 @@ public class PolynomialMCQDto implements MCQDto {
   private Integer subjectId;
   private Integer chapterId;
   private Integer createdBy;
-  private Integer approvedBy;
+  private Integer moderatedBy;
   private String status;
+  private Difficulty difficulty;
   private Date createdAt;
-  private Date approvedAt;
+  private Date moderatedAt;
 
   @JsonUnwrapped
   private PolynomialMCQDetail polynomialMCQDetail;

@@ -56,14 +56,15 @@ button {
 
 .dotted-border-bottom:hover {
   .nav__submenu {
-    display: block;
-  }
+		display: block;
+	}
+
 }
 
 .nav__submenu {
   font-weight: 300;
   text-transform: none;
-  display: none;
+	display: none;
 }
     
 .nav__submenu-item {

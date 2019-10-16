@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/label-has-for */
 import React, { Component } from 'react';
-import { reduxForm, FieldArray } from 'redux-form/immutable';
+import { reduxForm, FieldArray, Field } from 'redux-form/immutable';
 import PropTypes from 'prop-types';
 
 import { FormSelect, FormInput } from 'components/FormComponent';
@@ -10,7 +11,10 @@ class McqForm extends Component {
     mcqType: PropTypes.string.isRequired,
     classes: PropTypes.object,
     subjects: PropTypes.object,
+    chapters: PropTypes.object,
     selectedClass: PropTypes.object,
+    selectedSubject: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   prepareClasses = classes =>
@@ -32,6 +36,69 @@ class McqForm extends Component {
       }));
   };
 
+  prepareChapters = chapters => {
+    const { selectedSubject } = this.props;
+    return chapters
+      .filter(
+        chapter =>
+          selectedSubject &&
+          chapter.get('subjectId') === selectedSubject.get('value')
+      )
+      .map(chapter => ({
+        label: chapter.get('chapterName'),
+        value: chapter.get('id'),
+      }));
+  };
+
+  renderRightAnswer = (extraName = '') => {
+    return (
+      <div className="mt-2">
+        <label>সঠিক উত্তর</label>
+        <div>
+          <label>
+            <Field
+              name={`${extraName}answer`}
+              component="input"
+              type="radio"
+              value="1"
+            />
+            (ক)
+          </label>
+          {'    '}
+          <label>
+            <Field
+              name={`${extraName}answer`}
+              component="input"
+              type="radio"
+              value="2"
+            />
+            (খ)
+          </label>
+          <label>
+            <Field
+              name={`${extraName}answer`}
+              component="input"
+              type="radio"
+              value="3"
+            />
+            (গ)
+          </label>
+          {'    '}
+          <label>
+            <Field
+              name={`${extraName}answer`}
+              component="input"
+              type="radio"
+              value="4"
+            />
+            (ঘ)
+          </label>
+          {'    '}
+        </div>
+      </div>
+    );
+  };
+
   renderGeneralMcq = (generalMcq = '') => (
     <span>
       <FormInput
@@ -43,6 +110,7 @@ class McqForm extends Component {
       <FormInput name={`${generalMcq}option2`} label="(খ)" />
       <FormInput name={`${generalMcq}option3`} label="(গ)" />
       <FormInput name={`${generalMcq}option4`} label="(ঘ)" />
+      {this.renderRightAnswer(generalMcq)}
     </span>
   );
 
@@ -63,8 +131,6 @@ class McqForm extends Component {
   addGeneralMcq = ({ fields }) => (
     <div>
       {fields.map((generalMcq, index) => {
-        console.log('ge', typeof generalMcq);
-
         return (
           <div key={index}>
             <fieldset className="border border-info p-2">
@@ -138,7 +204,19 @@ class McqForm extends Component {
   );
 
   render() {
-    const { classes, subjects, selectedClass, mcqType } = this.props;
+    const {
+      classes,
+      subjects,
+      selectedClass,
+      selectedSubject,
+      mcqType,
+      chapters,
+      handleSubmit,
+      submitting,
+      valid,
+      pristine,
+    } = this.props;
+
     const mcqName =
       mcqType === McqType.GENERAL
         ? 'সাধারণ বহুনির্বাচনী'
@@ -147,20 +225,29 @@ class McqForm extends Component {
         : 'অভিন্ন তথ্যভিত্তিক';
     return (
       <div className="jumbotron">
-        <form>
+        <form onSubmit={handleSubmit}>
           <FormSelect
             name="class"
             label="শ্রেণী"
             options={this.prepareClasses(classes)}
           />
           <FormSelect
-            name="subject"
+            name="subjectId"
             label="বিষয়"
             placeholder={
-              selectedClass ? 'Select Subject' : 'Please Select Class First'
+              selectedClass ? 'Select subject' : 'Please select class first'
             }
             disabled={selectedClass ? false : true}
             options={this.prepareSubjects(subjects)}
+          />
+          <FormSelect
+            name="chapterId"
+            label="অধ্যায়"
+            placeholder={
+              selectedSubject ? 'Select chapter' : 'Please select subject first'
+            }
+            disabled={selectedSubject ? false : true}
+            options={this.prepareChapters(chapters)}
           />
           <fieldset className="border p-2">
             <legend className="w-auto">{mcqName}</legend>
@@ -168,6 +255,51 @@ class McqForm extends Component {
             {mcqType === McqType.POLYNOMIAL && this.renderPolynomialMcq()}
             {mcqType === McqType.STEM && this.renderStemBasedMcq()}
           </fieldset>
+
+          <FormInput name="weight" label="নম্বর" type="number" />
+          <div className="mt-2">
+            <label>স্তর</label>
+            <div>
+              <label>
+                <Field
+                  name="difficulty"
+                  component="input"
+                  type="radio"
+                  value="easy"
+                />
+                সহজ স্তর
+              </label>
+              {'    '}
+              <label>
+                <Field
+                  name="difficulty"
+                  component="input"
+                  type="radio"
+                  value="standard"
+                />
+                মধ্যম স্তর
+              </label>
+              <label>
+                <Field
+                  name="difficulty"
+                  component="input"
+                  type="radio"
+                  value="hard"
+                />
+                কঠিন স্তর
+              </label>
+              {'    '}
+            </div>
+          </div>
+          <div>
+            <button
+              disabled={!valid || pristine || submitting}
+              type="submit"
+              className="btn btn-primary"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     );

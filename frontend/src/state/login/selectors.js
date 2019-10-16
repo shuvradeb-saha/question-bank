@@ -53,3 +53,9 @@ export const makeAllChapters = () =>
     selectLogin,
     loginState => loginState.get('chapters').get('allChapters')
   );
+
+export const makeUserId = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('user').get('id')
+  );
