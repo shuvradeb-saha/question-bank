@@ -4,154 +4,193 @@ import PropTypes from 'prop-types';
 import { Roles } from 'containers/App/constants';
 
 const AdminSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar">
-    <div className="text-center bg-dark p-2">Admin</div>
-    <ul className="nav nav-sidebar d-inline">
-      <li className="dotted-border-bottom">
-        <Link to="/">
-          <i className="fa fa-home" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Home</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/profile">
-          <i className="fa fa-user" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Profile</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-user">
-          <i className="fa fa-users" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage User</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-institute">
-          <i className="fa fa-university" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage Institute</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-class">
-          <i className="fa fa-address-card" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage Class</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-subject">
-          <i className="fa fa-book" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage Subject</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/manage-chapter">
-          <i className="fa fa-object-group" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage Chapter</span>
-        </Link>
-      </li>
-    </ul>
-  </div>
-);
+  <ul className="list-group sticky-top sticky-offset">
+    <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
+      <b>
+        <small>Admin</small>
+      </b>
+    </li>
 
-const TeacherManager = () => (
-  <ul className="nav__submenu">
-    <li>
-      <Link to="/pending-teacher" style={{ textDecoration: 'none' }}>
-        <span style={{ marginLeft: 10, color: 'white' }}>Pending list</span>
-      </Link>
-    </li>
-    <li>
-      <Link to="/approved-teacher">
-        <span style={{ marginLeft: 10, color: 'white' }}>Approved list</span>
-      </Link>
-    </li>
+    <Link
+      to="/"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-home fa-fw mr-3"></span>
+        <span className="menu-collapsed">Home</span>
+      </div>
+    </Link>
+    <Link
+      to="/profile"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-user fa-fw mr-3"></span>
+        <span className="menu-collapsed">Profile</span>
+      </div>
+    </Link>
+    <Link
+      to="/manage-user"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-users fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage User</span>
+      </div>
+    </Link>
+    <Link
+      to="/manage-institute"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-university fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage Institute</span>
+      </div>
+    </Link>
+    <Link
+      to="/manage-class"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-address-card fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage Class</span>
+      </div>
+    </Link>
+    <Link
+      to="/manage-subject"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-book fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage Subject</span>
+      </div>
+    </Link>
+    <Link
+      to="/manage-chapter"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-object-group fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage Chapter</span>
+      </div>
+    </Link>
   </ul>
 );
 
 const HeadMasterSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar">
-    <div className="text-center bg-dark p-2">Headmaster</div>
-    <ul className="nav nav-sidebar d-inline">
-      <li className="dotted-border-bottom">
-        <Link to="/">
-          <i className="fa fa-home" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Home</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/profile">
-          <i className="fa fa-user" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Profile</span>
-        </Link>
-      </li>
+  <ul className="list-group sticky-top sticky-offset">
+    <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
+      <b>
+        <small>Headmaster</small>
+      </b>
+    </li>
 
-      <li className="nav__menu-item dotted-border-bottom">
-        <span>
-          <i className="fa fa-tasks" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Manage Teacher</span>
-          <i
-            style={{ marginLeft: '20%' }}
-            className="fa fa-angle-down"
-            aria-hidden="true"
-          ></i>
-        </span>
-        <TeacherManager />
-      </li>
+    <Link
+      to="/"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-home fa-fw mr-3"></span>
+        <span className="menu-collapsed">Home</span>
+      </div>
+    </Link>
+    <Link
+      to="/profile"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-user fa-fw mr-3"></span>
+        <span className="menu-collapsed">Profile</span>
+      </div>
+    </Link>
 
-      <li className="dotted-border-bottom">
-        <Link to="/create-question">
-          <i className="fa fa-plus-square" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Create Question</span>
-        </Link>
-      </li>
-      <li className="dotted-border-bottom">
-        <Link to="/create-question">
-          <i className="fa fa-eye" aria-hidden="true"></i>
-          <span style={{ marginLeft: 10 }}>Question Status</span>
-        </Link>
-      </li>
-    </ul>
-  </div>
+    <a
+      href="#teacher-list"
+      data-toggle="collapse"
+      aria-expanded="false"
+      className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-tasks fa-fw mr-3"></span>
+        <span className="menu-collapsed">Manage Teacher</span>
+        <span className="submenu-icon ml-auto"></span>
+      </div>
+    </a>
+
+    <div id="teacher-list" className="collapse sidebar-submenu">
+      <Link
+        to="/pending-teacher"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <span className="menu-collapsed">Pending list</span>
+      </Link>
+      <Link
+        to="/approved-teacher"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <span className="menu-collapsed">Approved list</span>
+      </Link>
+    </div>
+    <Link
+      to="/create-question"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-plus-square fa-fw mr-3"></span>
+        <span className="menu-collapsed">Create Question</span>
+      </div>
+    </Link>
+
+    <Link
+      to="/"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-eye fa-fw mr-3"></span>
+        <span className="menu-collapsed">Question Status</span>
+      </div>
+    </Link>
+  </ul>
 );
 
 const TeacherSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar" id="Navbar">
-    Teacher
-    <ul className="nav nav-sidebar d-inline">
-      <li className="active">
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="../notes">Notes</Link>
-      </li>
-      <li>
-        <Link to="../chat">Chat</Link>
-      </li>
-      <li>
-        <Link to="../rss">RSS</Link>
-      </li>
-    </ul>
-  </div>
+  <ul className="list-group sticky-top sticky-offset">
+    <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
+      <b>
+        <small>Teacher</small>
+      </b>
+    </li>
+
+    <Link
+      to="/"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-home fa-fw mr-3"></span>
+        <span className="menu-collapsed">Home</span>
+      </div>
+    </Link>
+  </ul>
 );
 
 const ModeratorSidebar = () => (
-  <div className="col-sm-3 col-md-2 sidebar" id="Navbar">
-    Moderator
-    <ul className="nav nav-sidebar d-inline">
-      <li className="active">
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="../notes">Notes</Link>
-      </li>
-      <li>
-        <Link to="../chat">Chat</Link>
-      </li>
-      <li>
-        <Link to="../rss">RSS</Link>
-      </li>
-    </ul>
-  </div>
+  <ul className="list-group sticky-top sticky-offset">
+    <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
+      <b>
+        <small>Moderator</small>
+      </b>
+    </li>
+
+    <Link
+      to="/"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-home fa-fw mr-3"></span>
+        <span className="menu-collapsed">Home</span>
+      </div>
+    </Link>
+  </ul>
 );
 
 class SideBar extends Component {
@@ -163,18 +202,24 @@ class SideBar extends Component {
 
   render() {
     const { roles } = this.props;
-
-    if (roles.includes(Roles.ADMIN)) {
-      return <AdminSidebar />;
-    } else if (roles.includes(Roles.MODERATOR)) {
-      return <ModeratorSidebar />;
-    } else if (roles.includes(Roles.HEADMASTER)) {
-      return <HeadMasterSidebar />;
-    } else if (roles.includes(Roles.TEACHER)) {
-      return <TeacherSidebar />;
-    } else {
-      return <h1>Access Denied</h1>;
-    }
+    return (
+      <div
+        id="sidebar-container"
+        className="sidebar-expanded d-none d-md-block col-2 "
+      >
+        {roles.includes(Roles.ADMIN) ? (
+          <AdminSidebar />
+        ) : roles.includes(Roles.MODERATOR) ? (
+          <ModeratorSidebar />
+        ) : roles.includes(Roles.HEADMASTER) ? (
+          <HeadMasterSidebar />
+        ) : roles.includes(Roles.TEACHER) ? (
+          <TeacherSidebar />
+        ) : (
+          <h1>Access Denied</h1>
+        )}
+      </div>
+    );
   }
 }
 

@@ -15,13 +15,7 @@ export default class UserDetails extends Component {
 
     return (
       <div className="bg-primary">
-        <Modal
-          size="md"
-          isOpen={isOpen}
-          centered
-          backdrop={false}
-          toggle={toggle}
-        >
+        <Modal size="md" isOpen={isOpen} centered toggle={toggle}>
           <ModalHeader>User Information</ModalHeader>
           <ModalBody>
             <table className="table table-bordered">

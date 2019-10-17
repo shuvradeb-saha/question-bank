@@ -75,7 +75,7 @@ class AllocateSubject extends Component {
 
     return (
       <div className="container-fluid">
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal centered isOpen={isOpen} toggle={toggle}>
           <ModalHeader toggle={toggle}>
             {`Allocate subject to ${this.props.teacherName}`}
           </ModalHeader>
