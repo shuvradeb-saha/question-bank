@@ -8,6 +8,7 @@ import spl.question.bank.database.model.Role;
 import spl.question.bank.model.admin.UserDto;
 import spl.question.bank.model.admin.UserInfo;
 import spl.question.bank.service.UserService;
+
 import java.security.SecureRandom;
 import java.util.List;
 
@@ -40,15 +41,15 @@ public class UserController {
   }
 
   @RequestMapping(value = "/user/{id}",
-          method = RequestMethod.GET,
-          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public UserDto getUser(final @PathVariable Integer id) {
     return userService.getUserById(id);
   }
 
   @RequestMapping(value = "/users",
-          method = RequestMethod.GET,
-          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<UserInfo> getUsers() {
     return userService.getUsersInfo();
   }
@@ -62,15 +63,20 @@ public class UserController {
   }
 
   @RequestMapping(value = "/roles",
-          method = RequestMethod.GET,
-          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<Role> getRoles() {
     return userService.getAllRoles();
   }
 
-  @RequestMapping(value = "/teacher/new-moderator/{id}", method = RequestMethod.POST)
-  public boolean makeModerator(final @PathVariable("id") Integer id) {
-    return userService.addModerator(id);
+  @RequestMapping(value = "/moderator/{action}/{id}", method = RequestMethod.POST)
+  public boolean makeModerator(final @PathVariable("action") ActionType action,
+                               final @PathVariable("id") Integer id) {
+    return userService.addRemoveModerator(action, id);
+  }
+
+  public enum ActionType {
+    add, remove
   }
 
 /*

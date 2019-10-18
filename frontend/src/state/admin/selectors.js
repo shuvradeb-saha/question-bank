@@ -80,3 +80,8 @@ export const makeChapter = () =>
     selectAdmin,
     adminState => adminState.get('chapters').get('details')
   );
+export const makeInProgress = () =>
+  createSelector(
+    selectAdmin,
+    adminState => adminState.get('inProgress')
+  );

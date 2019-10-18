@@ -150,6 +150,39 @@ const HeadMasterSidebar = () => (
         <span className="menu-collapsed">Question Status</span>
       </div>
     </Link>
+    <a
+      href="#question-status"
+      data-toggle="collapse"
+      aria-expanded="false"
+      className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-tasks fa-fw mr-3"></span>
+        <span className="menu-collapsed">Question Status</span>
+        <span className="submenu-icon ml-auto"></span>
+      </div>
+    </a>
+
+    <div id="question-status" className="collapse sidebar-submenu">
+      <Link
+        to="/question/pending"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <span className="menu-collapsed">Pending list</span>
+      </Link>
+      <Link
+        to="/question/approved"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <span className="menu-collapsed">Approved list</span>
+      </Link>
+      <Link
+        to="/question/rejected"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <span className="menu-collapsed">Rejected list</span>
+      </Link>
+    </div>
   </ul>
 );
 

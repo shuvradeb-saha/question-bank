@@ -1,27 +1,36 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+
+import { makeallAocatedSubjects } from 'state/login/selectors';
 
 class CreateQuestion extends Component {
+  static propTypes = {
+    allocatedSubjects: PropTypes.object,
+  };
+
   render() {
-    const isSubjectEmpty = false;
-    return isSubjectEmpty ? (
+    const { allocatedSubjects } = this.props;
+
+    const hasSubject = allocatedSubjects && allocatedSubjects.size > 0;
+    return !hasSubject ? (
       <div className="alert alert-danger">
-        <p>
-          <h3>
-            <b>
-              <i className="fa fa-frown-o" aria-hidden="true"></i>
-              {'   '}দুঃখিত!!
-            </b>{' '}
-            আপনাকে কোন বিষয় প্রদান করা হয়নি। এই মুহুর্তে আপনি কোন প্রশ্ন তৈরী
-            করতে পারছেন না। বিষয় নির্ধারনের জন্য আপনার প্রতিষ্ঠান প্রধানের সাথে
-            যোগাযোগ করুন।
-          </h3>
-        </p>
+        <h3>
+          <b>
+            <i className="fa fa-frown-o" aria-hidden="true"></i>
+            {'   '}দুঃখিত!!
+          </b>{' '}
+          আপনাকে কোন বিষয় প্রদান করা হয়নি। এই মুহুর্তে আপনি কোন প্রশ্ন তৈরী করতে
+          পারছেন না। বিষয় নির্ধারনের জন্য আপনার প্রতিষ্ঠান প্রধানের সাথে যোগাযোগ
+          করুন।
+        </h3>
       </div>
     ) : (
       <div className="container">
         <div className="card text-white">
-          <div className="card-header" style={{ backgroundColor: '#3b808b' }}>
+          <div className="card-header bg-dark">
             <i className="fa fa-arrow-right" aria-hidden="true"></i>
             <span style={{ marginLeft: 5 }}>
               MCQ (Multiple Choice Question/বহুনির্বাচনী প্রশ্ন)
@@ -62,7 +71,7 @@ class CreateQuestion extends Component {
         </div>
         <br />
         <div className="card text-white">
-          <div className="card-header" style={{ backgroundColor: '#3b808b' }}>
+          <div className="card-header bg-dark">
             <i className="fa fa-arrow-right" aria-hidden="true"></i>
             <span style={{ marginLeft: 5 }}>
               CQ (Creative Question/সৃজনশীল প্রশ্ন)
@@ -86,4 +95,10 @@ class CreateQuestion extends Component {
   }
 }
 
-export default CreateQuestion;
+const mapStateToProps = createStructuredSelector({
+  allocatedSubjects: makeallAocatedSubjects(),
+});
+
+const withConnect = connect(mapStateToProps);
+
+export default withConnect(CreateQuestion);

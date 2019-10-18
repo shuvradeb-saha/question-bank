@@ -230,7 +230,7 @@ class TeacherTable extends Component {
     return (
       <span>
         <div className="card">
-          <div className={`card-header bg-teacher-list`}>
+          <div className={`card-header bg-dark text-light`}>
             <b>
               {type === TableType.PENDING
                 ? TableType.PENDING.description

@@ -15,7 +15,7 @@ export function* saveQuestion({ payload: { question, type } }) {
       const saved = yield call(API.post, saveNewUri, question);
       console.log('saved question', saved);
 
-      toastSuccess('Question submitted for approval successfully.');
+      toastSuccess('Question has successfully submitted for approval.');
     } catch (error) {
       toastError('Unable to save.');
       console.log('Error: ', error);

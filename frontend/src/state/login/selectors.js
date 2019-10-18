@@ -59,3 +59,9 @@ export const makeUserId = () =>
     selectLogin,
     loginState => loginState.get('user').get('id')
   );
+
+export const makeallAocatedSubjects = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('allocatedSubjects')
+  );

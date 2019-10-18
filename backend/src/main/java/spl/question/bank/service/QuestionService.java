@@ -105,7 +105,8 @@ public class QuestionService {
     }
   }
 
-  public MCQDto getMcqById(Integer mcqId) throws IOException {
+  public MCQDto
+  getMcqById(Integer mcqId) throws IOException {
     val mcqQuestion = mcqMapper.selectByPrimaryKey(mcqId);
     if (isNull(mcqQuestion)) {
       throw new IllegalArgumentException("No MCQ found with id => " + mcqId);

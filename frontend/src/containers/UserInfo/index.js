@@ -7,7 +7,9 @@ import { MDBDataTable } from 'mdbreact';
 import { reset } from 'redux-form';
 import { change } from 'redux-form';
 import moment from 'moment';
+import Loader from 'react-loader-spinner';
 import { UserRegisterModal } from 'components/Modals';
+import { Roles } from 'containers/App/constants';
 import {
   fetchAllRoles,
   fetchEiinNumbers,
@@ -22,8 +24,17 @@ import {
   makeAllEiinNumbers,
   makeAllUsers,
   makeNewPassword,
+  makeInProgress,
   makeUserDetails,
 } from 'state/admin/selectors';
+
+import API from 'utils/api';
+import { toastSuccess, toastError } from 'components/Toaster';
+
+const ActionType = {
+  remove: 'remove',
+  add: 'add',
+};
 
 class UserInfo extends Component {
   static propTypes = {
@@ -35,12 +46,15 @@ class UserInfo extends Component {
     fetchAllUsers: PropTypes.func,
     fetchNewPassword: PropTypes.func,
     fetchUser: PropTypes.func,
+    inProgress: PropTypes.bool.isRequired,
     password: PropTypes.string,
     resetForm: PropTypes.func,
     setPassword: PropTypes.func,
     saveUser: PropTypes.func,
     userDetails: PropTypes.object,
   };
+
+  static defaultProps = { inProgress: false };
 
   constructor(props) {
     super(props);
@@ -97,6 +111,55 @@ class UserInfo extends Component {
     }));
   };
 
+  onModeratorOption = async (id, type = '') => {
+    if (type === ActionType.remove) {
+      if (
+        !this.isPropmpted(
+          'The teacher will not be able to moderate question. Are you sure?'
+        )
+      ) {
+        return;
+      } else {
+        const res = await API.post(
+          `/api/admin/moderator/${ActionType.remove}/${id}`
+        );
+        if (res) {
+          toastSuccess('Removed moderatorship from this user');
+          this.props.history.push('/manage-user');
+        } else {
+          toastError('Unable to remove this teacher from moderator');
+        }
+      }
+    } else {
+      if (
+        !this.isPropmpted(
+          'The teacher will be able to moderate question. Are you sure?'
+        )
+      ) {
+        return;
+      } else {
+        const res = await API.post(
+          `/api/admin/moderator/${ActionType.add}/${id}`
+        );
+
+        if (res) {
+          toastSuccess('Teacher added as moderator');
+          this.props.history.push('/manage-user');
+        } else {
+          toastError('Unable to add this teacher as moderator');
+        }
+      }
+    }
+  };
+
+  isPropmpted = msg => {
+    if (window.confirm(msg)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   generatePassword = () => {
     const { fetchNewPassword, setPassword, password } = this.props;
     fetchNewPassword();
@@ -136,18 +199,40 @@ class UserInfo extends Component {
         width: 200,
       },
     ];
+
     const rows = users.map(user => ({
       userName: user.get('name'),
       instituteName: user.get('instituteName'),
       eiinNumber: user.get('eiinNumber'),
       roles: user.get('roles'),
       action: (
-        <button
-          className="btn btn-sm btn-outline-info"
-          onClick={() => this.onEditClick(user.get('id'))}
-        >
-          Edit
-        </button>
+        <span>
+          <button
+            className="btn btn-sm btn-outline-info"
+            onClick={() => this.onEditClick(user.get('id'))}
+          >
+            Edit
+          </button>
+          {user.get('roles').includes(Roles.MODERATOR) ? (
+            <button
+              className="btn btn-sm btn-outline-primary"
+              onClick={() =>
+                this.onModeratorOption(user.get('id'), ActionType.remove)
+              }
+            >
+              Remove Moderator
+            </button>
+          ) : (
+            <button
+              className="btn btn-sm btn-outline-dark"
+              onClick={() =>
+                this.onModeratorOption(user.get('id'), ActionType.add)
+              }
+            >
+              Make Moderator
+            </button>
+          )}
+        </span>
       ),
     }));
     return { columns, rows: rows.toJS() };
@@ -183,18 +268,22 @@ class UserInfo extends Component {
         <div className="row">
           <div className="col">
             <button className="btn btn-primary" onClick={this.onCreateClick}>
-              Create New User
+              Create User
             </button>
           </div>
         </div>
         <div className="row">
-          <div className="col">
-            <MDBDataTable
-              striped
-              bordered
-              small
-              data={this.createDataForTable(allUsers)}
-            />
+          <div className="col text-center card">
+            {this.props.inProgress ? (
+              <Loader color="black" type="ThreeDots" width="200" height="400" />
+            ) : (
+              <MDBDataTable
+                striped
+                bordered
+                small
+                data={this.createDataForTable(allUsers)}
+              />
+            )}
           </div>
         </div>
         <UserRegisterModal
@@ -218,6 +307,7 @@ const mapStateToProps = createStructuredSelector({
   allRoles: makeAllRoles(),
   allEiinNumbers: makeAllEiinNumbers(),
   allUsers: makeAllUsers(),
+  inProgress: makeInProgress(),
   password: makeNewPassword(),
   userDetails: makeUserDetails(),
 });
