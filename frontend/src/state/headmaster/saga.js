@@ -16,7 +16,7 @@ export function* fetchPendingTeacherList({ payload: { eiin } }) {
     yield put(fetchPendingTeacherSuccess(pendingList));
   } catch (error) {
     console.log('Error', error);
-    toastError('Unable to fetch');
+    toastError('Unable to fetch pending teachers.');
   }
 }
 
@@ -27,7 +27,7 @@ export function* fetchApprovedTeacherList({ payload: { eiin } }) {
     yield put(fetchApprovedTeacherSuccess(approvedList));
   } catch (error) {
     console.log('Error', error);
-    toastError('Unable to fetch');
+    toastError('Unable to fetch approved teachers.');
   }
 }
 

@@ -15,7 +15,7 @@ class QuestionRoute extends Component {
         <Switch>
           <Route
             exact
-            path="/stem-mcq"
+            path="/question-mcq-stem"
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.STEM} />
@@ -25,7 +25,7 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path={`/general-mcq`}
+            path={`/question-mcq-general`}
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.GENERAL} />
@@ -35,7 +35,7 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path="/polynomial-mcq"
+            path="/question-mcq-polynomial"
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.POLYNOMIAL} />
@@ -45,7 +45,22 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path="/cq"
+            path="/question-pending"
+            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+          />
+          <Route
+            exact
+            path="/question-approved"
+            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+          />
+          <Route
+            exact
+            path="/question-rejected"
+            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+          />
+          <Route
+            exact
+            path="/question-cq"
             component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
           />
           <Route path="" component={NotFound} />

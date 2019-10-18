@@ -45,13 +45,13 @@ public class UserService {
   private final TeacherService teacherService;
 
   public UserService(final UserMapper userMapper,
-                     final UserRoleMapper userRoleMapper,
-                     final RoleMapper roleMapper,
-                     final InstituteMapper instituteMapper,
-                     final JwtConfig jwtConfig,
-                     final BCryptPasswordEncoder encoder,
-                     final MailService mailService,
-                     final TeacherService teacherService) {
+      final UserRoleMapper userRoleMapper,
+      final RoleMapper roleMapper,
+      final InstituteMapper instituteMapper,
+      final JwtConfig jwtConfig,
+      final BCryptPasswordEncoder encoder,
+      final MailService mailService,
+      final TeacherService teacherService) {
     this.userMapper = userMapper;
     this.userRoleMapper = userRoleMapper;
     this.roleMapper = roleMapper;
@@ -295,5 +295,26 @@ public class UserService {
       userRoleMapper.deleteByExample(ex);
     }
     return true;
+  }
+
+  public List<User> getModeratorBySubject(Integer subjectId) {
+    val allUsers = userMapper.selectByExample(null);
+    val allUserRole = userRoleMapper.selectByExample(null);
+
+    return allUsers.stream()
+        .filter(user -> isModeratorOfSubject(user.getId(), allUserRole, subjectId))
+        .collect(toList());
+  }
+
+  private boolean isModeratorOfSubject(Integer userId, List<UserRole> allUserRole,
+      Integer subjectId) {
+
+    for (UserRole userRole : allUserRole) {
+      if (userRole.getUserId().equals(userId) && userRole.getRoleId()
+          .equals(Roles.MODERATOR.getValue())) {
+        return teacherService.getAllocatedSubject(userId).contains(subjectId);
+      }
+    }
+    return false;
   }
 }

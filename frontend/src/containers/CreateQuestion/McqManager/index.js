@@ -44,7 +44,6 @@ class McqManager extends Component {
         mcqType: this.props.mcqType,
       };
 
-      //console.log('questionData', questionData);
       this.props.saveMcq(questionData, QuestionType.MCQ);
     } else {
       return;

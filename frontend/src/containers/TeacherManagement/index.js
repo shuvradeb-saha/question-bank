@@ -37,9 +37,9 @@ class TeacherManagement extends Component {
   }
 
   componentDidMount() {
-    const { eiin, fetchApprovedList, fetchPendingList } = this.props;
-    fetchPendingList(eiin);
-    fetchApprovedList(eiin);
+    const { eiin, fetchApprovedList, fetchPendingList, type } = this.props;
+    if (type === TableType.PENDING) fetchPendingList(eiin);
+    if (type === TableType.APPROVED) fetchApprovedList(eiin);
   }
 
   onToggle = () => {

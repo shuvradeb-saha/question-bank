@@ -43,7 +43,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/general-mcq" className="text-dark">
+                  <Link to="/question-mcq-general" className="text-dark">
                     General MCQ (সাধারণ বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -52,7 +52,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/polynomial-mcq" className="text-dark">
+                  <Link to="/question-mcq-polynomial" className="text-dark">
                     Polynomial MCQ (বহুপদীসমাপ্তিসূচক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -61,7 +61,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/stem-mcq" className="text-dark">
+                  <Link to="/question-mcq-stem" className="text-dark">
                     Stem Based MCQ (উদ্দীপকভিত্তিক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -83,7 +83,7 @@ class CreateQuestion extends Component {
                 <span style={{ marginRight: 10 }}>
                   <i className="fa fa-check-square" aria-hidden="true"></i>
                 </span>
-                <Link to="/cq" className="text-dark">
+                <Link to="/question-cq" className="text-dark">
                   Create CQ Question
                 </Link>
               </li>

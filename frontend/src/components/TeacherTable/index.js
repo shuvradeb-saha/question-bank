@@ -225,7 +225,6 @@ class TeacherTable extends Component {
 
   render() {
     const { type, classes, subjects, selectedClass } = this.props;
-    // const classOfHeader = type === TableType.PENDING ? 'bg-info' : 'bg-success';
 
     return (
       <span>

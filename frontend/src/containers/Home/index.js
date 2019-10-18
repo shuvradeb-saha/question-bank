@@ -91,26 +91,3 @@ const withConnect = connect(
 );
 
 export default withRouter(withConnect(HomePage));
-{
-  /* <div className="container-fluid">
-          <div className="row">
-            <SideBar roles={roles.toJS()} />
-            <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
-              <div className="container mt-3">
-                <div>
-                  {roles.toJS().includes(Roles.ADMIN) ? (
-                    <AdminContent />
-                  ) : roles.toJS().includes(Roles.HEADMASTER) ? (
-                    <HeadmasterContent />
-                  ) : roles.toJS().includes(Roles.HEADMASTER) ||
-                    roles.toJS().includes(Roles.TEACHER) ? (
-                    <HeadmasterContent />
-                  ) : (
-                    <AccessDenied />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */
-}

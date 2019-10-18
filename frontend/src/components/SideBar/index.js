@@ -119,20 +119,20 @@ const HeadMasterSidebar = () => (
 
     <div id="teacher-list" className="collapse sidebar-submenu">
       <Link
-        to="/pending-teacher"
+        to="/teacher-pending"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Pending list</span>
       </Link>
       <Link
-        to="/approved-teacher"
+        to="/teacher-approved"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Approved list</span>
       </Link>
     </div>
     <Link
-      to="/create-question"
+      to="/question-create"
       className="list-group-item list-group-item-action bg-dark text-white"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -141,15 +141,6 @@ const HeadMasterSidebar = () => (
       </div>
     </Link>
 
-    <Link
-      to="/"
-      className="list-group-item list-group-item-action bg-dark text-white"
-    >
-      <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-eye fa-fw mr-3"></span>
-        <span className="menu-collapsed">Question Status</span>
-      </div>
-    </Link>
     <a
       href="#question-status"
       data-toggle="collapse"
@@ -157,7 +148,7 @@ const HeadMasterSidebar = () => (
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-tasks fa-fw mr-3"></span>
+        <span className="fa fa-eye fa-fw mr-3"></span>
         <span className="menu-collapsed">Question Status</span>
         <span className="submenu-icon ml-auto"></span>
       </div>
@@ -165,19 +156,19 @@ const HeadMasterSidebar = () => (
 
     <div id="question-status" className="collapse sidebar-submenu">
       <Link
-        to="/question/pending"
+        to="/question-pending"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Pending list</span>
       </Link>
       <Link
-        to="/question/approved"
+        to="/question-approved"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Approved list</span>
       </Link>
       <Link
-        to="/question/rejected"
+        to="/question-rejected"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Rejected list</span>
@@ -199,8 +190,8 @@ const TeacherSidebar = () => (
       className="list-group-item list-group-item-action bg-dark text-white"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-home fa-fw mr-3"></span>
         <span className="menu-collapsed">Home</span>
+        <span className="fa fa-home fa-fw mr-3"></span>
       </div>
     </Link>
   </ul>

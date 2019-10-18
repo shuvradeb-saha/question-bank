@@ -26,7 +26,7 @@ class HeadmasterContent extends Component {
           />
           <Route
             exact
-            path="/approved-teacher"
+            path="/teacher-approved"
             component={Authorization(
               () => (
                 <TeacherManagement type={TableType.APPROVED} />
@@ -37,7 +37,7 @@ class HeadmasterContent extends Component {
 
           <Route
             exact
-            path="/pending-teacher"
+            path="/teacher-pending"
             component={Authorization(
               () => (
                 <TeacherManagement type={TableType.PENDING} />
@@ -48,12 +48,12 @@ class HeadmasterContent extends Component {
 
           <Route
             exact
-            path="/create-question"
+            path="/question-create"
             component={Authorization(CreateQuestion, [Roles.HEADMASTER])}
           />
           <Route
             exact
-            path="/download-question"
+            path="/question-download"
             component={Authorization(Download, [Roles.HEADMASTER])}
           />
           <QuestionRoute />
