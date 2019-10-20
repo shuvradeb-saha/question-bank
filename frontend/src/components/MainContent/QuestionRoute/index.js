@@ -4,6 +4,8 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
+import { QuestionStatusManagement } from 'containers';
+import { QuestionStatusType } from 'containers/QuestionStatusManager/StatusType';
 import { McqManager, McqType } from 'containers/CreateQuestion/Question';
 
 const CQ = () => <h1>CQ Question</h1>;
@@ -46,17 +48,32 @@ class QuestionRoute extends Component {
           <Route
             exact
             path="/question-pending"
-            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+            component={Authorization(
+              () => (
+                <QuestionStatusManagement type={QuestionStatusType.PENDING} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER]
+            )}
           />
           <Route
             exact
             path="/question-approved"
-            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+            component={Authorization(
+              () => (
+                <QuestionStatusManagement type={QuestionStatusType.PENDING} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER]
+            )}
           />
           <Route
             exact
             path="/question-rejected"
-            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+            component={Authorization(
+              () => (
+                <QuestionStatusManagement type={QuestionStatusType.APPROVED} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER]
+            )}
           />
           <Route
             exact

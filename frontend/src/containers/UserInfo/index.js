@@ -46,6 +46,7 @@ class UserInfo extends Component {
     fetchAllUsers: PropTypes.func,
     fetchNewPassword: PropTypes.func,
     fetchUser: PropTypes.func,
+    history: PropTypes.any,
     inProgress: PropTypes.bool.isRequired,
     password: PropTypes.string,
     resetForm: PropTypes.func,

@@ -47,6 +47,8 @@ function reducer(state = initialState, { type, payload }) {
         .merge({ authenticated: true, inProgress: false, error: '' });
     }
 
+    //todo => failed login inprogress stopping
+
     case FETCH_CURRENT_PROFILE: {
       return state.merge({ inProgress: true, error: '' });
     }

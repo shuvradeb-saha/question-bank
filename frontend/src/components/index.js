@@ -8,3 +8,4 @@ export { default as NotFound } from './ErrorComponent/NotFound';
 export { default as AccessDenied } from './ErrorComponent/AccessDenied';
 export { default as Toaster } from './Toaster';
 export { default as TeacherTable } from './TeacherTable';
+export { default as QuestionList } from './QuestionList';
