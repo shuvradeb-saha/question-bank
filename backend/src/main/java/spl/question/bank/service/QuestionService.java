@@ -2,8 +2,10 @@ package spl.question.bank.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Random;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -41,8 +43,8 @@ public class QuestionService {
 
 
   public QuestionService(final MCQQuestionMapper mcqMapper,
-      final UserService userService,
-      final ModeratorQuestionMapper moderatorQuestionMapper) {
+                         final UserService userService,
+                         final ModeratorQuestionMapper moderatorQuestionMapper) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
     this.moderatorQuestionMapper = moderatorQuestionMapper;
@@ -91,7 +93,7 @@ public class QuestionService {
 
   @Transactional
   void submitToModerator(Integer subjectId, Integer questionId,
-      QuestionType questionType) {
+                         QuestionType questionType) {
     val allModerators = userService.getModeratorBySubject(subjectId);
 
     if (allModerators.size() <= 0) {
@@ -206,17 +208,21 @@ public class QuestionService {
   }
 
   public List<MCQDto> getMcqListByStatus(QuestionStatus status, Integer teacherId) {
-    MCQQuestionExample ex = new MCQQuestionExample();
-    ex.createCriteria().andCreatedByEqualTo(teacherId).andStatusEqualTo(status.name());
+    val ex = new MCQQuestionExample();
+    ex.createCriteria()
+        .andCreatedByEqualTo(teacherId)
+        .andStatusEqualTo(status.name());
 
-    return mcqMapper.selectByExample(ex).stream().map(mcqQuestion -> {
-      try {
-        return getMcqById(mcqQuestion.getId());
-      } catch (IOException e) {
-        logger.error("Exception occur =>" + e);
-        throw new RuntimeException("Question not found.");
-      }
-    }).collect(toList());
+    return mcqMapper.selectByExample(ex)
+        .stream()
+        .map(mcqQuestion -> {
+          try {
+            return getMcqById(mcqQuestion.getId());
+          } catch (IOException e) {
+            logger.error("Exception occur => " + e);
+            throw new RuntimeException("Question not found.");
+          }
+        }).collect(toList());
   }
 
 }

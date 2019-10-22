@@ -2,6 +2,7 @@ package spl.question.bank.service.similarity;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,15 +33,44 @@ public class TfIdfExtractor {
 
 
   public HashMap<String, Double> calculateIfIDf(
+      final List<String> combinedDocTokens,
       final List<String> document,
       final HashMap<Integer, List<String>> allDocuments) {
 
     HashMap<String, Double> tfIdfMap = new HashMap<>();
-    for (String term : document) {
+    for (String term : combinedDocTokens) {
       double tf = termFrequency(term, document);
       double idf = inverseDocFrequency(term, allDocuments);
       tfIdfMap.put(term, (tf * idf));
     }
     return tfIdfMap;
+  }
+
+
+  public double calculateCosineSimilarity(final HashMap<String, Double> tfIdfQueryMap,
+                                          final HashMap<String, Double> tfIdfDbMap) {
+    List<Double> tfIdfQuery = new ArrayList<>(tfIdfQueryMap.values());
+    List<Double> tfIdfDb = new ArrayList<>(tfIdfDbMap.values());
+
+    double dotProductSum = 0.0, cosineSimilarity;
+    for (int i = 0; i < tfIdfDb.size(); i++) {
+      dotProductSum += (tfIdfDb.get(i) * tfIdfQuery.get(i));
+    }
+    // rootover(a^2+b^2+c^2)
+    double rootSqrQuery = getSqrt(tfIdfQuery);
+    double rootSqrDb = getSqrt(tfIdfDb);
+    double sqrRtProduct = rootSqrDb * rootSqrQuery;
+
+    cosineSimilarity = dotProductSum / sqrRtProduct;
+
+    return cosineSimilarity;
+  }
+
+  private double getSqrt(List<Double> tfIdfVector) {
+    double sum = 0.0;
+    for (int i = 0; i < tfIdfVector.size(); i++) {
+      sum += Math.pow(tfIdfVector.get(i), 2);
+    }
+    return Math.sqrt(sum);
   }
 }
