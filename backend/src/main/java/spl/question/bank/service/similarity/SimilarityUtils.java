@@ -1,6 +1,7 @@
 package spl.question.bank.service.similarity;
 
 import lombok.val;
+import org.springframework.stereotype.Service;
 import spl.question.bank.model.question.mcq.*;
 
 import java.util.*;
@@ -9,7 +10,30 @@ import static java.lang.Character.MIN_VALUE;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isAlpha;
 
+@Service
 public class SimilarityUtils {
+
+  public HashMap<Integer, List<String>> getTokenizedMap(List<MCQDto> questions) {
+
+    val start = System.currentTimeMillis();
+    val questionWords = new HashMap<Integer, List<String>>();
+    for (int i = 0; i < 10000; i++) {
+      List<String> tokens = new ArrayList<>();
+
+      GeneralMCQDetail generalMCQDetail = new GeneralMCQDetail();
+      generalMCQDetail.setQuestionBody("তথ্যকে ()*(__)বিশ্লেষণ করলে কী বের হয়ে আসে?");
+      generalMCQDetail.setOption1("জ্ঞান");
+      generalMCQDetail.setOption2("প্রেক্ষাপট");
+      generalMCQDetail.setOption3("ঘটনা");
+      generalMCQDetail.setOption4("উপাত্ত");
+      generalMCQDetail.setAnswer(4);
+
+      questionWords.put(i, extractFromGeneralMcq(generalMCQDetail));
+    }
+
+    System.out.println("Total time = " + (System.currentTimeMillis() - start));
+    return questionWords;
+  }
 
   public List<String> extractFromGeneralMcq(GeneralMCQDetail detail) {
     List<String> tokens = new ArrayList<>();
@@ -45,28 +69,6 @@ public class SimilarityUtils {
       }
     }
     return tokens;
-  }
-
-  public HashMap<Integer, List<String>> getTokenizedMap(List<MCQDto> questions) {
-
-    val start = System.currentTimeMillis();
-    val questionWords = new HashMap<Integer, List<String>>();
-    for (int i = 0; i < 10000; i++) {
-      List<String> tokens = new ArrayList<>();
-
-      GeneralMCQDetail generalMCQDetail = new GeneralMCQDetail();
-      generalMCQDetail.setQuestionBody("তথ্যকে ()*(__)বিশ্লেষণ করলে কী বের হয়ে আসে?");
-      generalMCQDetail.setOption1("জ্ঞান");
-      generalMCQDetail.setOption2("প্রেক্ষাপট");
-      generalMCQDetail.setOption3("ঘটনা");
-      generalMCQDetail.setOption4("উপাত্ত");
-      generalMCQDetail.setAnswer(4);
-
-      questionWords.put(i, extractFromGeneralMcq(generalMCQDetail));
-    }
-
-    System.out.println("Total time = " + (System.currentTimeMillis() - start));
-    return questionWords;
   }
 
   private List<String> tokenize(String questionStr) {
