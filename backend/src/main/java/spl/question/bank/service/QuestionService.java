@@ -43,8 +43,8 @@ public class QuestionService {
 
 
   public QuestionService(final MCQQuestionMapper mcqMapper,
-                         final UserService userService,
-                         final ModeratorQuestionMapper moderatorQuestionMapper) {
+      final UserService userService,
+      final ModeratorQuestionMapper moderatorQuestionMapper) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
     this.moderatorQuestionMapper = moderatorQuestionMapper;
@@ -93,10 +93,11 @@ public class QuestionService {
 
   @Transactional
   void submitToModerator(Integer subjectId, Integer questionId,
-                         QuestionType questionType) {
+      QuestionType questionType) {
     val allModerators = userService.getModeratorBySubject(subjectId);
 
     if (allModerators.size() <= 0) {
+      mcqMapper.deleteByPrimaryKey(questionId);
       throw new RuntimeException("No moderator exists yet. Please submit question later");
     }
 

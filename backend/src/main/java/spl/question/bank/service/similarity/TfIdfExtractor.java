@@ -32,7 +32,7 @@ public class TfIdfExtractor {
   }
 
 
-  public HashMap<String, Double> calculateIfIDf(
+  public HashMap<String, Double> calculateTfIDf(
       final List<String> combinedDocTokens,
       final List<String> document,
       final HashMap<Integer, List<String>> allDocuments) {
@@ -47,11 +47,8 @@ public class TfIdfExtractor {
   }
 
 
-  public double calculateCosineSimilarity(final HashMap<String, Double> tfIdfQueryMap,
-                                          final HashMap<String, Double> tfIdfDbMap) {
-    List<Double> tfIdfQuery = new ArrayList<>(tfIdfQueryMap.values());
-    List<Double> tfIdfDb = new ArrayList<>(tfIdfDbMap.values());
-
+  public double calculateCosineSimilarity(final List<Double> tfIdfQuery,
+                                          final List<Double> tfIdfDb) {
     double dotProductSum = 0.0, cosineSimilarity;
     for (int i = 0; i < tfIdfDb.size(); i++) {
       dotProductSum += (tfIdfDb.get(i) * tfIdfQuery.get(i));

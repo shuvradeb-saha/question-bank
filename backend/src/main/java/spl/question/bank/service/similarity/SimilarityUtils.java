@@ -20,15 +20,9 @@ public class SimilarityUtils {
 
     val start = System.currentTimeMillis();
     val questionWords = new HashMap<Integer, List<String>>();
+
     questions.forEach(mcqDto -> {
-      List<String> question = new ArrayList<>();
-      if (mcqDto instanceof GeneralMCQDto) {
-        question = extractFromGeneralMcq(((GeneralMCQDto) mcqDto).getGeneralMCQDetail());
-      } else if (mcqDto instanceof PolynomialMCQDto) {
-        question = extractFromPolynomialMcq(((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
-      } else {
-        question = extractFromStemMcq(((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail());
-      }
+      List<String> question = extractTokenFromDto(mcqDto);
       questionWords.put(mcqDto.getId(), question);
     });
 
@@ -88,7 +82,7 @@ public class SimilarityUtils {
   }
 
   private String removeBadCharacters(String token) {
-    val badChar = "!#$%^&*()_-+|{}[]'`;:<>~?";
+    val badChar = "!#$%^&*()_-+|{}[]'`;:<>~?।";
     for (int i = 0; i < badChar.length(); i++) {
       for (int j = 0; j < token.length(); j++) {
         if (token.charAt(j) == badChar.charAt(i)) {
@@ -99,4 +93,16 @@ public class SimilarityUtils {
     return token;
   }
 
+  public List<String> extractTokenFromDto(MCQDto mcqDto) {
+    List<String> tokenizedQuery;
+    if (mcqDto instanceof GeneralMCQDto) {
+      tokenizedQuery = extractFromGeneralMcq(((GeneralMCQDto) mcqDto).getGeneralMCQDetail());
+    } else if (mcqDto instanceof PolynomialMCQDto) {
+      tokenizedQuery = extractFromPolynomialMcq(
+          ((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
+    } else {
+      tokenizedQuery = extractFromStemMcq(((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail());
+    }
+    return tokenizedQuery;
+  }
 }
