@@ -2,15 +2,21 @@ import { createSelector } from 'reselect';
 import { REDUCER_NAME } from './constants';
 
 export const selectQuestion = state => state.get(REDUCER_NAME);
-/* 
-export const makePendingList = () =>
+
+export const makePendingMcqs = status =>
   createSelector(
-    selectHeadmaster,
-    headmasterState => headmasterState.get('pendingTeachers')
+    selectQuestion,
+    questionState => questionState.get('pendingMcqs')
   );
 
-export const makeApprovedList = () =>
+export const makeApprovedMcqs = status =>
   createSelector(
-    selectHeadmaster,
-    headmasterState => headmasterState.get('approvedTeachers')
-  ); */
+    selectQuestion,
+    questionState => questionState.get('approvedMcqs')
+  );
+
+export const makeRejectedMcqs = status =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('rejectedMcqs')
+  );

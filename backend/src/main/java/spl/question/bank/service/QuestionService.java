@@ -43,8 +43,8 @@ public class QuestionService {
 
 
   public QuestionService(final MCQQuestionMapper mcqMapper,
-      final UserService userService,
-      final ModeratorQuestionMapper moderatorQuestionMapper) {
+                         final UserService userService,
+                         final ModeratorQuestionMapper moderatorQuestionMapper) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
     this.moderatorQuestionMapper = moderatorQuestionMapper;
@@ -93,7 +93,7 @@ public class QuestionService {
 
   @Transactional
   void submitToModerator(Integer subjectId, Integer questionId,
-      QuestionType questionType) {
+                         QuestionType questionType) {
     val allModerators = userService.getModeratorBySubject(subjectId);
 
     if (allModerators.size() <= 0) {
@@ -156,6 +156,11 @@ public class QuestionService {
     if (isNull(mcqQuestion)) {
       throw new IllegalArgumentException("No MCQ found with id => " + mcqId);
     }
+
+    return extractMcqDto(mcqQuestion);
+  }
+
+  private MCQDto extractMcqDto(MCQQuestion mcqQuestion) throws IOException {
     MCQDto mcqDto;
     if (mcqQuestion.getType().equals(MCQType.GENERAL.name())) {
       mcqDto = extractGeneralDto(mcqQuestion);
@@ -213,12 +218,12 @@ public class QuestionService {
     ex.createCriteria()
         .andCreatedByEqualTo(teacherId)
         .andStatusEqualTo(status.name());
-
+    ex.setOrderByClause("created_at DESC");
     return mcqMapper.selectByExample(ex)
         .stream()
         .map(mcqQuestion -> {
           try {
-            return getMcqById(mcqQuestion.getId());
+            return extractMcqDto(mcqQuestion);
           } catch (IOException e) {
             logger.error("Exception occur => " + e);
             throw new RuntimeException("Question not found.");

@@ -3,9 +3,9 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
-import { NotFound } from 'components';
-import { QuestionStatusManagement } from 'containers';
-import { QuestionStatusType } from 'containers/QuestionStatusManager/StatusType';
+import { NotFound, McqViewer } from 'components';
+import { McqStatusManagement } from 'containers';
+import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqManager, McqType } from 'containers/CreateQuestion/Question';
 
 const CQ = () => <h1>CQ Question</h1>;
@@ -50,7 +50,7 @@ class QuestionRoute extends Component {
             path="/question-pending"
             component={Authorization(
               () => (
-                <QuestionStatusManagement type={QuestionStatusType.PENDING} />
+                <McqStatusManagement type={QuestionStatusType.PENDING} />
               ),
               [Roles.HEADMASTER, Roles.TEACHER]
             )}
@@ -60,7 +60,7 @@ class QuestionRoute extends Component {
             path="/question-approved"
             component={Authorization(
               () => (
-                <QuestionStatusManagement type={QuestionStatusType.PENDING} />
+                <McqStatusManagement type={QuestionStatusType.APPROVED} />
               ),
               [Roles.HEADMASTER, Roles.TEACHER]
             )}
@@ -70,7 +70,7 @@ class QuestionRoute extends Component {
             path="/question-rejected"
             component={Authorization(
               () => (
-                <QuestionStatusManagement type={QuestionStatusType.APPROVED} />
+                <McqStatusManagement type={QuestionStatusType.REJECTED} />
               ),
               [Roles.HEADMASTER, Roles.TEACHER]
             )}
@@ -79,6 +79,13 @@ class QuestionRoute extends Component {
             exact
             path="/question-cq"
             component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+          />
+          <Route
+            path="/mcq/:id"
+            component={Authorization(McqViewer, [
+              Roles.HEADMASTER,
+              Roles.TEACHER,
+            ])}
           />
           <Route path="" component={NotFound} />
         </Switch>

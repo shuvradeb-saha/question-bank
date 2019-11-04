@@ -8,6 +8,8 @@ import lombok.val;
 import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -207,6 +209,12 @@ public class UserService {
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
         .compact();
   }
+
+  public User getAuthenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return getUserByEmail((String) authentication.getPrincipal());
+  }
+
 
   public List<Role> getAllRoles() {
     val roles = roleMapper.selectByExample(null);

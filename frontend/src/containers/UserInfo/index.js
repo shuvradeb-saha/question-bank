@@ -205,7 +205,10 @@ class UserInfo extends Component {
       userName: user.get('name'),
       instituteName: user.get('instituteName'),
       eiinNumber: user.get('eiinNumber'),
-      roles: user.get('roles'),
+      roles: user
+        .get('roles')
+        .toJS()
+        .join(', '),
       action: (
         <span>
           <button
@@ -216,7 +219,7 @@ class UserInfo extends Component {
           </button>
           {user.get('roles').includes(Roles.MODERATOR) ? (
             <button
-              className="btn btn-sm btn-outline-primary"
+              className="btn btn-sm btn-outline-danger"
               onClick={() =>
                 this.onModeratorOption(user.get('id'), ActionType.remove)
               }
