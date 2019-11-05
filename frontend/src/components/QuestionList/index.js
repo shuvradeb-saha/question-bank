@@ -146,8 +146,6 @@ class QuestionList extends Component {
           </div>
           <div className="card-body">
             <MDBDataTable
-              striped
-              bordered
               small
               data={this.createDataForTable(
                 allMcqs,

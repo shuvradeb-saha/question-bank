@@ -5,6 +5,7 @@ import {
   FETCH_ALL_MCQ_FIALURE,
   FETCH_MCQ,
   FETCH_MCQ_SUCCESS,
+  FETCH_MCQ_FAILURE,
 } from './constants';
 
 export function saveQuestion(question, type) {
@@ -29,4 +30,9 @@ export function fetchMcq(questionId) {
 
 export function fetchMcqSuccess(mcq) {
   return { type: FETCH_MCQ_SUCCESS, payload: { mcq } };
+}
+export function fetchMcqFailure(errorCode) {
+  console.log('error code ', errorCode);
+
+  return { type: FETCH_MCQ_FAILURE, payload: { errorCode } };
 }

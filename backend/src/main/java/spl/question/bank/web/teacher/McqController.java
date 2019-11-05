@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,7 @@ public class McqController {
   }
 
   @RequestMapping(value = "/question/mcq/{mcqId}", method = GET, produces = APPLICATION_JSON_UTF8_VALUE)
-  public MCQDto getMcq(final @PathVariable("mcqId") Integer mcqId) throws IOException {
+  public ResponseEntity getMcq(final @PathVariable("mcqId") Integer mcqId) throws IOException {
     return questionService.getMcqById(mcqId);
   }
 

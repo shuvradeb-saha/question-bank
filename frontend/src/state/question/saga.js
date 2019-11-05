@@ -4,7 +4,7 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import { toastError, toastSuccess } from 'components/Toaster';
 import { QuestionType } from 'containers/CreateQuestion/Question';
 import API from 'utils/api';
-import { fetchAllMcqSuccess, fetchMcqSuccess } from './action';
+import { fetchAllMcqSuccess, fetchMcqSuccess, fetchMcqFailure } from './action';
 import { SAVE_QUESTION, FETCH_ALL_MCQ, FETCH_MCQ } from './constants';
 
 export function* saveQuestion({ payload: { question, type } }) {
@@ -31,14 +31,14 @@ export function* fetchMcqs({ payload: { status, teacherId } }) {
 }
 
 export function* fetchMcqById({ payload: { questionId } }) {
-  console.log('question', questionId);
-
   const uri = `/api/teacher/question/mcq/${questionId}`;
   try {
     const question = yield call(API.get, uri);
     yield put(fetchMcqSuccess(question));
   } catch (error) {
-    console.log('Error: ', error);
+    // toastError(error.response.data.message);
+    console.log('Error in saga: ', JSON.stringify(error));
+    yield put(fetchMcqFailure(error.response.status));
   }
 }
 

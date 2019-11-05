@@ -2,21 +2,17 @@ package spl.question.bank.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.client.ModeratorQuestionMapper;
-import spl.question.bank.database.custom.SqlMapper;
 import spl.question.bank.database.model.MCQQuestion;
 import spl.question.bank.database.model.MCQQuestionExample;
 import spl.question.bank.database.model.ModeratorQuestion;
-import spl.question.bank.database.model.ModeratorQuestionExample;
 import spl.question.bank.model.question.Difficulty;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.QuestionType;
@@ -25,6 +21,7 @@ import spl.question.bank.model.question.mcq.*;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
@@ -150,14 +147,21 @@ public class QuestionService {
     }
   }
 
-  public MCQDto getMcqById(Integer mcqId) throws IOException {
+  public ResponseEntity getMcqById(Integer mcqId) throws IOException {
 
     val mcqQuestion = mcqMapper.selectByPrimaryKey(mcqId);
     if (isNull(mcqQuestion)) {
-      throw new IllegalArgumentException("No MCQ found with id => " + mcqId);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No MCQ found with id => " + mcqId);
     }
 
-    return extractMcqDto(mcqQuestion);
+    val authenticatedUser = userService.getAuthenticatedUser();
+// Question creator & moderator of the question can view the question
+    if (!authenticatedUser.getId().equals(mcqId)) {
+      if (!mcqQuestion.getModeratedBy().equals(authenticatedUser.getId())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have access to see this question.");
+      }
+    }
+    return ResponseEntity.ok().body(extractMcqDto(mcqQuestion));
   }
 
   private MCQDto extractMcqDto(MCQQuestion mcqQuestion) throws IOException {

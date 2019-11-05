@@ -1,6 +1,11 @@
 import { fromJS } from 'immutable';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
-import { FETCH_ALL_MCQ_SUCCESS, FETCH_MCQ_SUCCESS } from './constants';
+import {
+  FETCH_ALL_MCQ_SUCCESS,
+  FETCH_MCQ,
+  FETCH_MCQ_SUCCESS,
+  FETCH_MCQ_FAILURE,
+} from './constants';
 
 const initialState = fromJS({
   mcq: {},
@@ -8,7 +13,7 @@ const initialState = fromJS({
   rejectedMcqs: [],
   approvedMcqs: [],
   inProgress: false,
-  error: '',
+  errorCode: '',
 });
 
 function reducer(state = initialState, { type, payload }) {
@@ -25,9 +30,18 @@ function reducer(state = initialState, { type, payload }) {
       }
     }
 
+    case FETCH_MCQ: {
+      return state.merge(fromJS({ inProgress: true }));
+    }
+
     case FETCH_MCQ_SUCCESS: {
       const { mcq } = payload;
-      return state.merge(fromJS({ mcq }));
+      return state.merge(fromJS({ mcq, inProgress: false, errorCode: '' }));
+    }
+
+    case FETCH_MCQ_FAILURE: {
+      const { errorCode } = payload;
+      return state.merge(fromJS({ errorCode, inProgress: false }));
     }
     default:
       return state;

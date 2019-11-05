@@ -3,20 +3,37 @@ import { REDUCER_NAME } from './constants';
 
 export const selectQuestion = state => state.get(REDUCER_NAME);
 
-export const makePendingMcqs = status =>
+export const makePendingMcqs = () =>
   createSelector(
     selectQuestion,
     questionState => questionState.get('pendingMcqs')
   );
 
-export const makeApprovedMcqs = status =>
+export const makeApprovedMcqs = () =>
   createSelector(
     selectQuestion,
     questionState => questionState.get('approvedMcqs')
   );
 
-export const makeRejectedMcqs = status =>
+export const makeRejectedMcqs = () =>
   createSelector(
     selectQuestion,
     questionState => questionState.get('rejectedMcqs')
+  );
+
+export const makeMcq = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('mcq')
+  );
+export const makeInProgress = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('inProgress')
+  );
+
+export const makeErrorCode = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('errorCode')
   );
