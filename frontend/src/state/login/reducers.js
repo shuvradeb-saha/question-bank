@@ -9,6 +9,7 @@ import {
   FETCH_ALL_CLASS_SUCCESS,
   FETCH_ALL_SUBJECT_SUCCESS,
   FETCH_ALL_CHAPTER_SUCCESS,
+  FETCH_ALLOCATED_SUBJECTS_SUCCESS,
 } from './constants';
 
 const initialState = fromJS({
@@ -85,6 +86,11 @@ function reducer(state = initialState, { type, payload }) {
       const chapters = state.get('chapters').toJS();
       chapters.allChapters = data;
       return state.merge(fromJS({ chapters }));
+    }
+
+    case FETCH_ALLOCATED_SUBJECTS_SUCCESS: {
+      const { subjectIds } = payload;
+      return state.merge(fromJS({ allocatedSubjects: subjectIds }));
     }
 
     default:

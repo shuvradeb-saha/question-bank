@@ -91,7 +91,7 @@ class TeacherTable extends Component {
           dataToSave
         );
         toastSuccess('Teacher has been suspended');
-        this.props.history.push('/approved-teacher');
+        this.props.history.push('/teacher-approved');
       } catch (error) {
         console.log('error', error);
       }
@@ -109,7 +109,7 @@ class TeacherTable extends Component {
       try {
         await API.post(`/api/headmaster/allocation/remove/${id}`);
         toastSuccess('All allocation has beed deleted.');
-        this.props.history.push('/approved-teacher');
+        this.props.history.push('/teacher-approved');
       } catch (error) {
         console.log('error', error);
       }
@@ -120,7 +120,7 @@ class TeacherTable extends Component {
 
   onEditClick = async teacherId => {
     this.setState({ editInProgress: { id: teacherId, status: true } });
-    const subjectIds = await API.get(`/api/headmaster/allocation/${teacherId}`);
+    const subjectIds = await API.get(`/api/teacher/allocation/${teacherId}`);
     this.setState({ allocateSubjectIds: subjectIds, actType: 'edit' });
     this.onAllocateClick(teacherId);
     this.setState({ editInProgress: { id: -1, status: false } });

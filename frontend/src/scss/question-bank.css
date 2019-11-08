@@ -154,5 +154,44 @@ tbody + thead {
   height: 450px;
   margin: 8% 0% 0% 14%; }
 
+.home-txt {
+  display: block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  float: none;
+  z-index: auto;
+  width: auto;
+  height: auto;
+  position: static;
+  cursor: default;
+  opacity: 1;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  font: normal normal 900 70px/normal "Aldrich", Helvetica, sans-serif;
+  color: #202c2d;
+  text-align: center;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  text-shadow: 0 1px 0 #808d93, -1px 0 0 #cdd2d5, -1px 2px 0 #808d93, -2px 1px 0 #cdd2d5, -2px 3px 0 #808d93, -3px 2px 0 #cdd2d5, -3px 4px 0 #808d93, -4px 3px 0 #cdd2d5, -4px 5px 0 #808d93, -5px 4px 0 #cdd2d5, -5px 6px 0 #808d93, -6px 5px 0 #cdd2d5, -6px 7px 0 #808d93, -7px 6px 0 #cdd2d5, -7px 8px 0 #808d93, -8px 7px 0 #cdd2d5;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0; }
+
+html {
+  font-size: 0.9rem; }
+
 a:link {
   text-decoration: none; }

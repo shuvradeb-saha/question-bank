@@ -9,12 +9,12 @@ import spl.question.bank.database.model.TeacherSubject;
 import spl.question.bank.database.model.TeacherSubjectExample;
 import spl.question.bank.database.model.UserExample;
 import spl.question.bank.model.teacher.TeacherDto;
-import spl.question.bank.web.teacher.TeacherController;
+import spl.question.bank.web.teacher.HeadmasterController;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static spl.question.bank.web.teacher.TeacherController.TeacherListType.PENDING;
+import static spl.question.bank.web.teacher.HeadmasterController.TeacherListType.PENDING;
 
 @Slf4j
 @Service
@@ -30,7 +30,7 @@ public class TeacherService {
     }
 
     public List<TeacherDto> getTeachersList(final Integer eiinNumber,
-                                            final TeacherController.TeacherListType listType) {
+                                            final HeadmasterController.TeacherListType listType) {
         val example = new UserExample();
         example.createCriteria().andEiinNumberEqualTo(eiinNumber);
         val allUsers = userMapper.selectByExample(example);

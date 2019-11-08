@@ -11,7 +11,11 @@ import HomePage from '../Home';
 import Login from '../Login';
 import { Toaster } from 'components';
 import { fetchCurrentUserProfile } from 'state/login/action';
-import { makeAuthenticated, makeInProgress } from 'state/login/selectors';
+import {
+  makeAuthenticated,
+  makeLoginErrorCode,
+  makeInProgress,
+} from 'state/login/selectors';
 
 const NOT_FOUND = () => <h1>Not Found</h1>;
 
@@ -49,6 +53,7 @@ class App extends Component {
     authenticated: PropTypes.bool.isRequired,
     fetchCurrentUserProfile: PropTypes.func.isRequired,
     inProgress: PropTypes.bool.isRequired,
+    errorCode: PropTypes.any,
   };
 
   static defaultProps = {
@@ -100,6 +105,7 @@ class App extends Component {
 const mapStateToProps = createStructuredSelector({
   authenticated: makeAuthenticated(),
   inProgress: makeInProgress(),
+  errorCode: makeLoginErrorCode(),
 });
 
 const mapDispatchToProps = dispatch => ({

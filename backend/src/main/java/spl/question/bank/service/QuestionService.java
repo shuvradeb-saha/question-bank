@@ -7,21 +7,20 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.client.ModeratorQuestionMapper;
 import spl.question.bank.database.model.MCQQuestion;
 import spl.question.bank.database.model.MCQQuestionExample;
-import spl.question.bank.database.model.ModeratorQuestion;
 import spl.question.bank.model.question.Difficulty;
 import spl.question.bank.model.question.QuestionStatus;
-import spl.question.bank.model.question.QuestionType;
+import spl.question.bank.model.question.SimpleQuestionDto;
 import spl.question.bank.model.question.mcq.*;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
@@ -79,34 +78,30 @@ public class QuestionService {
     }
 
     if (mcqDto.getId() == null) {
+      val moderator = getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
+      mcqQuestion.setModeratedBy(moderator);
       mcqMapper.insert(mcqQuestion);
-      submitToModerator(mcqQuestion.getSubjectId(), mcqQuestion.getId(), QuestionType.MCQ);
     } else {
       mcqQuestion.setId(mcqDto.getId());
-      // mcqMapper.updateByPrimaryKey(mcqQuestion);
+      mcqMapper.updateByPrimaryKey(mcqQuestion);
     }
     return mcqQuestion;
   }
 
-  @Transactional
-  void submitToModerator(Integer subjectId, Integer questionId,
-                         QuestionType questionType) {
+  private Integer getRandomModerator(Integer subjectId, Integer creator) {
     val allModerators = userService.getModeratorBySubject(subjectId);
+    // Remove the creator if he is a moderator
+    val refinedModerators = allModerators
+        .stream()
+        .filter(user -> !user.getId().equals(creator))
+        .collect(Collectors.toList());
 
-    if (allModerators.size() <= 0) {
-      mcqMapper.deleteByPrimaryKey(questionId);
-      throw new RuntimeException("No moderator exists yet. Please submit question later");
+    if (refinedModerators.size() <= 0) {
+      throw new RuntimeException("No moderator exists yet. Please submit question later.");
     }
 
-    int randIndx = new Random().nextInt(allModerators.size());
-
-    ModeratorQuestion data = new ModeratorQuestion();
-    data.setModeratorId(allModerators.get(randIndx).getId());
-    data.setAssignedDate(new Date(System.currentTimeMillis()));
-    data.setQuestionId(questionId);
-    data.setQuestionType(questionType.name());
-
-    moderatorQuestionMapper.insert(data);
+    int randIndx = new Random().nextInt(refinedModerators.size());
+    return refinedModerators.get(randIndx).getId();
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {
@@ -156,8 +151,8 @@ public class QuestionService {
 
     val authenticatedUser = userService.getAuthenticatedUser();
 // Question creator & moderator of the question can view the question
-    if (!authenticatedUser.getId().equals(mcqId)) {
-      if (!mcqQuestion.getModeratedBy().equals(authenticatedUser.getId())) {
+    if (!authenticatedUser.getId().equals(mcqQuestion.getCreatedBy())) {
+      if (!authenticatedUser.getId().equals(mcqQuestion.getModeratedBy())) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have access to see this question.");
       }
     }
@@ -233,6 +228,47 @@ public class QuestionService {
             throw new RuntimeException("Question not found.");
           }
         }).collect(toList());
+  }
+
+  public ResponseEntity retrieveMcqForModerator(QuestionStatus status) {
+    Integer moderatorId = userService.getAuthenticatedUser().getId();
+    val ex = new MCQQuestionExample();
+    ex.createCriteria()
+        .andModeratedByEqualTo(moderatorId)
+        .andStatusEqualTo(status.name());
+    val allMcqs = mcqMapper.selectByExample(ex);
+
+    val simpleMcqs = allMcqs.stream().map(mcqQuestion -> {
+      String partialContent = "No partial content available...";
+      final String type = mcqQuestion.getType();
+      try {
+        partialContent = getPartialContent(type, mcqQuestion.getBaseQuestion());
+      } catch (IOException e) {
+        logger.debug("Problem occurs during base question de-serialization.");
+      }
+
+      return new SimpleQuestionDto()
+          .setId(mcqQuestion.getId())
+          .setPartialContent(partialContent)
+          .setChapterId(mcqQuestion.getChapterId())
+          .setSubjectId(mcqQuestion.getSubjectId())
+          .setMcqType(type);
+    }).collect(Collectors.toList());
+
+    return ResponseEntity.ok(simpleMcqs);
+  }
+
+  private String getPartialContent(String type, String baseQuestion) throws IOException {
+    if (type.equals(MCQType.GENERAL.name())) {
+      val mcq = objectMapper.readValue(baseQuestion, GeneralMCQDetail.class);
+      return mcq.getQuestionBody();
+    } else if (type.equals(MCQType.POLYNOMIAL.name())) {
+      val mcq = objectMapper.readValue(baseQuestion, PolynomialMCQDetail.class);
+      return mcq.getQuestionStatement();
+    } else {
+      val mcq = objectMapper.readValue(baseQuestion, StemBasedMCQDetail.class);
+      return mcq.getStem();
+    }
   }
 
 }

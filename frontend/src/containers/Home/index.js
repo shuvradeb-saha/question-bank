@@ -6,12 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 
 import Header from 'components/Header';
-import {
-  SideBar,
-  AdminContent,
-  HeadmasterContent,
-  AccessDenied,
-} from 'components';
+import { SideBar, AdminContent, MixContent, AccessDenied } from 'components';
 import { logout } from 'state/login/action';
 import {
   fetchAllClass,
@@ -60,10 +55,10 @@ class HomePage extends Component {
             {roles.toJS().includes(Roles.ADMIN) ? (
               <AdminContent />
             ) : roles.toJS().includes(Roles.HEADMASTER) ? (
-              <HeadmasterContent />
+              <MixContent />
             ) : roles.toJS().includes(Roles.HEADMASTER) ||
               roles.toJS().includes(Roles.TEACHER) ? (
-              <HeadmasterContent />
+              <MixContent />
             ) : (
               <AccessDenied />
             )}

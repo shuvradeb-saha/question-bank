@@ -4,17 +4,25 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 
-import { makeallAocatedSubjects } from 'state/login/selectors';
-
+import { makeallAocatedSubjects, makeUserId } from 'state/login/selectors';
+import { fetchAllocatedSubject } from 'state/login/action';
 class CreateQuestion extends Component {
   static propTypes = {
     allocatedSubjects: PropTypes.object,
+    teacherId: PropTypes.number,
+    fetchAllocatedSubject: PropTypes.func,
   };
+
+  componentDidMount() {
+    this.props.fetchAllocatedSubject(this.props.teacherId);
+  }
 
   render() {
     const { allocatedSubjects } = this.props;
 
     const hasSubject = allocatedSubjects && allocatedSubjects.size > 0;
+    console.log('has subject', hasSubject);
+
     return !hasSubject ? (
       <div className="alert alert-danger">
         <h3>
@@ -43,7 +51,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/question-mcq-general" className="text-dark">
+                  <Link to="/question/mcq/general" className="text-dark">
                     General MCQ (সাধারণ বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -52,7 +60,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/question-mcq-polynomial" className="text-dark">
+                  <Link to="/question/mcq/polynomial" className="text-dark">
                     Polynomial MCQ (বহুপদীসমাপ্তিসূচক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -61,7 +69,7 @@ class CreateQuestion extends Component {
                   <span style={{ marginRight: 10 }}>
                     <i className="fa fa-check-square" aria-hidden="true"></i>
                   </span>
-                  <Link to="/question-mcq-stem" className="text-dark">
+                  <Link to="/question/mcq/stem" className="text-dark">
                     Stem Based MCQ (উদ্দীপকভিত্তিক বহুনির্বাচনী প্রশ্ন)
                   </Link>
                 </li>
@@ -83,7 +91,7 @@ class CreateQuestion extends Component {
                 <span style={{ marginRight: 10 }}>
                   <i className="fa fa-check-square" aria-hidden="true"></i>
                 </span>
-                <Link to="/question-cq" className="text-dark">
+                <Link to="/question/cq" className="text-dark">
                   Create CQ Question
                 </Link>
               </li>
@@ -97,8 +105,16 @@ class CreateQuestion extends Component {
 
 const mapStateToProps = createStructuredSelector({
   allocatedSubjects: makeallAocatedSubjects(),
+  teacherId: makeUserId(),
 });
 
-const withConnect = connect(mapStateToProps);
+const mapDispatchToProps = dispatch => ({
+  fetchAllocatedSubject: id => dispatch(fetchAllocatedSubject(id)),
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default withConnect(CreateQuestion);

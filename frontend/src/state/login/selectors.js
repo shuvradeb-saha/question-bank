@@ -9,6 +9,12 @@ export const makeAuthenticated = () =>
     loginState => loginState.get('authenticated')
   );
 
+export const makeLoginErrorCode = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('error')
+  );
+
 export const makeUserName = () =>
   createSelector(
     selectLogin,

@@ -10,6 +10,8 @@ import {
   FETCH_ALL_CHAPTER_SUCCESS,
   FETCH_ALL_SUBJECT,
   FETCH_ALL_SUBJECT_SUCCESS,
+  FETCH_ALLOCATED_SUBJECTS,
+  FETCH_ALLOCATED_SUBJECTS_SUCCESS,
 } from './constants';
 
 export function submitLoginInfo(data) {
@@ -54,4 +56,12 @@ export function fetchAllChapters() {
 
 export function fetchAllChaptersSuccess(data) {
   return { type: FETCH_ALL_CHAPTER_SUCCESS, payload: { data } };
+}
+
+export function fetchAllocatedSubject(teacherId) {
+  return { type: FETCH_ALLOCATED_SUBJECTS, payload: { teacherId } };
+}
+
+export function fetchAllocateSubjectSuccess(subjectIds) {
+  return { type: FETCH_ALLOCATED_SUBJECTS_SUCCESS, payload: { subjectIds } };
 }

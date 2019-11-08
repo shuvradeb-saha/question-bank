@@ -37,3 +37,21 @@ export const makeErrorCode = () =>
     selectQuestion,
     questionState => questionState.get('errorCode')
   );
+
+export const makePendingMcqsForModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('pendingMcqs')
+  );
+
+export const makeApprovedMcqsByModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('approvedMcqs')
+  );
+
+export const makeRejectedMcqsByModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('rejectedMcqs')
+  );

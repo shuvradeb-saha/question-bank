@@ -17,74 +17,79 @@ class QuestionRoute extends Component {
         <Switch>
           <Route
             exact
-            path="/question-mcq-stem"
+            path="/question/mcq/stem"
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.STEM} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path={`/question-mcq-general`}
+            path={`/question/mcq/general`}
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.GENERAL} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path="/question-mcq-polynomial"
+            path="/question/mcq/polynomial"
             component={Authorization(
               () => (
                 <McqManager mcqType={McqType.POLYNOMIAL} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path="/question-pending"
+            path="/question/pending"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.PENDING} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path="/question-approved"
+            path="/question/approved"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.APPROVED} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path="/question-rejected"
+            path="/question/rejected"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.REJECTED} />
               ),
-              [Roles.HEADMASTER, Roles.TEACHER]
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
           <Route
             exact
-            path="/question-cq"
-            component={Authorization(CQ, [Roles.HEADMASTER, Roles.TEACHER])}
+            path="/question/cq"
+            component={Authorization(CQ, [
+              Roles.HEADMASTER,
+              Roles.TEACHER,
+              Roles.MODERATOR,
+            ])}
           />
           <Route
             path="/mcq/:id"
             component={Authorization(McqViewer, [
               Roles.HEADMASTER,
               Roles.TEACHER,
+              Roles.MODERATOR,
             ])}
           />
           <Route path="" component={NotFound} />

@@ -7,3 +7,4 @@ export { default as ChapterInfo } from './ChapterInfo';
 export { default as TeacherManagement } from './TeacherManagement';
 export { default as CreateQuestion } from './CreateQuestion';
 export { default as McqStatusManagement } from './McqStatusManager';
+export { default as McqModeration } from './McqModeration';

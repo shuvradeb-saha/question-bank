@@ -5,28 +5,47 @@ import { Authorization } from 'utils/auth';
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
 import QuestionRoute from 'components/MainContent/QuestionRoute';
-import { TeacherManagement, CreateQuestion } from 'containers';
+import { TeacherManagement, CreateQuestion, McqModeration } from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
+import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 
-const Home = () => <h1>Home</h1>;
+const Home = () => (
+  <div className="home-txt p-3">
+    <h1>Dear Shaishab Saha, Welcome to Question Bank</h1>
+  </div>
+);
 const Profile = () => <h1>Profile</h1>;
 
 const Download = () => <h1>Download</h1>;
 
-class HeadmasterContent extends Component {
+class MixContent extends Component {
   render() {
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
           <Route
             exact
-            path="/profile"
-            component={Authorization(Profile, [Roles.HEADMASTER])}
+            path="/"
+            component={Authorization(Home, [
+              Roles.HEADMASTER,
+              Roles.ADMIN,
+              Roles.MODERATOR,
+              Roles.TEACHER,
+            ])}
           />
           <Route
             exact
-            path="/teacher-approved"
+            path="/profile"
+            component={Authorization(Profile, [
+              Roles.HEADMASTER,
+              Roles.ADMIN,
+              Roles.MODERATOR,
+              Roles.TEACHER,
+            ])}
+          />
+          <Route
+            exact
+            path="/teacher/approved"
             component={Authorization(
               () => (
                 <TeacherManagement type={TableType.APPROVED} />
@@ -37,7 +56,7 @@ class HeadmasterContent extends Component {
 
           <Route
             exact
-            path="/teacher-pending"
+            path="/teacher/pending"
             component={Authorization(
               () => (
                 <TeacherManagement type={TableType.PENDING} />
@@ -48,13 +67,47 @@ class HeadmasterContent extends Component {
 
           <Route
             exact
-            path="/question-create"
-            component={Authorization(CreateQuestion, [Roles.HEADMASTER])}
+            path="/question/create"
+            component={Authorization(CreateQuestion, [
+              Roles.HEADMASTER,
+              Roles.MODERATOR,
+              Roles.TEACHER,
+            ])}
           />
           <Route
             exact
-            path="/question-download"
+            path="/question/download"
             component={Authorization(Download, [Roles.HEADMASTER])}
+          />
+          <Route
+            exact
+            path="/moderate/mcq/pending"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.PENDING} />
+              ),
+              [Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/moderate/mcq/approved"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.APPROVED} />
+              ),
+              [Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/moderate/mcq/rejected"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.REJECTED} />
+              ),
+              [Roles.MODERATOR]
+            )}
           />
           <QuestionRoute />
           <Route path="" component={NotFound} />
@@ -64,4 +117,4 @@ class HeadmasterContent extends Component {
   }
 }
 
-export default withRouter(HeadmasterContent);
+export default withRouter(MixContent);

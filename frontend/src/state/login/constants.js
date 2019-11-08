@@ -19,3 +19,7 @@ export const FETCH_ALL_SUBJECT_SUCCESS =
 export const FETCH_ALL_CHAPTER = 'app/state/login/FETCH_ALL_CHAPTER';
 export const FETCH_ALL_CHAPTER_SUCCESS =
   'app/state/login/FETCH_ALL_CHAPTER_SUCCESS';
+export const FETCH_ALLOCATED_SUBJECTS =
+  'app/state/login/FETCH_ALLOCATED_SUBJECTS';
+export const FETCH_ALLOCATED_SUBJECTS_SUCCESS =
+  'app/state/login/FETCH_ALLOCATED_SUBJECTS_SUCCESS';

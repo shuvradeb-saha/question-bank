@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Roles } from 'containers/App/constants';
+import { AccessDenied } from 'components';
 
 const AdminSidebar = () => (
   <ul className="list-group sticky-top sticky-offset">
@@ -77,14 +78,50 @@ const AdminSidebar = () => (
   </ul>
 );
 
-const HeadMasterSidebar = () => (
-  <ul className="list-group sticky-top sticky-offset">
-    <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
-      <b>
-        <small>Headmaster</small>
-      </b>
-    </li>
+const HeadMasterSidebar = ({ roles }) => {
+  return (
+    <ul className="list-group sticky-top sticky-offset">
+      <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
+        <b>
+          <small>Headmaster</small>
+        </b>
+      </li>
 
+      {renderTeacherOptions()}
+      <a
+        href="#teacher-list"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+      >
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="fa fa-tasks fa-fw mr-3"></span>
+          <span className="menu-collapsed">Manage Teacher</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+
+      <div id="teacher-list" className="collapse sidebar-submenu">
+        <Link
+          to="/teacher/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending list</span>
+        </Link>
+        <Link
+          to="/teacher/approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved list</span>
+        </Link>
+      </div>
+      {roles.includes(Roles.MODERATOR) && renderModerationOption()}
+    </ul>
+  );
+};
+
+const renderTeacherOptions = () => (
+  <span>
     <Link
       to="/"
       className="list-group-item list-group-item-action bg-dark text-white"
@@ -103,36 +140,8 @@ const HeadMasterSidebar = () => (
         <span className="menu-collapsed">Profile</span>
       </div>
     </Link>
-
-    <a
-      href="#teacher-list"
-      data-toggle="collapse"
-      aria-expanded="false"
-      className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
-    >
-      <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-tasks fa-fw mr-3"></span>
-        <span className="menu-collapsed">Manage Teacher</span>
-        <span className="submenu-icon ml-auto"></span>
-      </div>
-    </a>
-
-    <div id="teacher-list" className="collapse sidebar-submenu">
-      <Link
-        to="/teacher-pending"
-        className="list-group-item list-group-item-action bg-dark text-white"
-      >
-        <span className="menu-collapsed">Pending list</span>
-      </Link>
-      <Link
-        to="/teacher-approved"
-        className="list-group-item list-group-item-action bg-dark text-white"
-      >
-        <span className="menu-collapsed">Approved list</span>
-      </Link>
-    </div>
     <Link
-      to="/question-create"
+      to="/question/create"
       className="list-group-item list-group-item-action bg-dark text-white"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -140,7 +149,6 @@ const HeadMasterSidebar = () => (
         <span className="menu-collapsed">Create Question</span>
       </div>
     </Link>
-
     <a
       href="#question-status"
       data-toggle="collapse"
@@ -153,28 +161,27 @@ const HeadMasterSidebar = () => (
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
-
     <div id="question-status" className="collapse sidebar-submenu">
       <Link
-        to="/question-pending"
+        to="/question/pending"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Pending list</span>
       </Link>
       <Link
-        to="/question-approved"
+        to="/question/approved"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Approved list</span>
       </Link>
       <Link
-        to="/question-rejected"
+        to="/question/rejected"
         className="list-group-item list-group-item-action bg-dark text-white"
       >
         <span className="menu-collapsed">Rejected list</span>
       </Link>
     </div>
-  </ul>
+  </span>
 );
 
 const TeacherSidebar = () => (
@@ -184,16 +191,7 @@ const TeacherSidebar = () => (
         <small>Teacher</small>
       </b>
     </li>
-
-    <Link
-      to="/"
-      className="list-group-item list-group-item-action bg-dark text-white"
-    >
-      <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="menu-collapsed">Home</span>
-        <span className="fa fa-home fa-fw mr-3"></span>
-      </div>
-    </Link>
+    {renderTeacherOptions()}
   </ul>
 );
 
@@ -204,17 +202,93 @@ const ModeratorSidebar = () => (
         <small>Moderator</small>
       </b>
     </li>
+    {renderTeacherOptions()}
+    {renderModerationOption()}
+  </ul>
+);
 
-    <Link
-      to="/"
-      className="list-group-item list-group-item-action bg-dark text-white"
+const renderModerationOption = () => (
+  <span>
+    <a
+      href="#moderate"
+      data-toggle="collapse"
+      aria-expanded="false"
+      className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-home fa-fw mr-3"></span>
-        <span className="menu-collapsed">Home</span>
+        <span className="fa fa-tasks mr-3"></span>
+
+        <span className="menu-collapsed">Moderate Question</span>
+        <span className="submenu-icon ml-auto"></span>
       </div>
-    </Link>
-  </ul>
+    </a>
+
+    <div id="moderate" className="collapse sidebar-submenu">
+      <a
+        href="#cq"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+      >
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="menu-collapsed">Creative Question</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+      <div id="cq" className="collapse sidebar-submenu">
+        <Link
+          to="/moderate/question/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending CQ</span>
+        </Link>
+        <Link
+          to="/question-approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved CQ</span>
+        </Link>
+        <Link
+          to="/question-rejected"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Rejected CQ</span>
+        </Link>
+      </div>
+      <a
+        href="#mcq"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+      >
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="menu-collapsed">Multiple Choice</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+
+      <div id="mcq" className="collapse sidebar-submenu">
+        <Link
+          to="/moderate/mcq/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending MCQ</span>
+        </Link>
+        <Link
+          to="/question-approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved MCQ</span>
+        </Link>
+        <Link
+          to="/question-rejected"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Rejected MCQ</span>
+        </Link>
+      </div>
+    </div>
+  </span>
 );
 
 class SideBar extends Component {
@@ -233,14 +307,14 @@ class SideBar extends Component {
       >
         {roles.includes(Roles.ADMIN) ? (
           <AdminSidebar />
+        ) : roles.includes(Roles.HEADMASTER) ? (
+          <HeadMasterSidebar roles={roles} />
         ) : roles.includes(Roles.MODERATOR) ? (
           <ModeratorSidebar />
-        ) : roles.includes(Roles.HEADMASTER) ? (
-          <HeadMasterSidebar />
         ) : roles.includes(Roles.TEACHER) ? (
           <TeacherSidebar />
         ) : (
-          <h1>Access Denied</h1>
+          <AccessDenied />
         )}
       </div>
     );

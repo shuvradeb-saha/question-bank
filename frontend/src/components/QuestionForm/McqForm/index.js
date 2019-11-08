@@ -226,29 +226,40 @@ class McqForm extends Component {
     return (
       <div className="jumbotron">
         <form onSubmit={handleSubmit}>
-          <FormSelect
-            name="class"
-            label="শ্রেণী"
-            options={this.prepareClasses(classes)}
-          />
-          <FormSelect
-            name="subjectId"
-            label="বিষয়"
-            placeholder={
-              selectedClass ? 'Select subject' : 'Please select class first'
-            }
-            disabled={selectedClass ? false : true}
-            options={this.prepareSubjects(subjects)}
-          />
-          <FormSelect
-            name="chapterId"
-            label="অধ্যায়"
-            placeholder={
-              selectedSubject ? 'Select chapter' : 'Please select subject first'
-            }
-            disabled={selectedSubject ? false : true}
-            options={this.prepareChapters(chapters)}
-          />
+          <div className="row">
+            <div className="col">
+              <FormSelect
+                name="class"
+                label="শ্রেণী"
+                options={this.prepareClasses(classes)}
+              />
+            </div>
+            <div className="col">
+              <FormSelect
+                name="subjectId"
+                label="বিষয়"
+                placeholder={
+                  selectedClass ? 'Select subject' : 'Please select class first'
+                }
+                disabled={selectedClass ? false : true}
+                options={this.prepareSubjects(subjects)}
+              />
+            </div>
+            <div className="col">
+              <FormSelect
+                name="chapterId"
+                label="অধ্যায়"
+                placeholder={
+                  selectedSubject
+                    ? 'Select chapter'
+                    : 'Please select subject first'
+                }
+                disabled={selectedSubject ? false : true}
+                options={this.prepareChapters(chapters)}
+              />
+            </div>
+          </div>
+
           <fieldset className="border p-2">
             <legend className="w-auto">{mcqName}</legend>
             {mcqType === McqType.GENERAL && this.renderGeneralMcq()}

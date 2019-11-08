@@ -10,6 +10,7 @@ import {
   FETCH_ALL_CLASS,
   FETCH_ALL_SUBJECT,
   FETCH_ALL_CHAPTER,
+  FETCH_ALLOCATED_SUBJECTS,
 } from './constants';
 
 import {
@@ -18,6 +19,7 @@ import {
   fetchAllClassSuccess,
   fetchAllsubjectSuccess,
   fetchAllChaptersSuccess,
+  fetchAllocateSubjectSuccess,
 } from './action';
 
 export function* submitInfoForAuthentication({ payload: { data } }) {
@@ -36,7 +38,14 @@ export function* submitInfoForAuthentication({ payload: { data } }) {
     yield put(fetchProfileSuccess(responseData));
     yield put(push('/'));
   } else {
-    toastError('Incorrect username and/or password');
+    const status = response.status;
+    let errorMsg = 'Incorrect username and/or password';
+    if (status === 500) {
+      errorMsg =
+        'Unexpected problem occur on the server. Please reload the page.';
+    }
+    yield put(fetchProfileFailure(status));
+    toastError(errorMsg);
     return;
   }
 }
@@ -96,10 +105,21 @@ export function* fetchAllChapter() {
   }
 }
 
+export function* fetchAllocateSubject({ payload: { teacherId } }) {
+  const uri = `/api/teacher/allocation/${teacherId}`;
+  try {
+    const ids = yield call(API.get, uri);
+    yield put(fetchAllocateSubjectSuccess(ids));
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
 export default function* saga() {
   yield takeLatest(SUBMIT_INFO_AND_FETCH_PROFILE, submitInfoForAuthentication);
   yield takeEvery(FETCH_CURRENT_PROFILE, fetchCurrentProfile);
   yield takeEvery(FETCH_ALL_CLASS, fetchAllClasses);
   yield takeEvery(FETCH_ALL_SUBJECT, fetchAllSubjects);
   yield takeEvery(FETCH_ALL_CHAPTER, fetchAllChapter);
+  yield takeLatest(FETCH_ALLOCATED_SUBJECTS, fetchAllocateSubject);
 }

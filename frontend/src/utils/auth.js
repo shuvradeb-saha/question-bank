@@ -26,6 +26,8 @@ export const Authorization = (WrappedComponent, allowedRoles) => {
       if (allowedRoles.some(r => roles.indexOf(r) >= 0)) {
         return <WrappedComponent {...this.props} />;
       } else {
+        console.log('came');
+
         return <AccessDenied />;
       }
     }

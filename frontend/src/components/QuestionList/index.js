@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqType } from 'containers/CreateQuestion/Question';
+import { splitStringForContent, extractNameObject } from 'utils/utils';
 
 class QuestionList extends Component {
   static propTypes = {
@@ -58,31 +59,24 @@ class QuestionList extends Component {
 
     const rows = allMcqs.map(mcq => {
       const mcqType = mcq.get('mcqType');
-      let contentToShow = '',
-        chapterName = '',
-        subjectName = '',
-        className = '';
+      let contentToShow = '';
       if (mcqType === McqType.GENERAL) {
         const mainStr = mcq.get('questionBody');
-        contentToShow = mainStr && this.splitStringForContent(mainStr);
+        contentToShow = mainStr && splitStringForContent(mainStr);
       } else if (mcqType === McqType.POLYNOMIAL) {
         const mainStr = mcq.get('questionStatement');
-        contentToShow = mainStr && this.splitStringForContent(mainStr);
+        contentToShow = mainStr && splitStringForContent(mainStr);
       } else {
         const mainStr = mcq.get('stem');
-        contentToShow = mainStr && this.splitStringForContent(mainStr);
+        contentToShow = mainStr && splitStringForContent(mainStr);
       }
 
-      const filterdChapter = allChapter.filter(
-        chp => chp.get('id') === mcq.get('chapterId')
+      const nameObject = extractNameObject(
+        mcq.get('chapterId'),
+        allChapter,
+        allClass,
+        allSubject
       );
-      if (filterdChapter && filterdChapter.get(0)) {
-        const targetChapter = filterdChapter.get(0).toJS();
-
-        chapterName = targetChapter.chapterName;
-        subjectName = this.getNameById(targetChapter.subjectId, allSubject);
-        className = this.getNameById(targetChapter.classId, allClass);
-      }
 
       const createdAt = moment(mcq.get('createdAt')).format('YYYY-MM-DD');
       return {
@@ -92,41 +86,12 @@ class QuestionList extends Component {
           </Link>
         ),
         mcqType,
-        chapterName,
-        subjectName,
-        className,
+        ...nameObject,
         createdAt,
       };
     });
 
     return { columns, rows: rows.toJS() };
-  };
-
-  splitStringForContent = str => {
-    let words = str.split(' ');
-
-    let newStr = '';
-    if (words.size <= 5) {
-      newStr = str;
-    } else {
-      let count = 0;
-      for (const c of words) {
-        if (count === 5) {
-          break;
-        }
-        newStr = `${newStr} ${c}`;
-        count++;
-      }
-      newStr = `${newStr}...`;
-    }
-    return newStr;
-  };
-
-  getNameById = (id, data) => {
-    const filteredItem = data.filter(item => item.get('id') === id);
-    return filteredItem && filteredItem.size > 0
-      ? filteredItem.get(0).toJS().name
-      : '';
   };
 
   render() {
@@ -145,15 +110,19 @@ class QuestionList extends Component {
             </b>
           </div>
           <div className="card-body">
-            <MDBDataTable
-              small
-              data={this.createDataForTable(
-                allMcqs,
-                allChapter,
-                allClass,
-                allSubject
-              )}
-            />
+            {allMcqs.size === 0 ? (
+              <h5>No MCQ Available</h5>
+            ) : (
+              <MDBDataTable
+                small
+                data={this.createDataForTable(
+                  allMcqs,
+                  allChapter,
+                  allClass,
+                  allSubject
+                )}
+              />
+            )}
           </div>
         </div>
       </span>

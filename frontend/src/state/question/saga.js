@@ -4,8 +4,18 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import { toastError, toastSuccess } from 'components/Toaster';
 import { QuestionType } from 'containers/CreateQuestion/Question';
 import API from 'utils/api';
-import { fetchAllMcqSuccess, fetchMcqSuccess, fetchMcqFailure } from './action';
-import { SAVE_QUESTION, FETCH_ALL_MCQ, FETCH_MCQ } from './constants';
+import {
+  fetchAllMcqSuccess,
+  fetchMcqSuccess,
+  fetchMcqFailure,
+  fetchMcqForModeratorSuccess,
+} from './action';
+import {
+  SAVE_QUESTION,
+  FETCH_ALL_MCQ,
+  FETCH_MCQ,
+  FETCH_ALL_MCQ_FOR_MODERATOR,
+} from './constants';
 
 export function* saveQuestion({ payload: { question, type } }) {
   if (QuestionType.MCQ === type) {
@@ -37,8 +47,18 @@ export function* fetchMcqById({ payload: { questionId } }) {
     yield put(fetchMcqSuccess(question));
   } catch (error) {
     // toastError(error.response.data.message);
-    console.log('Error in saga: ', JSON.stringify(error));
+    console.log('Error in saga: ', error);
     yield put(fetchMcqFailure(error.response.status));
+  }
+}
+
+export function* fetchModeratorAllMcq({ payload: { status } }) {
+  const uri = `/api/moderator/mcq/${status}`;
+  try {
+    const mcqs = yield call(API.get, uri);
+    yield put(fetchMcqForModeratorSuccess(status, mcqs));
+  } catch (error) {
+    console.log('Error: ', error);
   }
 }
 
@@ -46,4 +66,5 @@ export default function* saga() {
   yield takeLatest(SAVE_QUESTION, saveQuestion);
   yield takeLatest(FETCH_ALL_MCQ, fetchMcqs);
   yield takeLatest(FETCH_MCQ, fetchMcqById);
+  yield takeLatest(FETCH_ALL_MCQ_FOR_MODERATOR, fetchModeratorAllMcq);
 }

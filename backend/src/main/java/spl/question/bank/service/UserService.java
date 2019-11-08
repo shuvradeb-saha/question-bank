@@ -158,7 +158,6 @@ public class UserService {
         .andEnabledEqualTo(true);
 
     val users = userMapper.selectByExample(ex);
-
     if (users == null || users.size() == 0) {
       throw new UsernameNotFoundException("No user found with the email " + email);
     }

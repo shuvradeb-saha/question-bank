@@ -39,7 +39,7 @@ class Login extends Component {
         <div className="row align-items-center h-100">
           <div className="col-6 mx-auto">
             <form className="jumbotron" onSubmit={handleSubmit(this.onSubmit)}>
-              <h1 className="text-center">Login Here</h1>
+              <h1 className="text-center">Login </h1>
               <FormInput name="username" label="Email" />
               <FormInput name="password" label="Password" />
               <div className="row">
