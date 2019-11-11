@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import spl.question.bank.database.client.MCQQuestionMapper;
-import spl.question.bank.database.client.ModeratorQuestionMapper;
 import spl.question.bank.database.model.MCQQuestion;
 import spl.question.bank.database.model.MCQQuestionExample;
 import spl.question.bank.model.question.Difficulty;
@@ -33,18 +32,14 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class QuestionService {
 
   private final MCQQuestionMapper mcqMapper;
-  private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private final UserService userService;
-  private final ModeratorQuestionMapper moderatorQuestionMapper;
 
 
   public QuestionService(final MCQQuestionMapper mcqMapper,
-                         final UserService userService,
-                         final ModeratorQuestionMapper moderatorQuestionMapper) {
+                         final UserService userService) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
-    this.moderatorQuestionMapper = moderatorQuestionMapper;
-    this.objectMapper = new ObjectMapper();
   }
 
   public MCQQuestion saveMcq(final MCQDto mcqDto) throws JsonProcessingException {
@@ -238,11 +233,17 @@ public class QuestionService {
         .andStatusEqualTo(status.name());
     val allMcqs = mcqMapper.selectByExample(ex);
 
-    val simpleMcqs = allMcqs.stream().map(mcqQuestion -> {
+    List<SimpleQuestionDto> simpleMcqs = getSimpleQuestionDtos(allMcqs);
+
+    return ResponseEntity.ok(simpleMcqs);
+  }
+
+  private List<SimpleQuestionDto> getSimpleQuestionDtos(List<MCQQuestion> allMcqs) {
+    return allMcqs.stream().map(mcqQuestion -> {
       String partialContent = "No partial content available...";
       final String type = mcqQuestion.getType();
       try {
-        partialContent = getPartialContent(type, mcqQuestion.getBaseQuestion());
+        partialContent = makePartialContent(type, mcqQuestion.getBaseQuestion());
       } catch (IOException e) {
         logger.debug("Problem occurs during base question de-serialization.");
       }
@@ -254,11 +255,9 @@ public class QuestionService {
           .setSubjectId(mcqQuestion.getSubjectId())
           .setMcqType(type);
     }).collect(Collectors.toList());
-
-    return ResponseEntity.ok(simpleMcqs);
   }
 
-  private String getPartialContent(String type, String baseQuestion) throws IOException {
+  private String makePartialContent(String type, String baseQuestion) throws IOException {
     if (type.equals(MCQType.GENERAL.name())) {
       val mcq = objectMapper.readValue(baseQuestion, GeneralMCQDetail.class);
       return mcq.getQuestionBody();
@@ -269,6 +268,21 @@ public class QuestionService {
       val mcq = objectMapper.readValue(baseQuestion, StemBasedMCQDetail.class);
       return mcq.getStem();
     }
+  }
+
+  public List<MCQDto> getMcqBySubjectAndStatus(Integer subjectId, QuestionStatus status) {
+    MCQQuestionExample ex = new MCQQuestionExample();
+    ex.createCriteria()
+        .andStatusEqualTo(status.name())
+        .andSubjectIdEqualTo(subjectId);
+    return mcqMapper.selectByExample(ex).stream().map(mcqQuestion -> {
+      try {
+        return extractMcqDto(mcqQuestion);
+      } catch (IOException e) {
+        logger.info("Problem occur during mcq extraction => {}", e.getMessage());
+        return null;
+      }
+    }).collect(Collectors.toList());
   }
 
 }

@@ -55,3 +55,23 @@ export const makeRejectedMcqsByModerator = () =>
     selectQuestion,
     questionState => questionState.get('moderator').get('rejectedMcqs')
   );
+
+export const makeMcqForModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState =>
+      questionState
+        .get('moderator')
+        .get('mcq')
+        .get('question')
+  );
+
+export const makeSimilarMcqs = () =>
+  createSelector(
+    selectQuestion,
+    questionState =>
+      questionState
+        .get('moderator')
+        .get('mcq')
+        .get('similar')
+  );

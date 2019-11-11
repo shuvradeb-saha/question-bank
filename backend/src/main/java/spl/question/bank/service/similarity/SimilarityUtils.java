@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.StringUtils.isAlpha;
 @Slf4j
 public class SimilarityUtils {
 
-  public HashMap<Integer, List<String>> getTokenizedMap(List<MCQDto> questions) {
+  HashMap<Integer, List<String>> getTokenizedMap(List<MCQDto> questions) {
 
     val start = System.currentTimeMillis();
     val questionWords = new HashMap<Integer, List<String>>();
@@ -30,7 +30,20 @@ public class SimilarityUtils {
     return questionWords;
   }
 
-  public List<String> extractFromGeneralMcq(GeneralMCQDetail detail) {
+  List<String> extractTokenFromDto(MCQDto mcqDto) {
+    List<String> tokenizedQuery;
+    if (mcqDto instanceof GeneralMCQDto) {
+      tokenizedQuery = extractFromGeneralMcq(((GeneralMCQDto) mcqDto).getGeneralMCQDetail());
+    } else if (mcqDto instanceof PolynomialMCQDto) {
+      tokenizedQuery = extractFromPolynomialMcq(
+          ((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
+    } else {
+      tokenizedQuery = extractFromStemMcq(((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail());
+    }
+    return tokenizedQuery;
+  }
+
+  private List<String> extractFromGeneralMcq(GeneralMCQDetail detail) {
     List<String> tokens = new ArrayList<>();
     tokens.addAll(tokenize(detail.getQuestionBody()));
     tokens.addAll(tokenize(detail.getOption1()));
@@ -40,7 +53,7 @@ public class SimilarityUtils {
     return tokens;
   }
 
-  public List<String> extractFromPolynomialMcq(PolynomialMCQDetail detail) {
+  private List<String> extractFromPolynomialMcq(PolynomialMCQDetail detail) {
     List<String> tokens = new ArrayList<>();
     tokens.addAll(tokenize(detail.getQuestionStatement()));
     tokens.addAll(tokenize(detail.getStatement1()));
@@ -49,7 +62,7 @@ public class SimilarityUtils {
     return tokens;
   }
 
-  public List<String> extractFromStemMcq(StemBasedMCQDetail detail) {
+  private List<String> extractFromStemMcq(StemBasedMCQDetail detail) {
     List<String> tokens = new ArrayList<>(tokenize(detail.getStem()));
     final int generalCount = detail.getGeneralMcqs().size();
     if (generalCount > 0) {
@@ -91,18 +104,5 @@ public class SimilarityUtils {
       }
     }
     return token;
-  }
-
-  public List<String> extractTokenFromDto(MCQDto mcqDto) {
-    List<String> tokenizedQuery;
-    if (mcqDto instanceof GeneralMCQDto) {
-      tokenizedQuery = extractFromGeneralMcq(((GeneralMCQDto) mcqDto).getGeneralMCQDetail());
-    } else if (mcqDto instanceof PolynomialMCQDto) {
-      tokenizedQuery = extractFromPolynomialMcq(
-          ((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
-    } else {
-      tokenizedQuery = extractFromStemMcq(((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail());
-    }
-    return tokenizedQuery;
   }
 }

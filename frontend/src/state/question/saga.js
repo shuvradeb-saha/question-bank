@@ -9,12 +9,15 @@ import {
   fetchMcqSuccess,
   fetchMcqFailure,
   fetchMcqForModeratorSuccess,
+  fetchMcqForModerationSuccess,
+  fetchMcqForModerationFailure,
 } from './action';
 import {
   SAVE_QUESTION,
   FETCH_ALL_MCQ,
   FETCH_MCQ,
   FETCH_ALL_MCQ_FOR_MODERATOR,
+  FETCH_MCQ_FOR_MODERATION,
 } from './constants';
 
 export function* saveQuestion({ payload: { question, type } }) {
@@ -53,11 +56,22 @@ export function* fetchMcqById({ payload: { questionId } }) {
 }
 
 export function* fetchModeratorAllMcq({ payload: { status } }) {
-  const uri = `/api/moderator/mcq/${status}`;
+  const uri = `/api/moderator/all/mcq/${status}`;
   try {
     const mcqs = yield call(API.get, uri);
     yield put(fetchMcqForModeratorSuccess(status, mcqs));
   } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchMcqForModeration({ payload: { id } }) {
+  const uri = `/api/moderator/mcq/${id}`;
+  try {
+    const mcqDetails = yield call(API.get, uri);
+    yield put(fetchMcqForModerationSuccess(mcqDetails));
+  } catch (error) {
+    yield put(fetchMcqForModerationFailure(error.response.status));
     console.log('Error: ', error);
   }
 }
@@ -67,4 +81,5 @@ export default function* saga() {
   yield takeLatest(FETCH_ALL_MCQ, fetchMcqs);
   yield takeLatest(FETCH_MCQ, fetchMcqById);
   yield takeLatest(FETCH_ALL_MCQ_FOR_MODERATOR, fetchModeratorAllMcq);
+  yield takeLatest(FETCH_MCQ_FOR_MODERATION, fetchMcqForModeration);
 }

@@ -8,3 +8,7 @@ export { default as TeacherManagement } from './TeacherManagement';
 export { default as CreateQuestion } from './CreateQuestion';
 export { default as McqStatusManagement } from './McqStatusManager';
 export { default as McqModeration } from './McqModeration';
+export { default as McqViewer } from './McqViewer';
+export {
+  default as ModerateMcqViewer,
+} from './McqModeration/ModerateMcqViewer';

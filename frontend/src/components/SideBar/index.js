@@ -243,13 +243,13 @@ const renderModerationOption = () => (
           <span className="menu-collapsed">Pending CQ</span>
         </Link>
         <Link
-          to="/question-approved"
+          to="/moderate/question/approved"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Approved CQ</span>
         </Link>
         <Link
-          to="/question-rejected"
+          to="/moderate/question/rejected"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Rejected CQ</span>
@@ -275,13 +275,13 @@ const renderModerationOption = () => (
           <span className="menu-collapsed">Pending MCQ</span>
         </Link>
         <Link
-          to="/question-approved"
+          to="/moderate/mcq/approved"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Approved MCQ</span>
         </Link>
         <Link
-          to="/question-rejected"
+          to="/moderate/mcq/rejected"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Rejected MCQ</span>

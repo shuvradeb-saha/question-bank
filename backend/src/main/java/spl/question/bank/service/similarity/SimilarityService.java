@@ -1,13 +1,11 @@
 package spl.question.bank.service.similarity;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
+
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -27,42 +25,32 @@ public class SimilarityService {
   private final TfIdfExtractor tfIdfExtractor;
 
   public SimilarityService(SimilarityUtils similarityUtils,
-      QuestionService questionService,
-      TfIdfExtractor tfIdfExtractor) {
+                           QuestionService questionService,
+                           TfIdfExtractor tfIdfExtractor) {
     this.similarityUtils = similarityUtils;
     this.questionService = questionService;
     this.tfIdfExtractor = tfIdfExtractor;
-
-    GeneralMCQDto generalMCQDto = new GeneralMCQDto();
-    GeneralMCQDetail detail = new GeneralMCQDetail()
-        .setQuestionBody("একুশ শতাব্দীতে টিকে থাকতে হলে সবাইকে জানতে হবে-")
-        .setOption1("তথ্যপ্রযুক্তির প্রাথমিক বিষয়গুলো")
-        .setOption2("যোগাযোগ প্রযুক্তির প্রাথমিক বিষযগুলো")
-        .setOption3("তথ্য ও যোগাযোগ প্রযুক্তির প্রাথমিক বিষয়গুলো")
-        .setOption4("অর্থনৈতিক বিষয়গুলো")
-        .setAnswer(4);
-    generalMCQDto.setGeneralMCQDetail(detail);
-    extractSimilarQuestions(generalMCQDto);
   }
 
-  public List<Integer> extractSimilarQuestions(MCQDto queryMcqDto) {
+  public List<MCQDto> extractSimilarQuestions(MCQDto queryMcqDto) {
 
     List<String> tokenizedQuery = similarityUtils.extractTokenFromDto(queryMcqDto);
 
-    // Extract all from db
-    val questions = questionService.getMcqListByStatus(QuestionStatus.pending, 2);
+    // Extract all approved mcq of this subject from db
+    val questions = questionService
+        .getMcqBySubjectAndStatus(queryMcqDto.getSubjectId(), QuestionStatus.approved);
+
+    // If no question in db then return empty list
+    if (CollectionUtils.isEmpty(questions)) {
+      return Collections.emptyList();
+    }
 
     // Create token from db
     HashMap<Integer, List<String>> allTokenizedDocuments = similarityUtils
         .getTokenizedMap(questions);
 
-    // If no question in db then return empty list
-    if (CollectionUtils.isEmpty(allTokenizedDocuments)) {
-      return Collections.emptyList();
-    }
 
     HashMap<Integer, Double> dtoScore = new HashMap<>();
-
     for (Entry<Integer, List<String>> docInDb : allTokenizedDocuments.entrySet()) {
 
       List<String> combinedDocTokens = combineTokens(tokenizedQuery, docInDb.getValue());
@@ -78,23 +66,31 @@ public class SimilarityService {
           .calculateCosineSimilarity(tfIdfQueryValues, tfIdfDbValues);
       logger
           .info("Similarity between query question and {} = {}", docInDb.getKey(), similarityScore);
-      dtoScore.put(docInDb.getKey(), similarityScore);
+      if (similarityScore > 0.3)
+        dtoScore.put(docInDb.getKey(), similarityScore);
     }
-
-    /*val similarityUtils.getTokenizedMap(questionService
-        .getMcqSBySubjectAndStatus(mcqDto.getSubjectId(), QuestionStatus.approved));*/
 
     val sortedMap = dtoScore.entrySet()
         .stream()
         .sorted(Entry.<Integer, Double>comparingByValue()
             .reversed())
         .collect(toMap(Entry::getKey,
-            Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            Entry::getValue, (e1, e2) -> e1, HashMap::new));
 
-    if(sortedMap.size() > 10) {
+    if (sortedMap.size() > 10) {
+      return extractSimilarDtoFromScore(questions, Utils.putFirstEntries(10, sortedMap));
+    } else return extractSimilarDtoFromScore(questions, Collections.unmodifiableMap(sortedMap));
+  }
 
-    }
-    return null;
+  private List<MCQDto> extractSimilarDtoFromScore(List<MCQDto> questions, Map<Integer, Double> sortedScoreMap) {
+    return sortedScoreMap
+        .keySet()
+        .stream()
+        .map(id -> questions.
+            stream()
+            .filter(mcqDto -> mcqDto.getId().equals(id))
+            .findFirst().orElse(null))
+        .collect(toList());
   }
 
   private List<String> combineTokens(final List<String> queryDocument, final List<String> dbDoc) {

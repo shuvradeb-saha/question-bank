@@ -76,7 +76,7 @@ const createDataForTable = (allMcqs, allChapter, allClass, allSubject) => {
     const createdAt = moment(mcq.get('createdAt')).format('YYYY-MM-DD');
     return {
       mcq: (
-        <Link to={`/mcq/${mcq.get('id')}`} style={{ color: 'blue' }}>
+        <Link to={`/moderate/mcq/${mcq.get('id')}`} style={{ color: 'blue' }}>
           {contentToShow}
         </Link>
       ),

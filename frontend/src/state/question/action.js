@@ -8,6 +8,9 @@ import {
   FETCH_MCQ_FAILURE,
   FETCH_ALL_MCQ_FOR_MODERATOR,
   FETCH_ALL_MCQ_FOR_MODERATOR_SUCCESS,
+  FETCH_MCQ_FOR_MODERATION,
+  FETCH_MCQ_FOR_MODERATION_SUCCESS,
+  FETCH_MCQ_FOR_MODERATION_FAILURE,
 } from './constants';
 
 export function saveQuestion(question, type) {
@@ -46,4 +49,16 @@ export function fetchMcqForModeratorSuccess(status, mcqs) {
     type: FETCH_ALL_MCQ_FOR_MODERATOR_SUCCESS,
     payload: { status, mcqs },
   };
+}
+
+export function fetchMcqForModeration(id) {
+  return { type: FETCH_MCQ_FOR_MODERATION, payload: { id } };
+}
+
+export function fetchMcqForModerationSuccess(mcqDetails) {
+  return { type: FETCH_MCQ_FOR_MODERATION_SUCCESS, payload: { mcqDetails } };
+}
+
+export function fetchMcqForModerationFailure(errorCode) {
+  return { type: FETCH_MCQ_FOR_MODERATION_FAILURE, payload: { errorCode } };
 }

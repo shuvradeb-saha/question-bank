@@ -3,8 +3,8 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
-import { NotFound, McqViewer } from 'components';
-import { McqStatusManagement } from 'containers';
+import { NotFound } from 'components';
+import { McqStatusManagement, McqViewer, ModerateMcqViewer } from 'containers';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqManager, McqType } from 'containers/CreateQuestion/Question';
 
@@ -91,6 +91,11 @@ class QuestionRoute extends Component {
               Roles.TEACHER,
               Roles.MODERATOR,
             ])}
+          />
+
+          <Route
+            path="/moderate/mcq/:id"
+            component={Authorization(ModerateMcqViewer, [Roles.MODERATOR])}
           />
           <Route path="" component={NotFound} />
         </Switch>
