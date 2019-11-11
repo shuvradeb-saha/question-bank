@@ -52,5 +52,5 @@ export const extractNameObject = (
     className = getNameById(targetChapter.classId, allClass);
   }
 
-  return { chapterName, subjectName, className };
+  return { className, subjectName, chapterName };
 };

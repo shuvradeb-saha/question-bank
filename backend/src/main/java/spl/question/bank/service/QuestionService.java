@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.model.MCQQuestion;
 import spl.question.bank.database.model.MCQQuestionExample;
+import spl.question.bank.model.admin.Roles;
 import spl.question.bank.model.question.Difficulty;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.SimpleQuestionDto;
@@ -147,7 +148,7 @@ public class QuestionService {
     val authenticatedUser = userService.getAuthenticatedUser();
 // Question creator & moderator of the question can view the question
     if (!authenticatedUser.getId().equals(mcqQuestion.getCreatedBy())) {
-      if (!authenticatedUser.getId().equals(mcqQuestion.getModeratedBy())) {
+      if (!userService.getRolesByUser(authenticatedUser.getId()).contains(Roles.MODERATOR.name())) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have access to see this question.");
       }
     }

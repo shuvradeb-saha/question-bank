@@ -18,6 +18,7 @@ import { AccessDenied, NotFound, MCQ } from 'components';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqType } from 'containers/CreateQuestion/Question';
 import { splitStringForContent } from 'utils/utils';
+import { toastSuccess } from 'components/Toaster';
 
 class ModerateMcqViewer extends Component {
   static propTypes = {
@@ -35,20 +36,39 @@ class ModerateMcqViewer extends Component {
   }
 
   onApproveClick = async id => {
-    const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.APPROVED}`;
-    const response = await API.put(uri);
-    console.log('response', response);
+    if (
+      window.confirm(
+        'Question will be added to the approved question database. Are you sure?'
+      )
+    ) {
+      const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.APPROVED}`;
+      const response = await API.put(uri);
+      toastSuccess(response);
+      this.props.history.push('/moderate/mcq/approved');
+    } else {
+      return;
+    }
   };
 
   onRejectClick = async id => {
-    const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.REJECTED}`;
-    const response = await API.put(uri);
-    console.log('response', response);
+    if (
+      window.confirm(
+        'Question will be added to the rejected question database. Are you sure?'
+      )
+    ) {
+      const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.REJECTED}`;
+      const response = await API.put(uri);
+      toastSuccess(response);
+      this.props.history.push('/moderate/mcq/rejected');
+    } else {
+      return;
+    }
   };
 
   render() {
     const { mcq, errorCode, similarMcqs, inProgress } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
+    const status = mcq.get('status');
 
     if (inProgress) {
       return (
@@ -78,62 +98,66 @@ class ModerateMcqViewer extends Component {
         return (
           <span>
             <div className="row ">
-              <div className="col-8">
+              <div className="col">
                 <div>
                   <MCQ mcq={mcq} />
                 </div>
-                <div className="row">
-                  <div className="col-8">
-                    <button
-                      type="button"
-                      className="btn btn-outline-success"
-                      onClick={() => this.onApproveClick(id)}
-                    >
-                      <i className="fa fa-check" aria-hidden="true"></i>
-                      &nbsp;&nbsp; Approve
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-outline-danger"
-                      onClick={() => this.onRejectClick(id)}
-                    >
-                      <i className="fa fa-trash" aria-hidden="true"></i>
-                      &nbsp;&nbsp;Reject
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-4">
-                <div className=" row bg-dark text-light p-2 rounded">
-                  <strong>Similar Questions</strong>
-                </div>
-                {similarMcqs.map(mcq => {
-                  const mcqType = mcq.get('mcqType');
-                  let contentToShow = '';
-                  if (mcqType === McqType.GENERAL) {
-                    const mainStr = mcq.get('questionBody');
-                    contentToShow = mainStr && splitStringForContent(mainStr);
-                  } else if (mcqType === McqType.POLYNOMIAL) {
-                    const mainStr = mcq.get('questionStatement');
-                    contentToShow = mainStr && splitStringForContent(mainStr);
-                  } else {
-                    const mainStr = mcq.get('stem');
-                    contentToShow = mainStr && splitStringForContent(mainStr);
-                  }
-
-                  return (
-                    <div key={mcq.get('id')} className="row  p-2 ">
-                      <Link
-                        to={`/mcq/${mcq.get('id')}`}
-                        style={{ color: 'blue' }}
+                {status === QuestionStatusType.PENDING && (
+                  <div className="row">
+                    <div className="col-8">
+                      <button
+                        type="button"
+                        className="btn btn-outline-success"
+                        onClick={() => this.onApproveClick(id)}
                       >
-                        {contentToShow}
-                      </Link>
+                        <i className="fa fa-check" aria-hidden="true"></i>
+                        &nbsp;&nbsp; Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger"
+                        onClick={() => this.onRejectClick(id)}
+                      >
+                        <i className="fa fa-trash" aria-hidden="true"></i>
+                        &nbsp;&nbsp;Reject
+                      </button>
                     </div>
-                  );
-                })}
+                  </div>
+                )}
               </div>
+
+              {status === QuestionStatusType.PENDING && (
+                <div className="col-4">
+                  <div className=" row bg-dark text-light p-2 rounded">
+                    <strong>Similar Questions</strong>
+                  </div>
+                  {similarMcqs.map(mcq => {
+                    const mcqType = mcq.get('mcqType');
+                    let contentToShow = '';
+                    if (mcqType === McqType.GENERAL) {
+                      const mainStr = mcq.get('questionBody');
+                      contentToShow = mainStr && splitStringForContent(mainStr);
+                    } else if (mcqType === McqType.POLYNOMIAL) {
+                      const mainStr = mcq.get('questionStatement');
+                      contentToShow = mainStr && splitStringForContent(mainStr);
+                    } else {
+                      const mainStr = mcq.get('stem');
+                      contentToShow = mainStr && splitStringForContent(mainStr);
+                    }
+
+                    return (
+                      <div key={mcq.get('id')} className="row  p-2 ">
+                        <Link
+                          to={`/mcq/${mcq.get('id')}`}
+                          style={{ color: 'blue' }}
+                        >
+                          {contentToShow}
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </span>
         );
