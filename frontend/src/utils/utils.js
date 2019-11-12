@@ -54,3 +54,35 @@ export const extractNameObject = (
 
   return { className, subjectName, chapterName };
 };
+
+export const prepareClasses = classes =>
+  classes.map(cls => ({
+    label: cls.get('name'),
+    value: cls.get('id'),
+  }));
+
+export const prepareSubjects = (selectedClass, subjects) => {
+  return subjects
+    .filter(
+      subject =>
+        selectedClass && subject.get('classId') === selectedClass.get('value')
+    )
+    .map(subject => ({
+      label: subject.get('name'),
+      value: subject.get('id'),
+    }));
+};
+
+export const prepareChapters = chapters => {
+  const { selectedSubject } = this.props;
+  return chapters
+    .filter(
+      chapter =>
+        selectedSubject &&
+        chapter.get('subjectId') === selectedSubject.get('value')
+    )
+    .map(chapter => ({
+      label: chapter.get('chapterName'),
+      value: chapter.get('id'),
+    }));
+};

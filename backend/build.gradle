@@ -74,9 +74,11 @@ mybatisGenerator {
     configFile = 'db/mybatis/mybatisGenerator.xml'
 }
 
+/*
 task copyReactApp(type: Copy, dependsOn: ':frontend:assemble') {
     from project(':frontend').buildDir
     into "${sourceSets.main.output.resourcesDir}/static"
 }
 
 processResources.dependsOn copyReactApp
+*/

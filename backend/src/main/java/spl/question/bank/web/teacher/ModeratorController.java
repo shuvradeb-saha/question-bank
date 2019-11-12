@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.QuestionType;
 import spl.question.bank.service.ModeratorService;
-import spl.question.bank.service.QuestionService;
+import spl.question.bank.service.McqService;
 
 import java.io.IOException;
 
@@ -19,12 +19,12 @@ import java.io.IOException;
 @RequestMapping("/api/moderator")
 public class ModeratorController {
 
-  private final QuestionService questionService;
+  private final McqService mcqService;
   private final ModeratorService moderatorService;
 
-  public ModeratorController(QuestionService questionService,
+  public ModeratorController(McqService mcqService,
                              ModeratorService moderatorService) {
-    this.questionService = questionService;
+    this.mcqService = mcqService;
     this.moderatorService = moderatorService;
   }
 
@@ -33,7 +33,7 @@ public class ModeratorController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
       method = RequestMethod.GET)
   public ResponseEntity getMcqQuestions(@PathVariable("status") QuestionStatus status) {
-    return questionService.retrieveMcqForModerator(status);
+    return mcqService.retrieveMcqForModerator(status);
   }
 
   @RequestMapping(

@@ -12,3 +12,5 @@ export { default as McqViewer } from './McqViewer';
 export {
   default as ModerateMcqViewer,
 } from './McqModeration/ModerateMcqViewer';
+
+export { default as Download } from './Download';

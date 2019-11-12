@@ -5,7 +5,12 @@ import { Authorization } from 'utils/auth';
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
 import QuestionRoute from 'components/MainContent/QuestionRoute';
-import { TeacherManagement, CreateQuestion, McqModeration } from 'containers';
+import {
+  TeacherManagement,
+  CreateQuestion,
+  McqModeration,
+  Download,
+} from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 
@@ -15,8 +20,6 @@ const Home = () => (
   </div>
 );
 const Profile = () => <h1>Profile</h1>;
-
-const Download = () => <h1>Download</h1>;
 
 class MixContent extends Component {
   render() {
@@ -76,7 +79,7 @@ class MixContent extends Component {
           />
           <Route
             exact
-            path="/question/download"
+            path="/download/paper"
             component={Authorization(Download, [Roles.HEADMASTER])}
           />
           <Route

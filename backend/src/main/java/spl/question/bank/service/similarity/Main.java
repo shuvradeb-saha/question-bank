@@ -6,6 +6,6 @@ public class Main {
   public static void main(String[] args) throws IOException {
     System.out.println("hello");
     Stemmer stemmer = new Stemmer();
-    System.out.println(stemmer.stemOfWord("বাংলাদেশের"));
+    System.out.println(stemmer.stemOfWord("abs"));
   }
 }

@@ -115,7 +115,17 @@ const HeadMasterSidebar = ({ roles }) => {
           <span className="menu-collapsed">Approved list</span>
         </Link>
       </div>
+
       {roles.includes(Roles.MODERATOR) && renderModerationOption()}
+      <Link
+        to="/download/paper"
+        className="list-group-item list-group-item-action bg-dark text-white"
+      >
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="fa fa-download mr-3"></span>
+          <span className="menu-collapsed">Download</span>
+        </div>
+      </Link>
     </ul>
   );
 };

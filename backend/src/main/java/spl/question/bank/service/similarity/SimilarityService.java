@@ -1,34 +1,32 @@
 package spl.question.bank.service.similarity;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.util.*;
-import java.util.Map.Entry;
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import spl.question.bank.model.question.QuestionStatus;
-import spl.question.bank.model.question.mcq.GeneralMCQDetail;
-import spl.question.bank.model.question.mcq.GeneralMCQDto;
 import spl.question.bank.model.question.mcq.MCQDto;
-import spl.question.bank.service.QuestionService;
+import spl.question.bank.service.McqService;
+
+import java.util.*;
+import java.util.Map.Entry;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Service
 @Slf4j
 public class SimilarityService {
 
   private final SimilarityUtils similarityUtils;
-  private final QuestionService questionService;
+  private final McqService mcqService;
   private final TfIdfExtractor tfIdfExtractor;
 
   public SimilarityService(SimilarityUtils similarityUtils,
-                           QuestionService questionService,
+                           McqService mcqService,
                            TfIdfExtractor tfIdfExtractor) {
     this.similarityUtils = similarityUtils;
-    this.questionService = questionService;
+    this.mcqService = mcqService;
     this.tfIdfExtractor = tfIdfExtractor;
   }
 
@@ -37,7 +35,7 @@ public class SimilarityService {
     List<String> tokenizedQuery = similarityUtils.extractTokenFromDto(queryMcqDto);
 
     // Extract all approved mcq of this subject from db
-    val questions = questionService
+    val questions = mcqService
         .getMcqBySubjectAndStatus(queryMcqDto.getSubjectId(), QuestionStatus.approved);
 
     // If no question in db then return empty list

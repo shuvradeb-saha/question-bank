@@ -1,9 +1,7 @@
 package spl.question.bank.service;
 
-import liquibase.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import spl.question.bank.database.client.CQQuestionMapper;
@@ -28,20 +26,20 @@ public class ModeratorService {
   private final SimilarityService similarityService;
   private final MCQQuestionMapper mcqQuestionMapper;
   private final CQQuestionMapper cqQuestionMapper;
-  private final QuestionService questionService;
+  private final McqService mcqService;
 
   public ModeratorService(SimilarityService similarityService,
                           MCQQuestionMapper mcqQuestionMapper,
                           CQQuestionMapper cqQuestionMapper,
-                          QuestionService questionService) {
+                          McqService mcqService) {
     this.similarityService = similarityService;
     this.mcqQuestionMapper = mcqQuestionMapper;
     this.cqQuestionMapper = cqQuestionMapper;
-    this.questionService = questionService;
+    this.mcqService = mcqService;
   }
 
   public ResponseEntity getSimilarMcqs(Integer mcqId) throws IOException {
-    val mcqRes = questionService.getMcqById(mcqId);
+    val mcqRes = mcqService.getMcqById(mcqId);
     if (!mcqRes.getStatusCode().is2xxSuccessful()) {
       return mcqRes;
     }

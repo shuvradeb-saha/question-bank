@@ -30,15 +30,15 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 @Slf4j
-public class QuestionService {
+public class McqService {
 
   private final MCQQuestionMapper mcqMapper;
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final UserService userService;
 
 
-  public QuestionService(final MCQQuestionMapper mcqMapper,
-                         final UserService userService) {
+  public McqService(final MCQQuestionMapper mcqMapper,
+                    final UserService userService) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
   }
@@ -146,7 +146,7 @@ public class QuestionService {
     }
 
     val authenticatedUser = userService.getAuthenticatedUser();
-// Question creator & moderator of the question can view the question
+    // Question creator & moderator of the question can view the question
     if (!authenticatedUser.getId().equals(mcqQuestion.getCreatedBy())) {
       if (!userService.getRolesByUser(authenticatedUser.getId()).contains(Roles.MODERATOR.name())) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have access to see this question.");
@@ -284,6 +284,17 @@ public class QuestionService {
         return null;
       }
     }).collect(Collectors.toList());
+  }
+
+  public List<MCQDto> getDtoByExample(MCQQuestionExample ex) {
+    return mcqMapper.selectByExample(ex).stream().map(mcqQuestion -> {
+      try {
+        return extractMcqDto(mcqQuestion);
+      } catch (IOException e) {
+        logger.info("Exception occur while dto creation.");
+      }
+      return null;
+    }).collect(toList());
   }
 
 }
