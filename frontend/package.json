@@ -7,6 +7,8 @@
 		"@fortawesome/fontawesome": "^1.1.5",
 		"@fortawesome/fontawesome-free-solid": "^5.0.10",
 		"@fortawesome/react-fontawesome": "^0.0.18",
+		"@progress/kendo-drawing": "^1.6.0",
+		"@progress/kendo-react-pdf": "^3.6.0",
 		"apisauce": "^0.14.3",
 		"classnames": "^2.2.5",
 		"history": "^4.7.2",
@@ -69,4 +71,5 @@
 		"prettier-eslint-cli": "^4.7.1",
 		"snazzy": "^7.1.1"
 	}
+	
 }

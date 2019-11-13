@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import spl.question.bank.model.question.DownloadCriteria;
 import spl.question.bank.model.question.QuestionType;
 import spl.question.bank.service.DownloadService;
+import spl.question.bank.service.download.PdfTemplate;
+
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -17,12 +20,15 @@ public class DownloadController {
 
   private final DownloadService downloadService;
 
-  public DownloadController(DownloadService downloadService) {
+  public DownloadController(DownloadService downloadService) throws IOException {
     this.downloadService = downloadService;
+    PdfTemplate pdfTemplate = new PdfTemplate();
+    pdfTemplate.createPdf();
   }
 
   @RequestMapping(value = "/generate/paper", method = RequestMethod.POST)
   public ResponseEntity generatePaper(@RequestBody DownloadCriteria downloadCriteria) {
+
     if(downloadCriteria.getQuestionType().equals(QuestionType.MCQ.name())) {
       return downloadService.generateMcqPaper(downloadCriteria);
     } else {

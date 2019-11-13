@@ -73,3 +73,23 @@ transform-origin: 50% 50% 0;
 }
 
 html { font-size: 0.9rem; }
+
+@font-face {
+  font-family: 'Siyam Rupali';
+  src: url('../static/fonts/SiyamRupali.eot');
+	src: local('Siyam Rupali'), url('../static/fonts/SiyamRupali.woff') format('woff'),       
+	url('../static/fonts/SiyamRupali.ttf') format('truetype');
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'SutonnyMJ';
+  src: url('../static/fonts/SutonnyMJ/SUTOM___.TTF');
+	src: local('SutonnyMJ'), url('../static/fonts/SutonnyMJ/SutonnyMJ-Bold.ttf') format('truetype'),       
+	url('../static/fonts/SutonnyMJ/SutonnyMJ-BoldItalic.ttf') format('truetype'),
+	url('../static/fonts/SutonnyMJ/SutonnyMJ-Italic.ttf') format('truetype'),
+	url('../static/fonts/SutonnyMJ/SutonnyOMJ.ttf') format('truetype')
+	;
+  font-style: normal;
+}

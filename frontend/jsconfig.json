@@ -9,5 +9,5 @@
       "*": ["*", "src/*"]
     }
   },
-  "include": ["src/**/*.js"]
+  "include": ["src/**/*.js", "src/containers/PdfComponent/PdfDoc.jsx"]
 }

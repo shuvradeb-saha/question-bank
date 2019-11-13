@@ -14,3 +14,4 @@ export {
 } from './McqModeration/ModerateMcqViewer';
 
 export { default as Download } from './Download';
+export { default as PdfComponent } from './PdfComponent';
