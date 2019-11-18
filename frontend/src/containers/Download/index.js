@@ -70,10 +70,22 @@ class Download extends Component {
     }
   };
 
+  onDownloadClick = async () => {
+    //const uri = `/api/headmaster/download/MCQ/29`;
+    //const data = await API.get(uri);
+    // console.log('data', data);
+    const href = `${process.env.REACT_APP_API_PREFIX}api/download/MCQ/29`;
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', null);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  };
+
   render() {
     const { classes, selectedClass, subjects } = this.props;
     const { questionPayload, inProgress, questionType, status } = this.state;
-    console.log('inProgress', inProgress);
 
     return (
       <div>
@@ -86,11 +98,13 @@ class Download extends Component {
           status={status}
         />
         {status && (
-          <PdfComponent
-            questionType={questionType}
-            questionPayload={fromJS(questionPayload)}
-          />
+          <button className="btn btn-lg" onClick={this.onDownloadClick}>
+            <i className="fa fa-download" aria-hidden="true"></i>&nbsp;Download
+          </button>
         )}
+        <button className="btn btn-lg" onClick={this.onDownloadClick}>
+          <i className="fa fa-download" aria-hidden="true"></i>&nbsp;Download
+        </button>
       </div>
     );
   }

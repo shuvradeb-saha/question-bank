@@ -205,5 +205,10 @@ html {
   src: local("SutonnyMJ"), url("../static/fonts/SutonnyMJ/SutonnyMJ-Bold.ttf") format("truetype"), url("../static/fonts/SutonnyMJ/SutonnyMJ-BoldItalic.ttf") format("truetype"), url("../static/fonts/SutonnyMJ/SutonnyMJ-Italic.ttf") format("truetype"), url("../static/fonts/SutonnyMJ/SutonnyOMJ.ttf") format("truetype");
   font-style: normal; }
 
+@font-face {
+  font-family: 'Noto';
+  src: url("../static/fonts/NotoSerifBengali-hinted/NotoSerifBengali-Regular.ttf");
+  src: local("Noto"), url("../static/fonts/NotoSerifBengali-hinted/NotoSerifBengali-Bold.ttf") format("truetype"); }
+
 a:link {
   text-decoration: none; }

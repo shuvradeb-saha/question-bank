@@ -1,39 +1,49 @@
 package spl.question.bank.web.teacher;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spl.question.bank.model.question.DownloadCriteria;
 import spl.question.bank.model.question.QuestionType;
 import spl.question.bank.service.DownloadService;
-import spl.question.bank.service.download.PdfTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/headmaster")
+@RequestMapping(value = "/api")
 public class DownloadController {
 
   private final DownloadService downloadService;
 
-  public DownloadController(DownloadService downloadService) throws IOException {
+
+  public DownloadController(DownloadService downloadService) {
     this.downloadService = downloadService;
-    PdfTemplate pdfTemplate = new PdfTemplate();
-    pdfTemplate.createPdf();
   }
 
-  @RequestMapping(value = "/generate/paper", method = RequestMethod.POST)
-  public ResponseEntity generatePaper(@RequestBody DownloadCriteria downloadCriteria) {
+  @RequestMapping(value = "/headmaster/generate/paper", method = RequestMethod.POST)
+  public ResponseEntity generatePaper(@RequestBody DownloadCriteria downloadCriteria) throws IOException {
 
-    if(downloadCriteria.getQuestionType().equals(QuestionType.MCQ.name())) {
+    if (downloadCriteria.getQuestionType().equals(QuestionType.MCQ.name())) {
       return downloadService.generateMcqPaper(downloadCriteria);
     } else {
       return downloadService.generateCQPaper(downloadCriteria);
     }
+  }
+
+  @RequestMapping(value = "/download/{questionType}/{paperId}", method = RequestMethod.GET)
+  public void downloadPaper(@PathVariable("questionType") QuestionType questionType,
+                            @PathVariable("paperId") Integer paperId,
+                            HttpServletResponse response) throws IOException {
+
+    if (questionType.equals(QuestionType.MCQ)) {
+      downloadService.downloadMcqPaper(response, paperId);
+    } else {
+
+    }
+
   }
 
 }

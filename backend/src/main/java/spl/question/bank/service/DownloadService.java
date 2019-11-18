@@ -16,7 +16,10 @@ import spl.question.bank.model.moderator.ExamType;
 import spl.question.bank.model.question.DownloadCriteria;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.QuestionType;
+import spl.question.bank.service.download.PdfTemplate;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -31,24 +34,27 @@ public class DownloadService {
   private final QuestionPaperMapper questionPaperMapper;
   private final QuestionPaperQuestionMapper paperQuestionMapper;
   private final McqService mcqService;
+  private final PdfTemplate pdfTemplate;
+
 
   public DownloadService(MCQQuestionMapper mcqQuestionMapper,
                          UserService userService,
                          QuestionPaperMapper questionPaperMapper,
                          QuestionPaperQuestionMapper paperQuestionMapper,
-                         McqService mcqService) {
+                         McqService mcqService, PdfTemplate pdfTemplate) {
     this.mcqQuestionMapper = mcqQuestionMapper;
     this.userService = userService;
     this.questionPaperMapper = questionPaperMapper;
     this.paperQuestionMapper = paperQuestionMapper;
     this.mcqService = mcqService;
+    this.pdfTemplate = pdfTemplate;
   }
 
   public ResponseEntity generateCQPaper(DownloadCriteria downloadCriteria) {
-    return null;
+    return ResponseEntity.ok("Done");
   }
 
-  public ResponseEntity generateMcqPaper(DownloadCriteria downloadCriteria) {
+  public ResponseEntity generateMcqPaper(DownloadCriteria downloadCriteria) throws IOException {
     val teacherId = downloadCriteria.getTeacherId();
     if (!userService
         .getRolesByUser(teacherId)
@@ -106,7 +112,8 @@ public class DownloadService {
     val generatedIds = prepareQuestionPaper(QuestionType.MCQ.name(), teacherId, subjectId, examType, totalWeight, idList);
     MCQQuestionExample ex = new MCQQuestionExample();
     ex.createCriteria().andIdIn(generatedIds);
-    return ResponseEntity.ok(mcqService.getDtoByExample(ex));
+    val dtos = mcqService.getDtoByExample(ex);
+    return ResponseEntity.ok(dtos);
   }
 
   private List<Integer> prepareQuestionPaper(
@@ -187,7 +194,8 @@ public class DownloadService {
     newPaper.setType(type);
     newPaper.setSubjectId(subjectId);
 
-    return questionPaperMapper.insert(newPaper);
+    questionPaperMapper.insert(newPaper);
+    return newPaper.getId();
   }
 
   private void addQuestionIdToPaperId(Integer paperId, List<Integer> newPaperQuestionIds) {
@@ -220,6 +228,15 @@ public class DownloadService {
       }
     }
     return questionIds;
+  }
+
+  public void downloadMcqPaper(HttpServletResponse response, Integer paperId) throws IOException {
+
+    val idsOfPaper = getQuestionIdsByPaperId(paperId);
+    MCQQuestionExample ex = new MCQQuestionExample();
+    ex.createCriteria().andIdIn(idsOfPaper);
+    val dtos = mcqService.getDtoByExample(ex);
+    pdfTemplate.createMcqPdf(response, dtos);
   }
 
   @Data

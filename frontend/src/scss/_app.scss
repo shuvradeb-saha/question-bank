@@ -93,3 +93,9 @@ html { font-size: 0.9rem; }
 	;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Noto';
+  src: url('../static/fonts/NotoSerifBengali-hinted/NotoSerifBengali-Regular.ttf');
+	src: local('Noto'), url('../static/fonts/NotoSerifBengali-hinted/NotoSerifBengali-Bold.ttf') format('truetype');
+}

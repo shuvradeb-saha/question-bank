@@ -1,9 +1,12 @@
 package spl.question.bank.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +29,10 @@ public class SystemUserController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public LoginResponse getUser(final Authentication authentication) {
     return userService.createLoginResponse(authentication);
+  }
+
+  @GetMapping("/status")
+  public Health getStatus() {
+    return Health.up().build();
   }
 }

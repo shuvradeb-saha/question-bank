@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ExamType {
 
-  finalExam(5, 110),
+  finalExam(10, 110),
   testExam(5, 110),
   preTestExam(5, 110),
   midExam(5, 110),
