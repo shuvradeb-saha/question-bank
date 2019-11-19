@@ -34,13 +34,20 @@ public class McqController {
     return mcqService.saveMcq(mcqDto);
   }
 
-  @RequestMapping(value = "/question/mcq/{mcqId}", method = GET, produces = APPLICATION_JSON_UTF8_VALUE)
+  @RequestMapping(
+      value = "/question/mcq/{mcqId}",
+      method = GET,
+      produces = APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity getMcq(final @PathVariable("mcqId") Integer mcqId) throws IOException {
     return mcqService.getMcqById(mcqId);
   }
 
-  @RequestMapping(value = "/question/mcq/{status}/{teacherId}", method = GET, produces = APPLICATION_JSON_UTF8_VALUE)
-  public List<MCQDto> getQuestions(final @PathVariable QuestionStatus status, final @PathVariable Integer teacherId) {
+  @RequestMapping(
+      value = "/question/mcq/{status}/{teacherId}",
+      method = GET,
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public List<MCQDto> getQuestions(
+      final @PathVariable QuestionStatus status, final @PathVariable Integer teacherId) {
     return mcqService.getMcqListByStatus(status, teacherId);
   }
 }

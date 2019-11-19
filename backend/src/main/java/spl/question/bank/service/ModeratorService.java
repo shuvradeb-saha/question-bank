@@ -28,10 +28,11 @@ public class ModeratorService {
   private final CQQuestionMapper cqQuestionMapper;
   private final McqService mcqService;
 
-  public ModeratorService(SimilarityService similarityService,
-                          MCQQuestionMapper mcqQuestionMapper,
-                          CQQuestionMapper cqQuestionMapper,
-                          McqService mcqService) {
+  public ModeratorService(
+      SimilarityService similarityService,
+      MCQQuestionMapper mcqQuestionMapper,
+      CQQuestionMapper cqQuestionMapper,
+      McqService mcqService) {
     this.similarityService = similarityService;
     this.mcqQuestionMapper = mcqQuestionMapper;
     this.cqQuestionMapper = cqQuestionMapper;
@@ -50,9 +51,8 @@ public class ModeratorService {
     return ResponseEntity.ok(similarMcqDto);
   }
 
-  public ResponseEntity changeQuestionStatus(Integer questionId,
-                                             QuestionType questionType,
-                                             QuestionStatus status) {
+  public ResponseEntity changeQuestionStatus(
+      Integer questionId, QuestionType questionType, QuestionStatus status) {
     if (questionType.equals(QuestionType.MCQ)) {
       MCQQuestion mcqQuestion = mcqQuestionMapper.selectByPrimaryKey(questionId);
       if (Objects.isNull(mcqQuestion)) {
@@ -69,5 +69,10 @@ public class ModeratorService {
     } else {
       return null;
     }
+  }
+
+  // Todo => need to recheck things here
+  public ResponseEntity getSimilarCQS(Integer cqId) {
+    return ResponseEntity.ok("done");
   }
 }

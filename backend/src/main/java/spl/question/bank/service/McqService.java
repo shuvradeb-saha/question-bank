@@ -36,16 +36,18 @@ public class McqService {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final UserService userService;
 
-
-  public McqService(final MCQQuestionMapper mcqMapper,
-                    final UserService userService) {
+  public McqService(final MCQQuestionMapper mcqMapper, final UserService userService) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
   }
 
   public MCQQuestion saveMcq(final MCQDto mcqDto) throws JsonProcessingException {
     val mcqQuestion = new MCQQuestion();
-
+    Integer creatorId = mcqDto.getCreatedBy();
+    Integer subjectId = mcqDto.getSubjectId();
+    if (!userService.checkTeacherSubject(creatorId, subjectId)) {
+      throw new IllegalArgumentException("You are not assigned in the subject.");
+    }
     if (mcqDto.getWeight() <= 0) {
       throw new IllegalArgumentException("Question weight must be positive.");
     }
@@ -87,10 +89,10 @@ public class McqService {
   private Integer getRandomModerator(Integer subjectId, Integer creator) {
     val allModerators = userService.getModeratorBySubject(subjectId);
     // Remove the creator if he is a moderator
-    val refinedModerators = allModerators
-        .stream()
-        .filter(user -> !user.getId().equals(creator))
-        .collect(Collectors.toList());
+    val refinedModerators =
+        allModerators.stream()
+            .filter(user -> !user.getId().equals(creator))
+            .collect(Collectors.toList());
 
     if (refinedModerators.size() <= 0) {
       throw new RuntimeException("No moderator exists yet. Please submit question later.");
@@ -101,18 +103,29 @@ public class McqService {
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {
-    if (!isNoneEmpty(detail.getOption1(),
-        detail.getOption2(), detail.getOption3(),
-        detail.getOption4(), detail.getQuestionBody()) || detail.getAnswer() <= 0) {
+    if (!isNoneEmpty(
+            detail.getOption1(),
+            detail.getOption2(),
+            detail.getOption3(),
+            detail.getOption4(),
+            detail.getQuestionBody())
+        || detail.getAnswer() <= 0) {
       throw new IllegalArgumentException("None of the question field should be empty.");
     }
   }
 
   private void validatePolynomial(PolynomialMCQDetail detail) {
-    if (!isNoneEmpty(detail.getQuestionStatement(), detail.getStatement1(),
-        detail.getStatement2(), detail.getStatement3(), detail.getOption1(),
-        detail.getOption2(), detail.getOption3(), detail.getOption4(),
-        detail.getQuestionBody()) || detail.getAnswer() <= 0) {
+    if (!isNoneEmpty(
+            detail.getQuestionStatement(),
+            detail.getStatement1(),
+            detail.getStatement2(),
+            detail.getStatement3(),
+            detail.getOption1(),
+            detail.getOption2(),
+            detail.getOption3(),
+            detail.getOption4(),
+            detail.getQuestionBody())
+        || detail.getAnswer() <= 0) {
       throw new IllegalArgumentException("None of the question field should be empty.");
     }
   }
@@ -146,10 +159,11 @@ public class McqService {
     }
 
     val authenticatedUser = userService.getAuthenticatedUser();
-    // Question creator & moderator of the question can view the question
+    // Question creator & moderators can view the question
     if (!authenticatedUser.getId().equals(mcqQuestion.getCreatedBy())) {
       if (!userService.getRolesByUser(authenticatedUser.getId()).contains(Roles.MODERATOR.name())) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You don't have access to see this question.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body("You don't have access to see this question.");
       }
     }
     return ResponseEntity.ok().body(extractMcqDto(mcqQuestion));
@@ -169,12 +183,17 @@ public class McqService {
 
   private MCQDto extractGeneralDto(MCQQuestion mcq) throws IOException {
     GeneralMCQDto dto = new GeneralMCQDto();
-    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+    dto.setId(mcq.getId())
+        .setChapterId(mcq.getChapterId())
         .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
-        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
-        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
-        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
-        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+        .setSubjectId(mcq.getSubjectId())
+        .setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy())
+        .setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt())
+        .setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType()))
+        .setWeight(mcq.getWeight());
 
     dto.setGeneralMCQDetail(objectMapper.readValue(mcq.getBaseQuestion(), GeneralMCQDetail.class));
     return dto;
@@ -182,12 +201,17 @@ public class McqService {
 
   private MCQDto extractPolynomialDto(MCQQuestion mcq) throws IOException {
     PolynomialMCQDto dto = new PolynomialMCQDto();
-    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+    dto.setId(mcq.getId())
+        .setChapterId(mcq.getChapterId())
         .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
-        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
-        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
-        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
-        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+        .setSubjectId(mcq.getSubjectId())
+        .setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy())
+        .setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt())
+        .setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType()))
+        .setWeight(mcq.getWeight());
 
     dto.setPolynomialMCQDetail(
         objectMapper.readValue(mcq.getBaseQuestion(), PolynomialMCQDetail.class));
@@ -196,12 +220,17 @@ public class McqService {
 
   private MCQDto extractStemDto(MCQQuestion mcq) throws IOException {
     StemBasedMCQDto dto = new StemBasedMCQDto();
-    dto.setId(mcq.getId()).setChapterId(mcq.getChapterId())
+    dto.setId(mcq.getId())
+        .setChapterId(mcq.getChapterId())
         .setDifficulty(Difficulty.valueOf(mcq.getDifficulty()))
-        .setSubjectId(mcq.getSubjectId()).setCreatedAt(mcq.getCreatedAt())
-        .setCreatedBy(mcq.getCreatedBy()).setStatus(mcq.getStatus())
-        .setModeratedAt(mcq.getModeratedAt()).setModeratedBy(mcq.getModeratedBy())
-        .setMcqType(MCQType.valueOf(mcq.getType())).setWeight(mcq.getWeight());
+        .setSubjectId(mcq.getSubjectId())
+        .setCreatedAt(mcq.getCreatedAt())
+        .setCreatedBy(mcq.getCreatedBy())
+        .setStatus(mcq.getStatus())
+        .setModeratedAt(mcq.getModeratedAt())
+        .setModeratedBy(mcq.getModeratedBy())
+        .setMcqType(MCQType.valueOf(mcq.getType()))
+        .setWeight(mcq.getWeight());
 
     dto.setStemBasedMCQDetail(
         objectMapper.readValue(mcq.getBaseQuestion(), StemBasedMCQDetail.class));
@@ -210,28 +239,25 @@ public class McqService {
 
   public List<MCQDto> getMcqListByStatus(QuestionStatus status, Integer teacherId) {
     val ex = new MCQQuestionExample();
-    ex.createCriteria()
-        .andCreatedByEqualTo(teacherId)
-        .andStatusEqualTo(status.name());
+    ex.createCriteria().andCreatedByEqualTo(teacherId).andStatusEqualTo(status.name());
     ex.setOrderByClause("created_at DESC");
-    return mcqMapper.selectByExample(ex)
-        .stream()
-        .map(mcqQuestion -> {
-          try {
-            return extractMcqDto(mcqQuestion);
-          } catch (IOException e) {
-            logger.error("Exception occur => " + e);
-            throw new RuntimeException("Question not found.");
-          }
-        }).collect(toList());
+    return mcqMapper.selectByExample(ex).stream()
+        .map(
+            mcqQuestion -> {
+              try {
+                return extractMcqDto(mcqQuestion);
+              } catch (IOException e) {
+                logger.error("Exception occur => " + e);
+                throw new RuntimeException("Question not found.");
+              }
+            })
+        .collect(toList());
   }
 
   public ResponseEntity retrieveMcqForModerator(QuestionStatus status) {
     Integer moderatorId = userService.getAuthenticatedUser().getId();
     val ex = new MCQQuestionExample();
-    ex.createCriteria()
-        .andModeratedByEqualTo(moderatorId)
-        .andStatusEqualTo(status.name());
+    ex.createCriteria().andModeratedByEqualTo(moderatorId).andStatusEqualTo(status.name());
     val allMcqs = mcqMapper.selectByExample(ex);
 
     List<SimpleQuestionDto> simpleMcqs = getSimpleQuestionDtos(allMcqs);
@@ -240,22 +266,25 @@ public class McqService {
   }
 
   private List<SimpleQuestionDto> getSimpleQuestionDtos(List<MCQQuestion> allMcqs) {
-    return allMcqs.stream().map(mcqQuestion -> {
-      String partialContent = "No partial content available...";
-      final String type = mcqQuestion.getType();
-      try {
-        partialContent = makePartialContent(type, mcqQuestion.getBaseQuestion());
-      } catch (IOException e) {
-        logger.debug("Problem occurs during base question de-serialization.");
-      }
+    return allMcqs.stream()
+        .map(
+            mcqQuestion -> {
+              String partialContent = "No partial content available...";
+              final String type = mcqQuestion.getType();
+              try {
+                partialContent = makePartialContent(type, mcqQuestion.getBaseQuestion());
+              } catch (IOException e) {
+                logger.debug("Problem occurs during base question de-serialization.");
+              }
 
-      return new SimpleQuestionDto()
-          .setId(mcqQuestion.getId())
-          .setPartialContent(partialContent)
-          .setChapterId(mcqQuestion.getChapterId())
-          .setSubjectId(mcqQuestion.getSubjectId())
-          .setMcqType(type);
-    }).collect(Collectors.toList());
+              return new SimpleQuestionDto()
+                  .setId(mcqQuestion.getId())
+                  .setPartialContent(partialContent)
+                  .setChapterId(mcqQuestion.getChapterId())
+                  .setSubjectId(mcqQuestion.getSubjectId())
+                  .setMcqType(type);
+            })
+        .collect(Collectors.toList());
   }
 
   private String makePartialContent(String type, String baseQuestion) throws IOException {
@@ -273,28 +302,31 @@ public class McqService {
 
   public List<MCQDto> getMcqBySubjectAndStatus(Integer subjectId, QuestionStatus status) {
     MCQQuestionExample ex = new MCQQuestionExample();
-    ex.createCriteria()
-        .andStatusEqualTo(status.name())
-        .andSubjectIdEqualTo(subjectId);
-    return mcqMapper.selectByExample(ex).stream().map(mcqQuestion -> {
-      try {
-        return extractMcqDto(mcqQuestion);
-      } catch (IOException e) {
-        logger.info("Problem occur during mcq extraction => {}", e.getMessage());
-        return null;
-      }
-    }).collect(Collectors.toList());
+    ex.createCriteria().andStatusEqualTo(status.name()).andSubjectIdEqualTo(subjectId);
+    return mcqMapper.selectByExample(ex).stream()
+        .map(
+            mcqQuestion -> {
+              try {
+                return extractMcqDto(mcqQuestion);
+              } catch (IOException e) {
+                logger.info("Problem occur during mcq extraction => {}", e.getMessage());
+                return null;
+              }
+            })
+        .collect(Collectors.toList());
   }
 
   public List<MCQDto> getDtoByExample(MCQQuestionExample ex) {
-    return mcqMapper.selectByExample(ex).stream().map(mcqQuestion -> {
-      try {
-        return extractMcqDto(mcqQuestion);
-      } catch (IOException e) {
-        logger.info("Exception occur while dto creation.");
-      }
-      return null;
-    }).collect(toList());
+    return mcqMapper.selectByExample(ex).stream()
+        .map(
+            mcqQuestion -> {
+              try {
+                return extractMcqDto(mcqQuestion);
+              } catch (IOException e) {
+                logger.info("Exception occur while dto creation.");
+              }
+              return null;
+            })
+        .collect(toList());
   }
-
 }

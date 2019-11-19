@@ -17,7 +17,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class TeacherController {
   private final TeacherService teacherService;
 
-
   public TeacherController(final TeacherService teacherService) {
     this.teacherService = teacherService;
   }

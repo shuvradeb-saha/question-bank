@@ -8,16 +8,12 @@ import lombok.val;
 import lombok.var;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spl.question.bank.database.client.InstituteMapper;
-import spl.question.bank.database.client.RoleMapper;
-import spl.question.bank.database.client.UserMapper;
-import spl.question.bank.database.client.UserRoleMapper;
+import spl.question.bank.database.client.*;
 import spl.question.bank.database.model.*;
 import spl.question.bank.model.admin.Roles;
 import spl.question.bank.model.admin.UserDto;
@@ -45,15 +41,18 @@ public class UserService {
   private final BCryptPasswordEncoder encoder;
   private final MailService mailService;
   private final TeacherService teacherService;
+  private final TeacherSubjectMapper teacherSubjectMapper;
 
-  public UserService(final UserMapper userMapper,
+  public UserService(
+      final UserMapper userMapper,
       final UserRoleMapper userRoleMapper,
       final RoleMapper roleMapper,
       final InstituteMapper instituteMapper,
       final JwtConfig jwtConfig,
       final BCryptPasswordEncoder encoder,
       final MailService mailService,
-      final TeacherService teacherService) {
+      final TeacherService teacherService,
+      final TeacherSubjectMapper teacherSubjectMapper) {
     this.userMapper = userMapper;
     this.userRoleMapper = userRoleMapper;
     this.roleMapper = roleMapper;
@@ -62,6 +61,7 @@ public class UserService {
     this.encoder = encoder;
     this.mailService = mailService;
     this.teacherService = teacherService;
+    this.teacherSubjectMapper = teacherSubjectMapper;
   }
 
   @Transactional
@@ -75,12 +75,13 @@ public class UserService {
     if (userMapper.insert(user) < 0) {
       throw new RuntimeException("Cannot insert user data");
     }
-    //assign role then
+    // assign role then
     final Integer id = user.getId();
     assignRole(id, roles);
     // if everything is done send the password to the email
-    boolean isMailSucceed = mailService
-        .sendMailWithCredentials(user.getEmail(), user.getFirstName(), user.getPassword());
+    boolean isMailSucceed =
+        mailService.sendMailWithCredentials(
+            user.getEmail(), user.getFirstName(), user.getPassword());
 
     if (!isMailSucceed) {
       // delete the new user
@@ -114,17 +115,18 @@ public class UserService {
   private void deleteRolesById(Integer userId) {
     val example = new UserRoleExample();
     example.createCriteria().andUserIdEqualTo(userId);
-    //delete previous roles
+    // delete previous roles
     userRoleMapper.deleteByExample(example);
   }
 
   private void assignRole(Integer userId, List<Role> roles) {
-    roles.forEach(role -> {
-      val userRole = new UserRole();
-      userRole.setRoleId(role.getId());
-      userRole.setUserId(userId);
-      userRoleMapper.insert(userRole);
-    });
+    roles.forEach(
+        role -> {
+          val userRole = new UserRole();
+          userRole.setRoleId(role.getId());
+          userRole.setUserId(userId);
+          userRoleMapper.insert(userRole);
+        });
   }
 
   private void validateUser(User user) {
@@ -136,10 +138,13 @@ public class UserService {
       throw new IllegalArgumentException("Must have to enter EIIN number");
     }
 
-    if (isBlank(user.getEmail()) || isBlank(user.getFirstName()) ||
-        isBlank(user.getLastName()) || isBlank(user.getPassword()) ||
-        isBlank(user.getPermanentAddress()) || user.getBirthDate() == null ||
-        user.getJoinDate() == null) {
+    if (isBlank(user.getEmail())
+        || isBlank(user.getFirstName())
+        || isBlank(user.getLastName())
+        || isBlank(user.getPassword())
+        || isBlank(user.getPermanentAddress())
+        || user.getBirthDate() == null
+        || user.getJoinDate() == null) {
       throw new IllegalArgumentException("Enter user information correctly");
     }
   }
@@ -153,15 +158,13 @@ public class UserService {
 
   public User getUserByEmail(String email) {
     UserExample ex = new UserExample();
-    ex.createCriteria()
-        .andEmailEqualTo(email)
-        .andEnabledEqualTo(true);
+    ex.createCriteria().andEmailEqualTo(email).andEnabledEqualTo(true);
 
     val users = userMapper.selectByExample(ex);
     if (users == null || users.size() == 0) {
       throw new UsernameNotFoundException("No user found with the email " + email);
     }
-    //As email is unique only one user will be retrieved at a time
+    // As email is unique only one user will be retrieved at a time
     return users.get(0);
   }
 
@@ -169,12 +172,9 @@ public class UserService {
     UserRoleExample ex = new UserRoleExample();
     ex.createCriteria().andUserIdEqualTo(userId);
     val roles = userRoleMapper.selectByExample(ex);
-    return roles
-        .stream()
+    return roles.stream()
         .map(UserRole::getRoleId)
-        .map(roleId -> roleMapper
-            .selectByPrimaryKey(roleId)
-            .getName())
+        .map(roleId -> roleMapper.selectByPrimaryKey(roleId).getName())
         .collect(toList());
   }
 
@@ -199,12 +199,11 @@ public class UserService {
     long now = System.currentTimeMillis();
     return Jwts.builder()
         .setSubject(auth.getName())
-        .claim("authorities", auth.getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(toList()))
+        .claim(
+            "authorities",
+            auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(toList()))
         .setIssuedAt(new Date(now))
-        .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
+        .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000)) // in milliseconds
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
         .compact();
   }
@@ -213,7 +212,6 @@ public class UserService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return getUserByEmail((String) authentication.getPrincipal());
   }
-
 
   public List<Role> getAllRoles() {
     val roles = roleMapper.selectByExample(null);
@@ -227,22 +225,20 @@ public class UserService {
     val ex = new UserExample();
     val users = userMapper.selectByExample(null);
 
-    val eiinInstituteMap = getInstituteEiinMap(users
-        .stream()
-        .map(User::getEiinNumber)
-        .collect(Collectors.toSet()));
+    val eiinInstituteMap =
+        getInstituteEiinMap(users.stream().map(User::getEiinNumber).collect(Collectors.toSet()));
 
-    return users
-        .stream()
+    return users.stream()
         .filter(user -> !getRolesByUser(user.getId()).contains("ADMIN"))
-        .map(user ->
-            new UserInfo()
-                .setId(user.getId())
-                .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
-                .setEiinNumber(user.getEiinNumber())
-                .setRoles(getRolesByUser(user.getId()))
-                .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
-                .setEmail(user.getEmail()))
+        .map(
+            user ->
+                new UserInfo()
+                    .setId(user.getId())
+                    .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
+                    .setEiinNumber(user.getEiinNumber())
+                    .setRoles(getRolesByUser(user.getId()))
+                    .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
+                    .setEmail(user.getEmail()))
         .collect(toList());
   }
 
@@ -251,33 +247,26 @@ public class UserService {
     example.createCriteria().andEiinNumberIn(new ArrayList<>(eiinNumbers));
     val institutes = instituteMapper.selectByExample(example);
 
-    return institutes
-        .stream()
-        .collect(toMap(Institute::getEiinNumber, this::getInstituteName));
+    return institutes.stream().collect(toMap(Institute::getEiinNumber, this::getInstituteName));
   }
 
   private String getInstituteName(Institute o) {
     val example = new InstituteExample();
     example.createCriteria().andEiinNumberEqualTo(o.getEiinNumber());
-    return instituteMapper.selectByExample(example)
-        .get(0)
-        .getName();
+    return instituteMapper.selectByExample(example).get(0).getName();
   }
 
   public UserDto getUserById(Integer id) {
     val user = userMapper.selectByPrimaryKey(id);
     user.setPassword("");
-    return new UserDto()
-        .setUser(user)
-        .setRoles(getRolesById(id));
+    return new UserDto().setUser(user).setRoles(getRolesById(id));
   }
 
   private List<Role> getRolesById(Integer id) {
     UserRoleExample ex = new UserRoleExample();
     ex.createCriteria().andUserIdEqualTo(id);
     val roles = userRoleMapper.selectByExample(ex);
-    return roles
-        .stream()
+    return roles.stream()
         .map(UserRole::getRoleId)
         .map(roleMapper::selectByPrimaryKey)
         .collect(toList());
@@ -296,9 +285,7 @@ public class UserService {
       userRoleMapper.insert(userRole);
     } else {
       UserRoleExample ex = new UserRoleExample();
-      ex.createCriteria()
-          .andUserIdEqualTo(id)
-          .andRoleIdEqualTo(moderatorRoleId);
+      ex.createCriteria().andUserIdEqualTo(id).andRoleIdEqualTo(moderatorRoleId);
       userRoleMapper.deleteByExample(ex);
     }
     return true;
@@ -313,15 +300,21 @@ public class UserService {
         .collect(toList());
   }
 
-  private boolean isModeratorOfSubject(Integer userId, List<UserRole> allUserRole,
-      Integer subjectId) {
+  private boolean isModeratorOfSubject(
+      Integer userId, List<UserRole> allUserRole, Integer subjectId) {
 
     for (UserRole userRole : allUserRole) {
-      if (userRole.getUserId().equals(userId) && userRole.getRoleId()
-          .equals(Roles.MODERATOR.getValue())) {
+      if (userRole.getUserId().equals(userId)
+          && userRole.getRoleId().equals(Roles.MODERATOR.getValue())) {
         return teacherService.getAllocatedSubject(userId).contains(subjectId);
       }
     }
     return false;
+  }
+
+  public boolean checkTeacherSubject(Integer teacherId, Integer subjectId) {
+    val ex = new TeacherSubjectExample();
+    ex.createCriteria().andTeacherIdEqualTo(teacherId).andSubjectIdEqualTo(subjectId);
+    return teacherSubjectMapper.countByExample(ex) > 0;
   }
 }
