@@ -11,6 +11,12 @@ import {
   FETCH_MCQ_FOR_MODERATION,
   FETCH_MCQ_FOR_MODERATION_SUCCESS,
   FETCH_MCQ_FOR_MODERATION_FAILURE,
+  FETCH_ALL_CQ,
+  FETCH_ALL_CQ_SUCCESS,
+  FETCH_CQ,
+  FETCH_CQ_SUCCESS,
+  FETCH_ALL_CQ_FOR_MODERATOR,
+  FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS,
 } from './constants';
 
 export function saveQuestion(question, type) {
@@ -61,4 +67,30 @@ export function fetchMcqForModerationSuccess(mcqDetails) {
 
 export function fetchMcqForModerationFailure(errorCode) {
   return { type: FETCH_MCQ_FOR_MODERATION_FAILURE, payload: { errorCode } };
+}
+
+export function fetchAllCq(status, teacherId) {
+  return { type: FETCH_ALL_CQ, payload: { status, teacherId } };
+}
+
+export function fetchAllCqSuccess(status, cqs) {
+  return { type: FETCH_ALL_CQ_SUCCESS, payload: { status, cqs } };
+}
+
+export function fetchCq(questionId) {
+  return { type: FETCH_CQ, payload: { questionId } };
+}
+export function fetchCqSuccess(cq) {
+  return { type: FETCH_CQ_SUCCESS, payload: { cq } };
+}
+export function fetchCqFailure(errorCode) {
+  return { type: FETCH_MCQ_FAILURE, payload: { errorCode } };
+}
+
+export function fetchCqForModerator(status) {
+  return { type: FETCH_ALL_CQ_FOR_MODERATOR, payload: { status } };
+}
+
+export function fetchCqForModeratorSuccess(status) {
+  return { type: FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS, payload: { status } };
 }

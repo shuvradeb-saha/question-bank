@@ -4,11 +4,19 @@ import { Authorization } from 'utils/auth';
 
 import { Roles } from 'containers/App/constants';
 import { NotFound } from 'components';
-import { McqStatusManagement, McqViewer, ModerateMcqViewer } from 'containers';
+import {
+  McqStatusManagement,
+  McqViewer,
+  CqViewer,
+  ModerateMcqViewer,
+  CqStatusManager,
+} from 'containers';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
-import { McqManager, McqType } from 'containers/CreateQuestion/Question';
-
-const CQ = () => <h1>CQ Question</h1>;
+import {
+  McqManager,
+  McqType,
+  CqManager,
+} from 'containers/CreateQuestion/Question';
 
 class QuestionRoute extends Component {
   render() {
@@ -47,7 +55,7 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path="/question/pending"
+            path="/question/mcq/pending"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.PENDING} />
@@ -57,7 +65,7 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path="/question/approved"
+            path="/question/mcq/approved"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.APPROVED} />
@@ -67,7 +75,7 @@ class QuestionRoute extends Component {
           />
           <Route
             exact
-            path="/question/rejected"
+            path="/question/mcq/rejected"
             component={Authorization(
               () => (
                 <McqStatusManagement type={QuestionStatusType.REJECTED} />
@@ -75,18 +83,59 @@ class QuestionRoute extends Component {
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
           />
+
           <Route
             exact
             path="/question/cq"
-            component={Authorization(CQ, [
+            component={Authorization(CqManager, [
+              Roles.HEADMASTER,
+              Roles.TEACHER,
+              Roles.MODERATOR,
+            ])}
+          />
+
+          <Route
+            exact
+            path="/question/cq/pending"
+            component={Authorization(
+              () => (
+                <CqStatusManager type={QuestionStatusType.PENDING} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/question/cq/approved"
+            component={Authorization(
+              () => (
+                <CqStatusManager type={QuestionStatusType.APPROVED} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/question/cq/rejected"
+            component={Authorization(
+              () => (
+                <CqStatusManager type={QuestionStatusType.REJECTED} />
+              ),
+              [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
+            )}
+          />
+
+          <Route
+            path="/mcq/:id"
+            component={Authorization(McqViewer, [
               Roles.HEADMASTER,
               Roles.TEACHER,
               Roles.MODERATOR,
             ])}
           />
           <Route
-            path="/mcq/:id"
-            component={Authorization(McqViewer, [
+            path="/cq/:id"
+            component={Authorization(CqViewer, [
               Roles.HEADMASTER,
               Roles.TEACHER,
               Roles.MODERATOR,

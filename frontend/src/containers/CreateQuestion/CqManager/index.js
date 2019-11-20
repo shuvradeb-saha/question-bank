@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { formValueSelector } from 'redux-form/immutable';
 import PropTypes from 'prop-types';
+import { CqForm } from 'components/QuestionForm';
 
 import {
   makeAllClasses,
@@ -11,15 +12,13 @@ import {
   makeUserId,
   makeAllChapters,
 } from 'state/login/selectors';
-import { saveQuestion } from 'state/question/action';
-import { QuestionType } from 'containers/CreateQuestion/Question';
-import { McqForm } from 'components/QuestionForm';
+import API from 'utils/api';
+import { toastSuccess, toastError } from 'components/Toaster';
 
-const mcqFormSelector = formValueSelector('mcqForm');
+const cqFormSelector = formValueSelector('cqForm');
 
-class McqManager extends Component {
+class CqManager extends Component {
   static propTypes = {
-    mcqType: PropTypes.string.isRequired,
     classes: PropTypes.object,
     chapters: PropTypes.object,
     subjects: PropTypes.object,
@@ -29,7 +28,7 @@ class McqManager extends Component {
     teacherId: PropTypes.number.isRequired,
   };
 
-  onMcqSubmit = values => {
+  onCQSubmit = async values => {
     if (
       window.confirm(
         'Make sure you enter correct information. Question cannot be edited after submit. Are you sure to submit?'
@@ -41,10 +40,15 @@ class McqManager extends Component {
         createdBy: this.props.teacherId,
         subjectId: data.subjectId.value,
         chapterId: data.chapterId.value,
-        mcqType: this.props.mcqType,
       };
-
-      this.props.saveMcq(questionData, QuestionType.MCQ);
+      try {
+        const uri = `/api/teacher/question/cq`;
+        await API.post(uri, questionData);
+        toastSuccess('Question has successfully submitted for approval.');
+      } catch (error) {
+        toastError(`Unable to save. ${error.response.data.message}`);
+        console.log('Error: ', error);
+      }
     } else {
       return;
     }
@@ -55,43 +59,37 @@ class McqManager extends Component {
       classes,
       subjects,
       selectedClass,
-      mcqType,
       selectedSubject,
       chapters,
     } = this.props;
-
     return (
       <div>
-        <McqForm
-          mcqType={mcqType}
+        <CqForm
           subjects={subjects}
           classes={classes}
           chapters={chapters}
           selectedClass={selectedClass}
           selectedSubject={selectedSubject}
-          onSubmit={this.onMcqSubmit}
+          onSubmit={this.onCQSubmit}
         />
       </div>
     );
   }
 }
-
 const mapStateToProps = createStructuredSelector({
-  selectedClass: state => mcqFormSelector(state, 'class'),
-  selectedSubject: state => mcqFormSelector(state, 'subjectId'),
+  selectedClass: state => cqFormSelector(state, 'class'),
+  selectedSubject: state => cqFormSelector(state, 'subjectId'),
   classes: makeAllClasses(),
   subjects: makeAllSubjects(),
   chapters: makeAllChapters(),
   teacherId: makeUserId(),
 });
 
-const mapDispatchToProps = dispatch => ({
-  saveMcq: (question, type) => dispatch(saveQuestion(question, type)),
-});
+const mapDispatchToProps = dispatch => ({});
 
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
-export default compose(withConnect)(McqManager);
+export default compose(withConnect)(CqManager);

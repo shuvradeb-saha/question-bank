@@ -160,36 +160,80 @@ const renderTeacherOptions = () => (
       </div>
     </Link>
     <a
-      href="#question-status"
+      href="#submission-status"
       data-toggle="collapse"
       aria-expanded="false"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
         <span className="fa fa-eye fa-fw mr-3"></span>
-        <span className="menu-collapsed">Question Status</span>
+        <span className="menu-collapsed">Submission Status</span>
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
-    <div id="question-status" className="collapse sidebar-submenu">
-      <Link
-        to="/question/pending"
-        className="list-group-item list-group-item-action bg-dark text-white"
+    <div id="submission-status" className="collapse sidebar-submenu">
+      <a
+        href="#mcq-status"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
       >
-        <span className="menu-collapsed">Pending list</span>
-      </Link>
-      <Link
-        to="/question/approved"
-        className="list-group-item list-group-item-action bg-dark text-white"
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="menu-collapsed">MCQ Status</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+      <div id="mcq-status" className="collapse sidebar-submenu">
+        <Link
+          to="/question/mcq/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending MCQ</span>
+        </Link>
+        <Link
+          to="/question/mcq/approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved MCQ</span>
+        </Link>
+        <Link
+          to="/question/mcq/rejected"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Rejected MCQ</span>
+        </Link>
+      </div>
+      <a
+        href="#cq-status"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
       >
-        <span className="menu-collapsed">Approved list</span>
-      </Link>
-      <Link
-        to="/question/rejected"
-        className="list-group-item list-group-item-action bg-dark text-white"
-      >
-        <span className="menu-collapsed">Rejected list</span>
-      </Link>
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="menu-collapsed">CQ Status</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+      <div id="cq-status" className="collapse sidebar-submenu">
+        <Link
+          to="/question/cq/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending CQ</span>
+        </Link>
+        <Link
+          to="/question/cq/approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved CQ</span>
+        </Link>
+        <Link
+          to="/question/cq/rejected"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Rejected CQ</span>
+        </Link>
+      </div>
     </div>
   </span>
 );

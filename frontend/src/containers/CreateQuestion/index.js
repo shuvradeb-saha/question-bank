@@ -21,7 +21,6 @@ class CreateQuestion extends Component {
     const { allocatedSubjects } = this.props;
 
     const hasSubject = allocatedSubjects && allocatedSubjects.size > 0;
-    console.log('has subject', hasSubject);
 
     return !hasSubject ? (
       <div className="alert alert-danger">

@@ -9,18 +9,33 @@ import {
   FETCH_MCQ_FOR_MODERATION,
   FETCH_MCQ_FOR_MODERATION_FAILURE,
   FETCH_MCQ_FOR_MODERATION_SUCCESS,
+  FETCH_ALL_CQ_SUCCESS,
+  FETCH_CQ_FIALURE,
+  FETCH_CQ_SUCCESS,
+  FETCH_CQ,
 } from './constants';
 
 const initialState = fromJS({
   mcq: {},
+  cq: {},
   pendingMcqs: [],
   rejectedMcqs: [],
   approvedMcqs: [],
+  pendingCqs: [],
+  rejectedCqs: [],
+  approvedCqs: [],
   moderator: {
     pendingMcqs: [],
     rejectedMcqs: [],
     approvedMcqs: [],
     mcq: {
+      question: {},
+      similar: [],
+    },
+    pendingCqs: [],
+    rejectedCqs: [],
+    approvedCqs: [],
+    cq: {
       question: {},
       similar: [],
     },
@@ -42,6 +57,7 @@ function reducer(state = initialState, { type, payload }) {
         return state.merge(fromJS({ rejectedMcqs: mcqs }));
       }
     }
+    case FETCH_CQ:
     case FETCH_MCQ_FOR_MODERATION:
     case FETCH_MCQ: {
       return state.merge(fromJS({ inProgress: true }));
@@ -51,6 +67,8 @@ function reducer(state = initialState, { type, payload }) {
       const { mcq } = payload;
       return state.merge(fromJS({ mcq, inProgress: false, errorCode: '' }));
     }
+
+    case FETCH_CQ_FIALURE:
     case FETCH_MCQ_FOR_MODERATION_FAILURE:
     case FETCH_MCQ_FAILURE: {
       const { errorCode } = payload;
@@ -85,6 +103,24 @@ function reducer(state = initialState, { type, payload }) {
         fromJS({ moderator, inProgress: false, errorCode: '' })
       );
     }
+
+    case FETCH_ALL_CQ_SUCCESS: {
+      const { status, cqs } = payload;
+
+      if (QuestionStatusType.PENDING === status) {
+        return state.merge(fromJS({ pendingCqs: cqs }));
+      } else if (QuestionStatusType.APPROVED === status) {
+        return state.merge(fromJS({ approvedCqs: cqs }));
+      } else {
+        return state.merge(fromJS({ rejectedCqs: cqs }));
+      }
+    }
+
+    case FETCH_CQ_SUCCESS: {
+      const { cq } = payload;
+      return state.merge(fromJS({ cq, inProgress: false, errorCode: '' }));
+    }
+
     default:
       return state;
   }

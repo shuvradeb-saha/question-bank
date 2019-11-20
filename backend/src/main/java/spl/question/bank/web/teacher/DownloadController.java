@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/headmaster")
 public class DownloadController {
 
   private final DownloadService downloadService;
@@ -21,7 +21,7 @@ public class DownloadController {
     this.downloadService = downloadService;
   }
 
-  @RequestMapping(value = "/headmaster/generate/paper", method = RequestMethod.POST)
+  @RequestMapping(value = "/generate/paper", method = RequestMethod.POST)
   public ResponseEntity generatePaper(@RequestBody DownloadCriteria downloadCriteria)
       throws IOException {
 

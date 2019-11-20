@@ -18,3 +18,13 @@ export const FETCH_MCQ_FOR_MODERATION_SUCCESS =
   'state/question/FETCH_MCQ_FOR_MODERATION_SUCCESS';
 export const FETCH_MCQ_FOR_MODERATION_FAILURE =
   'state/question/FETCH_MCQ_FOR_MODERATION_FAILURE';
+export const FETCH_ALL_CQ = 'state/question/FETCH_ALL_CQ';
+export const FETCH_ALL_CQ_SUCCESS = 'state/question/FETCH_ALL_CQ_SUCCESS';
+export const FETCH_ALL_CQ_FIALURE = 'state/question/FETCH_ALL_CQ_FIALURE';
+export const FETCH_CQ = 'state/question/FETCH_CQ';
+export const FETCH_CQ_SUCCESS = 'state/question/FETCH_CQ_SUCCESS';
+export const FETCH_CQ_FIALURE = 'state/question/FETCH_CQ_FIALURE';
+export const FETCH_ALL_CQ_FOR_MODERATOR =
+  'state/question/FETCH_ALL_CQ_FOR_MODERATOR';
+export const FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS =
+  'state/question/FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS';

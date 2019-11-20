@@ -75,3 +75,27 @@ export const makeSimilarMcqs = () =>
         .get('mcq')
         .get('similar')
   );
+
+export const makePendingCqs = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('pendingCqs')
+  );
+
+export const makeApprovedCqs = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('approvedCqs')
+  );
+
+export const makeRejectedCqs = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('rejectedCqs')
+  );
+
+export const makeCq = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('cq')
+  );

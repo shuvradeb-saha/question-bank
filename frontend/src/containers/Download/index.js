@@ -15,6 +15,7 @@ import {
 import API from 'utils/api';
 import { toastSuccess, toastError } from 'components/Toaster';
 import { fromJS } from 'immutable';
+import { zip } from 'rxjs/operators';
 
 const downloadFormSelector = formValueSelector('downloadForm');
 class Download extends Component {
@@ -71,16 +72,31 @@ class Download extends Component {
   };
 
   onDownloadClick = async () => {
-    //const uri = `/api/headmaster/download/MCQ/29`;
-    //const data = await API.get(uri);
-    // console.log('data', data);
-    const href = `${process.env.REACT_APP_API_PREFIX}api/download/MCQ/29`;
-    const link = document.createElement('a');
-    link.href = href;
-    link.setAttribute('download', null);
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
+    try {
+      let anchor = document.createElement('a');
+      document.body.appendChild(anchor);
+      let file = `${process.env.REACT_APP_API_PREFIX}api/headmaster/download/MCQ/29`;
+
+      let headers = new Headers();
+      headers.append(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token')}`
+      );
+
+      fetch(file, { headers })
+        .then(response => response.blob())
+        .then(blobby => {
+          let objectUrl = window.URL.createObjectURL(blobby);
+
+          anchor.href = objectUrl;
+          anchor.download = 'question-answer-file.zip';
+          anchor.click();
+
+          window.URL.revokeObjectURL(objectUrl);
+        });
+    } catch (error) {
+      console.log('Error', error);
+    }
   };
 
   render() {

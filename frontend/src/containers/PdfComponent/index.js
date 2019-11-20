@@ -37,7 +37,6 @@ export default class PdfComponent extends Component {
           <div
             style={{
               width: '500px',
-              fontFamily: 'Noto, sans-serif',
             }}
           >
             {questionType === 'MCQ' ? (

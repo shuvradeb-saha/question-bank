@@ -10,4 +10,6 @@ export { default as Toaster } from './Toaster';
 export { default as TeacherTable } from './TeacherTable';
 export { default as QuestionList } from './QuestionList';
 export { default as MCQ } from './QuestionViewer/MCQ';
+export { default as CQ } from './QuestionViewer/CQ';
 export { default as DownloadCriteria } from './DownloadCriteria';
+export { default as CqQuestionList } from './CqQuestionList';
