@@ -56,7 +56,6 @@ class MixContent extends Component {
               [Roles.HEADMASTER]
             )}
           />
-
           <Route
             exact
             path="/teacher/pending"
@@ -67,7 +66,6 @@ class MixContent extends Component {
               [Roles.HEADMASTER]
             )}
           />
-
           <Route
             exact
             path="/question/create"
@@ -105,6 +103,37 @@ class MixContent extends Component {
           <Route
             exact
             path="/moderate/mcq/rejected"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.REJECTED} />
+              ),
+              [Roles.MODERATOR]
+            )}
+          />
+
+          <Route
+            exact
+            path="/moderate/cq/pending"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.PENDING} />
+              ),
+              [Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/moderate/cq/approved"
+            component={Authorization(
+              () => (
+                <McqModeration type={QuestionStatusType.APPROVED} />
+              ),
+              [Roles.MODERATOR]
+            )}
+          />
+          <Route
+            exact
+            path="/moderate/cq/rejected"
             component={Authorization(
               () => (
                 <McqModeration type={QuestionStatusType.REJECTED} />

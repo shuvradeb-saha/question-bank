@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import spl.question.bank.database.client.CQQuestionMapper;
 import spl.question.bank.database.client.MCQQuestionMapper;
+import spl.question.bank.database.model.CQQuestion;
 import spl.question.bank.database.model.MCQQuestion;
+import spl.question.bank.model.moderator.SimilarCqDto;
 import spl.question.bank.model.moderator.SimilarMcqDto;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.QuestionType;
@@ -27,16 +29,19 @@ public class ModeratorService {
   private final MCQQuestionMapper mcqQuestionMapper;
   private final CQQuestionMapper cqQuestionMapper;
   private final McqService mcqService;
+  private final CqService cqService;
 
   public ModeratorService(
       SimilarityService similarityService,
       MCQQuestionMapper mcqQuestionMapper,
       CQQuestionMapper cqQuestionMapper,
-      McqService mcqService) {
+      McqService mcqService,
+      CqService cqService) {
     this.similarityService = similarityService;
     this.mcqQuestionMapper = mcqQuestionMapper;
     this.cqQuestionMapper = cqQuestionMapper;
     this.mcqService = mcqService;
+    this.cqService = cqService;
   }
 
   public ResponseEntity getSimilarMcqs(Integer mcqId) throws IOException {
@@ -45,7 +50,7 @@ public class ModeratorService {
       return mcqRes;
     }
     MCQDto newMcqDto = (MCQDto) mcqRes.getBody();
-    val similarMcqs = similarityService.extractSimilarQuestions(newMcqDto);
+    val similarMcqs = similarityService.extractSimilarMcq(newMcqDto);
     SimilarMcqDto similarMcqDto = new SimilarMcqDto();
     similarMcqDto.setNewMcq(newMcqDto).setSimilarMcqs(similarMcqs);
     return ResponseEntity.ok(similarMcqDto);
@@ -71,8 +76,15 @@ public class ModeratorService {
     }
   }
 
-  // Todo => need to recheck things here
   public ResponseEntity getSimilarCQS(Integer cqId) {
-    return ResponseEntity.ok("done");
+    val cqRes = cqService.getCQById(cqId);
+    if (!cqRes.getStatusCode().is2xxSuccessful()) {
+      return cqRes;
+    }
+    CQQuestion cqQuestion = (CQQuestion) cqRes.getBody();
+    val similarCqs = similarityService.extractSimilarCq(cqQuestion);
+    SimilarCqDto similarCqDto = new SimilarCqDto();
+    similarCqDto.setNewCq(cqQuestion).setSimilarCqs(similarCqs);
+    return ResponseEntity.ok(similarCqDto);
   }
 }

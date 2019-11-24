@@ -1,18 +1,18 @@
 package spl.question.bank.service.similarity;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+@Service
+@Slf4j
 public class Stemmer {
 
   private ArrayList<String> lines;
@@ -20,7 +20,6 @@ public class Stemmer {
 
   private static final String CURLY_OPEN = "{";
   private static final String CURLY_CLOSE = "}";
-  private final String dir = "common.rules";
   private TreeSet<Character> st;
   private HashMap<String, String> replaceRule;
 
@@ -28,11 +27,10 @@ public class Stemmer {
     replaceRule = new HashMap<>();
     dependantCharSetInstallation();
 
-    Charset charset = Charset.forName("UTF-8");
-    Path path = FileSystems.getDefault().getPath(dir);
+    Charset charset = StandardCharsets.UTF_8;
     lines = new ArrayList<>();
     pass = new ArrayList<>();
-    File  file = ResourceUtils.getFile("classpath:common.rules");
+    File file = ResourceUtils.getFile("classpath:common.rules");
     InputStream inputStream = new FileInputStream(file);
 
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset))) {
@@ -48,7 +46,6 @@ public class Stemmer {
         }
         lines.add(line);
       }
-
     } catch (IOException x) {
       x.printStackTrace();
     }
@@ -56,7 +53,7 @@ public class Stemmer {
     int cnt = 0;
     for (int i = 0; i < lines.size(); i++) {
       if (lines.get(i).equals(CURLY_OPEN)) {
-        pass.add(new ArrayList<String>());
+        pass.add(new ArrayList<>());
         i++;
         while (i < lines.size() && !lines.get(i).equals(CURLY_CLOSE)) {
           pass.get(cnt).add(lines.get(i));
@@ -65,6 +62,7 @@ public class Stemmer {
         cnt++;
       }
     }
+    logger.info("pass => {}", pass.toString());
   }
 
   private String whiteSpaceTrim(String str) {
@@ -103,7 +101,8 @@ public class Stemmer {
               }
             }
             word = builder.substring(0, k);
-          } else if (/* escape.contains(pass.get(i).get(j)) || */ check(word.substring(0, indx))) {
+          } else if (
+          /* escape.contains(pass.get(i).get(j)) || */ check(word.substring(0, indx))) {
             word = word.substring(0, indx);
           }
 
@@ -131,8 +130,7 @@ public class Stemmer {
     int wordLength = 0;
 
     for (i = 0; i < word.length(); i++) {
-      if (st.contains(word.charAt(i)))
-        continue;
+      if (st.contains(word.charAt(i))) continue;
       wordLength++;
     }
     return wordLength >= 1;

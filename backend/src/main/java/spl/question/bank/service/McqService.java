@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.model.MCQQuestion;
 import spl.question.bank.database.model.MCQQuestionExample;
+import spl.question.bank.database.model.User;
 import spl.question.bank.model.admin.Roles;
 import spl.question.bank.model.question.Difficulty;
 import spl.question.bank.model.question.QuestionStatus;
@@ -35,10 +36,12 @@ public class McqService {
   private final MCQQuestionMapper mcqMapper;
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final UserService userService;
+  private final MailService mailService;
 
-  public McqService(final MCQQuestionMapper mcqMapper, final UserService userService) {
+  public McqService(MCQQuestionMapper mcqMapper, UserService userService, MailService mailService) {
     this.mcqMapper = mcqMapper;
     this.userService = userService;
+    this.mailService = mailService;
   }
 
   public MCQQuestion saveMcq(final MCQDto mcqDto) throws JsonProcessingException {
@@ -77,8 +80,10 @@ public class McqService {
 
     if (mcqDto.getId() == null) {
       val moderator = getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
-      mcqQuestion.setModeratedBy(moderator);
+      mcqQuestion.setModeratedBy(moderator.getId());
       mcqMapper.insert(mcqQuestion);
+      mailService.sendEmailToModerator(
+          moderator.getEmail(), moderator.getFirstName() + " " + moderator.getLastName());
     } else {
       mcqQuestion.setId(mcqDto.getId());
       mcqMapper.updateByPrimaryKey(mcqQuestion);
@@ -86,7 +91,7 @@ public class McqService {
     return mcqQuestion;
   }
 
-  private Integer getRandomModerator(Integer subjectId, Integer creator) {
+  private User getRandomModerator(Integer subjectId, Integer creator) {
     val allModerators = userService.getModeratorBySubject(subjectId);
     // Remove the creator if he is a moderator
     val refinedModerators =
@@ -99,7 +104,7 @@ public class McqService {
     }
 
     int randIndx = new Random().nextInt(refinedModerators.size());
-    return refinedModerators.get(randIndx).getId();
+    return refinedModerators.get(randIndx);
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {

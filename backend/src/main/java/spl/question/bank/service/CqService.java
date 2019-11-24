@@ -79,6 +79,15 @@ public class CqService {
   }
 
   public ResponseEntity retrieveCQForModerator(QuestionStatus status) {
-    return ResponseEntity.ok("done");
+    Integer moderatorId = userService.getAuthenticatedUser().getId();
+    val cqEx = new CQQuestionExample();
+    cqEx.createCriteria().andStatusEqualTo(status.name()).andModeratedByEqualTo(moderatorId);
+    return ResponseEntity.ok(cqQuestionMapper.selectByExample(cqEx));
+  }
+
+  public List<CQQuestion> getCQListByStatusAndSubject(Integer subjectId, QuestionStatus approved) {
+    val cqex = new CQQuestionExample();
+    cqex.createCriteria().andSubjectIdEqualTo(subjectId).andStatusEqualTo(approved.name());
+    return cqQuestionMapper.selectByExample(cqex);
   }
 }

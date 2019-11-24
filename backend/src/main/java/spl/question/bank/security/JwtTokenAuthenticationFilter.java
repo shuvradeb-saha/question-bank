@@ -17,54 +17,51 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtConfig jwtConfig;
+  private final JwtConfig jwtConfig;
 
-    public JwtTokenAuthenticationFilter(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
+  public JwtTokenAuthenticationFilter(JwtConfig jwtConfig) {
+    this.jwtConfig = jwtConfig;
+  }
+
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+
+    String header = request.getHeader(jwtConfig.getHeader());
+
+    if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
+      filterChain.doFilter(request, response);
+      return;
     }
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    String token = header.replace(jwtConfig.getPrefix(), "");
 
-        String header = request.getHeader(jwtConfig.getHeader());
+    try {
+      Claims claims =
+          Jwts.parser()
+              .setSigningKey(jwtConfig.getSecret().getBytes())
+              .parseClaimsJws(token)
+              .getBody();
 
-        if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+      String username = claims.getSubject();
+      if (username != null) {
+        val authorities = (List<String>) claims.get("authorities");
 
-        String token = header.replace(jwtConfig.getPrefix(), "");
+        UsernamePasswordAuthenticationToken auth =
+            new UsernamePasswordAuthenticationToken(
+                username,
+                null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+      }
 
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(jwtConfig.getSecret().getBytes())
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            String username = claims.getSubject();
-            logger.info("Issued at {}", claims.getIssuedAt());
-            logger.info("Expired at {}", claims.getExpiration());
-            if (username != null) {
-                val authorities = (List<String>) claims.get("authorities");
-
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        username, null,
-                        authorities
-                                .stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .collect(Collectors.toList()));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-        }
-        filterChain.doFilter(request, response);
+    } catch (Exception e) {
+      SecurityContextHolder.clearContext();
     }
-
+    filterChain.doFilter(request, response);
+  }
 }

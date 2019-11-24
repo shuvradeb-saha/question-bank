@@ -2,8 +2,8 @@ package spl.question.bank.service.similarity;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import lombok.var;
 import org.springframework.stereotype.Service;
+import spl.question.bank.database.model.CQQuestion;
 import spl.question.bank.model.question.mcq.*;
 
 import java.util.*;
@@ -15,19 +15,33 @@ import static org.apache.commons.lang3.StringUtils.isAlpha;
 @Service
 @Slf4j
 public class SimilarityUtils {
+  private final Stemmer stemmer;
+
+  public SimilarityUtils(Stemmer stemmer) {
+    this.stemmer = stemmer;
+  }
 
   HashMap<Integer, List<String>> getTokenizedMap(List<MCQDto> questions) {
-
     val start = System.currentTimeMillis();
     val questionWords = new HashMap<Integer, List<String>>();
-
-    questions.forEach(mcqDto -> {
-      List<String> question = extractTokenFromDto(mcqDto);
-      questionWords.put(mcqDto.getId(), question);
-    });
+    questions.forEach(
+        mcqDto -> {
+          List<String> question = extractTokenFromDto(mcqDto);
+          questionWords.put(mcqDto.getId(), question);
+        });
 
     logger.debug("Total time = " + (System.currentTimeMillis() - start));
     return questionWords;
+  }
+
+  List<String> extractTokenFromCq(CQQuestion cq) {
+    List<String> tokens = new ArrayList<>();
+    tokens.addAll(tokenize(cq.getStem()));
+    tokens.addAll(tokenize(cq.getKnowledgeBased()));
+    tokens.addAll(tokenize(cq.getUnderstandingBased()));
+    tokens.addAll(tokenize(cq.getApplicationBased()));
+    tokens.addAll(tokenize(cq.getHigherAbility()));
+    return tokens;
   }
 
   List<String> extractTokenFromDto(MCQDto mcqDto) {
@@ -35,8 +49,8 @@ public class SimilarityUtils {
     if (mcqDto instanceof GeneralMCQDto) {
       tokenizedQuery = extractFromGeneralMcq(((GeneralMCQDto) mcqDto).getGeneralMCQDetail());
     } else if (mcqDto instanceof PolynomialMCQDto) {
-      tokenizedQuery = extractFromPolynomialMcq(
-          ((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
+      tokenizedQuery =
+          extractFromPolynomialMcq(((PolynomialMCQDto) mcqDto).getPolynomialMCQDetail());
     } else {
       tokenizedQuery = extractFromStemMcq(((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail());
     }
@@ -85,9 +99,9 @@ public class SimilarityUtils {
     for (String token : nonProcessedTokens) {
       String processedToken;
       if (isAlpha(token)) {
-        processedToken = token.toLowerCase();
+        processedToken = removeBadCharacters(token).toLowerCase();
       } else {
-        processedToken = removeBadCharacters(token);
+        processedToken = stemmer.stemOfWord(removeBadCharacters(token));
       }
       processedTokens.add(processedToken);
     }

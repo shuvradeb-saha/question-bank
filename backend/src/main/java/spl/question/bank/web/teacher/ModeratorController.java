@@ -69,7 +69,7 @@ public class ModeratorController {
       value = "/cq/{cqId}",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
       method = RequestMethod.GET)
-  public ResponseEntity getSimilarCQ(@PathVariable Integer cqId) throws IOException {
+  public ResponseEntity getSimilarCQ(@PathVariable Integer cqId) {
     return moderatorService.getSimilarCQS(cqId);
   }
 }
