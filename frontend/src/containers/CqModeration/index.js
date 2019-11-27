@@ -15,11 +15,11 @@ import {
   makeAllChapters,
 } from 'state/login/selectors';
 
-import { fetchCqForModerator } from 'state/question/action';
+import { fetchAllCqForModerator } from 'state/question/action';
 import {
-  makePendingMcqsForModerator,
-  makeApprovedMcqsByModerator,
-  makeRejectedMcqsByModerator,
+  makePendingCqsForModerator,
+  makeRejectedCqsByModerator,
+  makeApprovedCqsByModerator,
 } from 'state/question/selectors';
 
 const createDataForTable = (allCqs, allChapter, allClass, allSubject) => {
@@ -177,18 +177,18 @@ const mapStateToProps = createStructuredSelector({
   allClass: makeAllClasses(),
   allChapter: makeAllChapters(),
   allSubject: makeAllSubjects(),
-  pendingMcqs: makePendingMcqsForModerator(),
-  rejectedMcqs: makeRejectedMcqsByModerator(),
-  approvedMcqs: makeApprovedMcqsByModerator(),
+  pendingMcqs: makePendingCqsForModerator(),
+  rejectedMcqs: makeRejectedCqsByModerator(),
+  approvedMcqs: makeApprovedCqsByModerator(),
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchPendingForModerator: () =>
-    dispatch(fetchMcqForModerator(QuestionStatusType.PENDING)),
+    dispatch(fetchAllCqForModerator(QuestionStatusType.PENDING)),
   fetchApprovedByModerator: () =>
-    dispatch(fetchMcqForModerator(QuestionStatusType.APPROVED)),
+    dispatch(fetchAllCqForModerator(QuestionStatusType.APPROVED)),
   fetchRejectedByModerator: () =>
-    dispatch(fetchMcqForModerator(QuestionStatusType.REJECTED)),
+    dispatch(fetchAllCqForModerator(QuestionStatusType.REJECTED)),
 });
 
 const withConnect = connect(

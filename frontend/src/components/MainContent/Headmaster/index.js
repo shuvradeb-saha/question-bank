@@ -9,6 +9,7 @@ import {
   TeacherManagement,
   CreateQuestion,
   McqModeration,
+  CqModeration,
   Download,
 } from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
@@ -116,7 +117,7 @@ class MixContent extends Component {
             path="/moderate/cq/pending"
             component={Authorization(
               () => (
-                <McqModeration type={QuestionStatusType.PENDING} />
+                <CqModeration type={QuestionStatusType.PENDING} />
               ),
               [Roles.MODERATOR]
             )}
@@ -126,7 +127,7 @@ class MixContent extends Component {
             path="/moderate/cq/approved"
             component={Authorization(
               () => (
-                <McqModeration type={QuestionStatusType.APPROVED} />
+                <CqModeration type={QuestionStatusType.APPROVED} />
               ),
               [Roles.MODERATOR]
             )}
@@ -136,7 +137,7 @@ class MixContent extends Component {
             path="/moderate/cq/rejected"
             component={Authorization(
               () => (
-                <McqModeration type={QuestionStatusType.REJECTED} />
+                <CqModeration type={QuestionStatusType.REJECTED} />
               ),
               [Roles.MODERATOR]
             )}

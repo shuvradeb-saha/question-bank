@@ -79,7 +79,7 @@ public class McqService {
     }
 
     if (mcqDto.getId() == null) {
-      val moderator = getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
+      val moderator = userService.getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
       mcqQuestion.setModeratedBy(moderator.getId());
       mcqMapper.insert(mcqQuestion);
       mailService.sendEmailToModerator(
@@ -89,22 +89,6 @@ public class McqService {
       mcqMapper.updateByPrimaryKey(mcqQuestion);
     }
     return mcqQuestion;
-  }
-
-  private User getRandomModerator(Integer subjectId, Integer creator) {
-    val allModerators = userService.getModeratorBySubject(subjectId);
-    // Remove the creator if he is a moderator
-    val refinedModerators =
-        allModerators.stream()
-            .filter(user -> !user.getId().equals(creator))
-            .collect(Collectors.toList());
-
-    if (refinedModerators.size() <= 0) {
-      throw new RuntimeException("No moderator exists yet. Please submit question later.");
-    }
-
-    int randIndx = new Random().nextInt(refinedModerators.size());
-    return refinedModerators.get(randIndx);
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {

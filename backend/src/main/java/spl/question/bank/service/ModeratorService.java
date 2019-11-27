@@ -87,4 +87,6 @@ public class ModeratorService {
     similarCqDto.setNewCq(cqQuestion).setSimilarCqs(similarCqs);
     return ResponseEntity.ok(similarCqDto);
   }
+
+  // todo => add approve reject with notification
 }

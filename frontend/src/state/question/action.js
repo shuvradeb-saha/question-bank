@@ -17,6 +17,9 @@ import {
   FETCH_CQ_SUCCESS,
   FETCH_ALL_CQ_FOR_MODERATOR,
   FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS,
+  FETCH_CQ_FOR_MODERATION_SUCCESS,
+  FETCH_CQ_FOR_MODERATION,
+  FETCH_CQ_FOR_MODERATION_FAILURE,
 } from './constants';
 
 export function saveQuestion(question, type) {
@@ -87,10 +90,24 @@ export function fetchCqFailure(errorCode) {
   return { type: FETCH_MCQ_FAILURE, payload: { errorCode } };
 }
 
-export function fetchCqForModerator(status) {
+export function fetchAllCqForModerator(status) {
   return { type: FETCH_ALL_CQ_FOR_MODERATOR, payload: { status } };
 }
 
-export function fetchCqForModeratorSuccess(status) {
-  return { type: FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS, payload: { status } };
+export function fetchAllCqForModeratorSuccess(status, cqs) {
+  return { type: FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS, payload: { status, cqs } };
+}
+
+export function fetchCQForModeration(id) {
+  console.log('action0');
+
+  return { type: FETCH_CQ_FOR_MODERATION, payload: { id } };
+}
+
+export function fetchCQForModerationSuccess(cqDetails) {
+  return { type: FETCH_CQ_FOR_MODERATION_SUCCESS, payload: { cqDetails } };
+}
+
+export function fetchCQForModerationFailure(errorCode) {
+  return { type: FETCH_CQ_FOR_MODERATION_FAILURE, payload: { errorCode } };
 }

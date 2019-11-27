@@ -6,33 +6,33 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Loader from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
-import { fetchMcqForModeration } from 'state/question/action';
+import { fetchCQForModeration } from 'state/question/action';
 import {
   makeInProgress,
   makeErrorCode,
-  makeMcqForModerator,
-  makeSimilarMcqs,
+  makeCqForModerator,
+  makeSimilarCqs,
 } from 'state/question/selectors';
 import API from 'utils/api';
-import { AccessDenied, NotFound, MCQ } from 'components';
+import { AccessDenied, NotFound, CQ } from 'components';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
-import { McqType } from 'containers/CreateQuestion/Question';
+
 import { splitStringForContent } from 'utils/utils';
 import { toastSuccess, toastError } from 'components/Toaster';
 
-class ModerateMcqViewer extends Component {
+class ModeratorCqViewer extends Component {
   static propTypes = {
     match: PropTypes.any,
-    fetchMcqForModeration: PropTypes.func,
-    mcq: PropTypes.object,
-    similarMcqs: PropTypes.any,
+    fetchCQForModeration: PropTypes.func,
+    cq: PropTypes.object,
+    similarCqs: PropTypes.any,
     inProgress: PropTypes.bool,
     errorCode: PropTypes.any,
   };
 
   componentDidMount() {
     const id = parseInt(this.props.match.params.id, 10);
-    this.props.fetchMcqForModeration(id);
+    this.props.fetchCQForModeration(id);
   }
 
   onApproveClick = async id => {
@@ -41,14 +41,14 @@ class ModerateMcqViewer extends Component {
         'Question will be added to the approved question database. Are you sure?'
       )
     ) {
-      const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.APPROVED}`;
+      const uri = `/api/moderator/question/cq/${id}/${QuestionStatusType.APPROVED}`;
       try {
         const response = await API.put(uri);
         toastSuccess(response);
       } catch (error) {
         toastError('Some error occured during approving question.');
       }
-      this.props.history.push('/moderate/mcq/approved');
+      this.props.history.push('/moderate/cq/approved');
     } else {
       return;
     }
@@ -60,7 +60,7 @@ class ModerateMcqViewer extends Component {
         'Question will be added to the rejected question database. Are you sure?'
       )
     ) {
-      const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.REJECTED}`;
+      const uri = `/api/moderator/question/cq/${id}/${QuestionStatusType.REJECTED}`;
 
       try {
         const response = await API.put(uri);
@@ -68,17 +68,17 @@ class ModerateMcqViewer extends Component {
       } catch (error) {
         toastError('Some error occured during rejecting question.');
       }
-      this.props.history.push('/moderate/mcq/rejected');
+      this.props.history.push('/moderate/cq/rejected');
     } else {
       return;
     }
   };
 
   render() {
-    const { mcq, errorCode, similarMcqs, inProgress } = this.props;
+    const { cq, errorCode, similarCqs, inProgress } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
-    const status = mcq.get('status');
-
+    console.log('cq', cq, inProgress);
+    const status = cq.get('status');
     if (inProgress) {
       return (
         <div className="container-fluid h-100 mt-5">
@@ -109,7 +109,7 @@ class ModerateMcqViewer extends Component {
             <div className="row ">
               <div className="col">
                 <div>
-                  <MCQ mcq={mcq} />
+                  <CQ cq={cq} />
                 </div>
                 {status === QuestionStatusType.PENDING && (
                   <div className="row">
@@ -140,24 +140,14 @@ class ModerateMcqViewer extends Component {
                   <div className=" row bg-dark text-light p-2 rounded">
                     <strong>Similar Questions</strong>
                   </div>
-                  {similarMcqs.map(mcq => {
-                    const mcqType = mcq.get('mcqType');
+                  {similarCqs.map(cq => {
                     let contentToShow = '';
-                    if (mcqType === McqType.GENERAL) {
-                      const mainStr = mcq.get('questionBody');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    } else if (mcqType === McqType.POLYNOMIAL) {
-                      const mainStr = mcq.get('questionStatement');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    } else {
-                      const mainStr = mcq.get('stem');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    }
+                    contentToShow = splitStringForContent(cq.get('stem'));
 
                     return (
-                      <div key={mcq.get('id')} className="row  p-2 ">
+                      <div key={cq.get('id')} className="row  p-2 ">
                         <Link
-                          to={`/mcq/${mcq.get('id')}`}
+                          to={`/cq/${cq.get('id')}`}
                           style={{ color: 'blue' }}
                         >
                           {contentToShow}
@@ -182,18 +172,18 @@ class ModerateMcqViewer extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  mcq: makeMcqForModerator(),
-  similarMcqs: makeSimilarMcqs(),
+  cq: makeCqForModerator(),
+  similarCqs: makeSimilarCqs(),
   inProgress: makeInProgress(),
   errorCode: makeErrorCode(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchMcqForModeration: id => dispatch(fetchMcqForModeration(id)),
+  fetchCQForModeration: id => dispatch(fetchCQForModeration(id)),
 });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
-export default compose(withConnect)(ModerateMcqViewer);
+export default compose(withConnect)(ModeratorCqViewer);

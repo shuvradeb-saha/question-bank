@@ -99,3 +99,41 @@ export const makeCq = () =>
     selectQuestion,
     questionState => questionState.get('cq')
   );
+
+export const makePendingCqsForModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('pendingCqs')
+  );
+
+export const makeApprovedCqsByModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('approvedCqs')
+  );
+
+export const makeRejectedCqsByModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState => questionState.get('moderator').get('rejectedCqs')
+  );
+
+export const makeCqForModerator = () =>
+  createSelector(
+    selectQuestion,
+    questionState =>
+      questionState
+        .get('moderator')
+        .get('cq')
+        .get('question')
+  );
+
+export const makeSimilarCqs = () =>
+  createSelector(
+    selectQuestion,
+    questionState =>
+      questionState
+        .get('moderator')
+        .get('cq')
+        .get('similar')
+  );

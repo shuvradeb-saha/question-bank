@@ -9,6 +9,7 @@ import {
   McqViewer,
   CqViewer,
   ModerateMcqViewer,
+  ModeratorCqViewer,
   CqStatusManager,
 } from 'containers';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
@@ -145,6 +146,10 @@ class QuestionRoute extends Component {
           <Route
             path="/moderate/mcq/:id"
             component={Authorization(ModerateMcqViewer, [Roles.MODERATOR])}
+          />
+          <Route
+            path="/moderate/cq/:id"
+            component={Authorization(ModeratorCqViewer, [Roles.MODERATOR])}
           />
           <Route path="" component={NotFound} />
         </Switch>

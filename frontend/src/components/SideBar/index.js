@@ -291,19 +291,19 @@ const renderModerationOption = () => (
       </a>
       <div id="cq" className="collapse sidebar-submenu">
         <Link
-          to="/moderate/question/pending"
+          to="/moderate/cq/pending"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Pending CQ</span>
         </Link>
         <Link
-          to="/moderate/question/approved"
+          to="/moderate/cq/approved"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Approved CQ</span>
         </Link>
         <Link
-          to="/moderate/question/rejected"
+          to="/moderate/cq/rejected"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Rejected CQ</span>

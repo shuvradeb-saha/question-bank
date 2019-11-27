@@ -14,7 +14,9 @@ import {
   fetchAllCqSuccess,
   fetchCqSuccess,
   fetchCqFailure,
-  fetchCqForModeratorSuccess,
+  fetchAllCqForModeratorSuccess,
+  fetchCQForModerationSuccess,
+  fetchCQForModerationFailure,
 } from './action';
 import {
   SAVE_QUESTION,
@@ -25,6 +27,7 @@ import {
   FETCH_ALL_CQ,
   FETCH_CQ,
   FETCH_ALL_CQ_FOR_MODERATOR,
+  FETCH_CQ_FOR_MODERATION,
 } from './constants';
 
 export function* saveQuestion({ payload: { question, type } }) {
@@ -107,10 +110,26 @@ export function* fetchCqById({ payload: { questionId } }) {
 
 export function* fetchAllCqForModerator({ payload: { status } }) {
   const uri = `/api/moderator/all/cq/${status}`;
+
   try {
     const cqs = yield call(API.get, uri);
-    yield put(fetchCqForModeratorSuccess(status, cqs));
+
+    yield put(fetchAllCqForModeratorSuccess(status, cqs));
   } catch (error) {
+    console.log('Error: ', error);
+  }
+}
+
+export function* fetchCqForModeration({ payload: { id } }) {
+  console.log('id', id);
+
+  try {
+    const uri = `/api/moderator/cq/${id}`;
+    const cqDetails = yield call(API.get, uri);
+
+    yield put(fetchCQForModerationSuccess(cqDetails));
+  } catch (error) {
+    yield put(fetchCQForModerationFailure(error.response.status));
     console.log('Error: ', error);
   }
 }
@@ -124,4 +143,5 @@ export default function* saga() {
   yield takeLatest(FETCH_ALL_CQ, fetchAllCQ);
   yield takeLatest(FETCH_CQ, fetchCqById);
   yield takeLatest(FETCH_ALL_CQ_FOR_MODERATOR, fetchAllCqForModerator);
+  yield takeLatest(FETCH_CQ_FOR_MODERATION, fetchCqForModeration);
 }

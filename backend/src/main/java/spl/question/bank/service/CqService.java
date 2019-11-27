@@ -23,10 +23,13 @@ import static spl.question.bank.model.question.QuestionStatus.pending;
 public class CqService {
   private final CQQuestionMapper cqQuestionMapper;
   private final UserService userService;
+  private final MailService mailService;
 
-  public CqService(CQQuestionMapper cqQuestionMapper, UserService userService) {
+  public CqService(
+      CQQuestionMapper cqQuestionMapper, UserService userService, MailService mailService) {
     this.cqQuestionMapper = cqQuestionMapper;
     this.userService = userService;
+    this.mailService = mailService;
   }
 
   public ResponseEntity saveCq(CQQuestion cqQuestion) {
@@ -42,7 +45,13 @@ public class CqService {
     validateCq(cqQuestion);
     cqQuestion.setStatus(pending.name());
     cqQuestion.setCreatedAt(new Date(System.currentTimeMillis()));
+    val moderator =
+        userService.getRandomModerator(cqQuestion.getSubjectId(), cqQuestion.getCreatedBy());
+    cqQuestion.setModeratedBy(moderator.getId());
     cqQuestionMapper.insert(cqQuestion);
+    mailService.sendEmailToModerator(
+        moderator.getEmail(), moderator.getFirstName() + " " + moderator.getLastName());
+
     return ResponseEntity.ok("CQ question added successfully.");
   }
 
@@ -82,7 +91,9 @@ public class CqService {
     Integer moderatorId = userService.getAuthenticatedUser().getId();
     val cqEx = new CQQuestionExample();
     cqEx.createCriteria().andStatusEqualTo(status.name()).andModeratedByEqualTo(moderatorId);
-    return ResponseEntity.ok(cqQuestionMapper.selectByExample(cqEx));
+    val allCq = cqQuestionMapper.selectByExample(cqEx);
+    logger.info("CQ size ==> {}", allCq.size());
+    return ResponseEntity.ok(allCq);
   }
 
   public List<CQQuestion> getCQListByStatusAndSubject(Integer subjectId, QuestionStatus approved) {

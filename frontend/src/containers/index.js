@@ -9,11 +9,14 @@ export { default as CreateQuestion } from './CreateQuestion';
 export { default as McqStatusManagement } from './McqStatusManager';
 export { default as CqStatusManager } from './CqStatusManager';
 export { default as McqModeration } from './McqModeration';
+export { default as CqModeration } from './CqModeration';
+
 export { default as McqViewer } from './McqViewer';
 export { default as CqViewer } from './CqViewer';
 export {
   default as ModerateMcqViewer,
 } from './McqModeration/ModerateMcqViewer';
 
+export { default as ModeratorCqViewer } from './CqModeration/ModerateCqViewer';
 export { default as Download } from './Download';
 export { default as PdfComponent } from './PdfComponent';

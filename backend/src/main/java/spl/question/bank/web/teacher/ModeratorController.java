@@ -56,7 +56,7 @@ public class ModeratorController {
       @PathVariable("status") QuestionStatus status) {
     return moderatorService.changeQuestionStatus(questionId, questionType, status);
   }
-  // Todo => need to complete all for cq
+
   @RequestMapping(
       value = "/all/cq/{status}",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE,

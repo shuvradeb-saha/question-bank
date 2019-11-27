@@ -317,4 +317,20 @@ public class UserService {
     ex.createCriteria().andTeacherIdEqualTo(teacherId).andSubjectIdEqualTo(subjectId);
     return teacherSubjectMapper.countByExample(ex) > 0;
   }
+
+  public User getRandomModerator(Integer subjectId, Integer creator) {
+    val allModerators = getModeratorBySubject(subjectId);
+    // Remove the creator if he is a moderator
+    val refinedModerators =
+        allModerators.stream()
+            .filter(user -> !user.getId().equals(creator))
+            .collect(Collectors.toList());
+
+    if (refinedModerators.size() <= 0) {
+      throw new RuntimeException("No moderator exists yet. Please submit question later.");
+    }
+
+    int randIndx = new Random().nextInt(refinedModerators.size());
+    return refinedModerators.get(randIndx);
+  }
 }
