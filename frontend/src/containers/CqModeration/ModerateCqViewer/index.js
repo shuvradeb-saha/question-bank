@@ -13,6 +13,7 @@ import {
   makeCqForModerator,
   makeSimilarCqs,
 } from 'state/question/selectors';
+import { makeUserId } from 'state/login/selectors';
 import API from 'utils/api';
 import { AccessDenied, NotFound, CQ } from 'components';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
@@ -22,6 +23,7 @@ import { toastSuccess, toastError } from 'components/Toaster';
 
 class ModeratorCqViewer extends Component {
   static propTypes = {
+    userId: PropTypes.number,
     match: PropTypes.any,
     fetchCQForModeration: PropTypes.func,
     cq: PropTypes.object,
@@ -41,7 +43,7 @@ class ModeratorCqViewer extends Component {
         'Question will be added to the approved question database. Are you sure?'
       )
     ) {
-      const uri = `/api/moderator/question/cq/${id}/${QuestionStatusType.APPROVED}`;
+      const uri = `/api/moderator/question/CQ/${id}/${QuestionStatusType.APPROVED}`;
       try {
         const response = await API.put(uri);
         toastSuccess(response);
@@ -60,7 +62,7 @@ class ModeratorCqViewer extends Component {
         'Question will be added to the rejected question database. Are you sure?'
       )
     ) {
-      const uri = `/api/moderator/question/cq/${id}/${QuestionStatusType.REJECTED}`;
+      const uri = `/api/moderator/question/CQ/${id}/${QuestionStatusType.REJECTED}`;
 
       try {
         const response = await API.put(uri);
@@ -75,10 +77,11 @@ class ModeratorCqViewer extends Component {
   };
 
   render() {
-    const { cq, errorCode, similarCqs, inProgress } = this.props;
+    const { cq, errorCode, similarCqs, inProgress, userId } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
-    console.log('cq', cq, inProgress);
+
     const status = cq.get('status');
+
     if (inProgress) {
       return (
         <div className="container-fluid h-100 mt-5">
@@ -111,52 +114,54 @@ class ModeratorCqViewer extends Component {
                 <div>
                   <CQ cq={cq} />
                 </div>
-                {status === QuestionStatusType.PENDING && (
-                  <div className="row">
-                    <div className="col-8">
-                      <button
-                        type="button"
-                        className="btn btn-outline-success"
-                        onClick={() => this.onApproveClick(id)}
-                      >
-                        <i className="fa fa-check" aria-hidden="true"></i>
-                        &nbsp;&nbsp; Approve
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-outline-danger"
-                        onClick={() => this.onRejectClick(id)}
-                      >
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-                        &nbsp;&nbsp;Reject
-                      </button>
+                {status === QuestionStatusType.PENDING &&
+                  cq.get('moderatedBy') === userId && (
+                    <div className="row">
+                      <div className="col-8">
+                        <button
+                          type="button"
+                          className="btn btn-outline-success"
+                          onClick={() => this.onApproveClick(id)}
+                        >
+                          <i className="fa fa-check" aria-hidden="true"></i>
+                          &nbsp;&nbsp; Approve
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger"
+                          onClick={() => this.onRejectClick(id)}
+                        >
+                          <i className="fa fa-trash" aria-hidden="true"></i>
+                          &nbsp;&nbsp;Reject
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
 
-              {status === QuestionStatusType.PENDING && (
-                <div className="col-4">
-                  <div className=" row bg-dark text-light p-2 rounded">
-                    <strong>Similar Questions</strong>
-                  </div>
-                  {similarCqs.map(cq => {
-                    let contentToShow = '';
-                    contentToShow = splitStringForContent(cq.get('stem'));
+              {status === QuestionStatusType.PENDING &&
+                cq.get('moderatedBy') === userId && (
+                  <div className="col-4">
+                    <div className=" row bg-dark text-light p-2 rounded">
+                      <strong>Similar Questions</strong>
+                    </div>
+                    {similarCqs.map(cq => {
+                      let contentToShow = '';
+                      contentToShow = splitStringForContent(cq.get('stem'));
 
-                    return (
-                      <div key={cq.get('id')} className="row  p-2 ">
-                        <Link
-                          to={`/cq/${cq.get('id')}`}
-                          style={{ color: 'blue' }}
-                        >
-                          {contentToShow}
-                        </Link>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      return (
+                        <div key={cq.get('id')} className="row  p-2 ">
+                          <Link
+                            to={`/cq/${cq.get('id')}`}
+                            style={{ color: 'blue' }}
+                          >
+                            {contentToShow}
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
             </div>
           </span>
         );
@@ -172,6 +177,7 @@ class ModeratorCqViewer extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
+  userId: makeUserId(),
   cq: makeCqForModerator(),
   similarCqs: makeSimilarCqs(),
   inProgress: makeInProgress(),

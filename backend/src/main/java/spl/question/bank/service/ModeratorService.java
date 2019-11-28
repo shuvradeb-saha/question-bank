@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -60,7 +61,7 @@ public class ModeratorService {
       Integer questionId, QuestionType questionType, QuestionStatus status) {
     if (questionType.equals(QuestionType.MCQ)) {
       MCQQuestion mcqQuestion = mcqQuestionMapper.selectByPrimaryKey(questionId);
-      if (Objects.isNull(mcqQuestion)) {
+      if (isNull(mcqQuestion)) {
         return ResponseEntity.status(NOT_FOUND).body("No Mcq found with id = " + questionId);
       }
       if (mcqQuestion.getStatus().equals(status.name())) {
@@ -70,9 +71,21 @@ public class ModeratorService {
       mcqQuestion.setStatus(status.name());
       mcqQuestion.setModeratedAt(new Date(System.currentTimeMillis()));
       mcqQuestionMapper.updateByPrimaryKey(mcqQuestion);
-      return ResponseEntity.ok(String.format("Mcq submission has %s.", status.name()));
+      return ResponseEntity.ok(String.format("Submitted MCQ has %s successfully.", status.name()));
     } else {
-      return null;
+      CQQuestion cqQuestion = cqQuestionMapper.selectByPrimaryKey(questionId);
+      if (isNull(cqQuestion)) {
+        return ResponseEntity.status(NOT_FOUND)
+            .body("No cq question found with id = " + questionId);
+      }
+      if (cqQuestion.getStatus().equals(status.name())) {
+        return ResponseEntity.status(BAD_REQUEST).body("CQ has already " + status.name());
+      }
+      cqQuestion.setStatus(status.name());
+      cqQuestion.setModeratedAt(new Date(System.currentTimeMillis()));
+      cqQuestionMapper.updateByPrimaryKey(cqQuestion);
+
+      return ResponseEntity.ok(String.format("Submitted CQ has %s successfully.", status.name()));
     }
   }
 
