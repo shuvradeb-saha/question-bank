@@ -14,39 +14,45 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import spl.question.bank.database.model.CQQuestion;
+import spl.question.bank.database.model.QuestionPaper;
 import spl.question.bank.model.question.mcq.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
 @Service
 @Slf4j
-public class PdfTemplate {
+public class PdfService {
   private final String arialUni;
   private final String notoSerif;
   private final String notoSans;
-  private final StringBuilder answerSheet = new StringBuilder();
+  private StringBuilder answerSheet;
 
-  public PdfTemplate() throws FileNotFoundException {
+  public PdfService() throws FileNotFoundException {
     this.arialUni = ResourceUtils.getFile("classpath:fonts/ARIALUNI.TTF").getPath();
-    this.notoSerif = ResourceUtils.getFile("classpath:fonts/NotoSerifBengali-Regular.ttf").getPath();
+    this.notoSerif =
+        ResourceUtils.getFile("classpath:fonts/NotoSerifBengali-Regular.ttf").getPath();
     this.notoSans = ResourceUtils.getFile("classpath:fonts/NotoSansBengali-Light.ttf").getPath();
   }
 
-  public void createMcqPdf(HttpServletResponse response, List<MCQDto> mcqs) throws IOException {
+  public void createMcqPdf(
+      HttpServletResponse response, List<MCQDto> mcqs, QuestionPaper paperDetails)
+      throws IOException {
     final String licenceFile = ResourceUtils.getFile("classpath:saha.xml").getPath();
     LicenseKey.loadLicenseFile(licenceFile);
-    response.setContentType("application/zip");
-    response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.builder("attachment")
-        .filename("fileName.zip").build().toString());
-
+    answerSheet = new StringBuilder();
+    String fileName = makeNameForFile(paperDetails);
+    buildResponse(response, fileName);
+    logger.info("Selected size ==> {} questions for download.", mcqs.size());
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
-      ZipEntry questionEntry = new ZipEntry("question.pdf");
+      ZipEntry questionEntry = new ZipEntry(fileName + ".pdf");
       zipOutputStream.putNextEntry(questionEntry);
       final PdfWriter questionPaperWriter = new PdfWriter(zipOutputStream);
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
@@ -77,45 +83,118 @@ public class PdfTemplate {
     }
   }
 
+  private void buildResponse(HttpServletResponse response, String fileName) {
+    response.setContentType("application/zip");
+    response.setHeader(
+        HttpHeaders.CONTENT_DISPOSITION,
+        ContentDisposition.builder("attachment").filename(fileName + ".zip").build().toString());
+  }
+
+  public void createCqPdf(
+      HttpServletResponse response, List<CQQuestion> cqs, QuestionPaper paperDetails)
+      throws IOException {
+    final String licenceFile = ResourceUtils.getFile("classpath:saha.xml").getPath();
+    LicenseKey.loadLicenseFile(licenceFile);
+
+    String fileName = makeNameForFile(paperDetails);
+    buildResponse(response, fileName);
+    logger.info("Selected size ==> {} questions for download.", cqs.size());
+
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
+      ZipEntry questionEntry = new ZipEntry(fileName + ".pdf");
+      zipOutputStream.putNextEntry(questionEntry);
+      final PdfWriter questionPaperWriter = new PdfWriter(zipOutputStream);
+      final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
+      Document questionDocument = new Document(questionPdfDocument);
+      setFontToDocument(questionDocument);
+      int i = 1;
+      for (CQQuestion cq : cqs) {
+        String question = renderCq(i, cq);
+        i++;
+        Paragraph p = new Paragraph(question);
+        questionDocument.add(p);
+      }
+      zipOutputStream.closeEntry();
+      questionDocument.close();
+      questionPdfDocument.close();
+      questionPaperWriter.close();
+    }
+  }
+
+  private String renderCq(int i, CQQuestion cq) {
+    String serial = enNumberToBnNumber(i);
+    String question = "%s. %s\n" + "(ক) %s\n" + "(খ) %s\n " + "(গ) %s \n" + "(ঘ) %s\n";
+
+    return String.format(
+        question,
+        serial,
+        cq.getStem(),
+        cq.getKnowledgeBased(),
+        cq.getUnderstandingBased(),
+        cq.getApplicationBased(),
+        cq.getHigherAbility());
+  }
+
+  private String makeNameForFile(QuestionPaper paper) {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    return String.format(
+        "%s_%s_%s", paper.getType(), paper.getExamType(), dateFormat.format(paper.getCreatedAt()));
+  }
+
   private void setFontToDocument(Document questionDocument) {
     final FontSet set = new FontSet();
     set.addFont(notoSans);
     set.addFont(notoSerif);
     set.addFont(arialUni);
     questionDocument.setFontProvider(new FontProvider(set));
-    questionDocument.setProperty(Property.FONT, new String[]{"MyFontFamilyName"});
+    questionDocument.setProperty(Property.FONT, new String[] {"MyFontFamilyName"});
   }
 
   private String renderGeneralMcq(int i, GeneralMCQDetail detail) {
     String serial = enNumberToBnNumber(i);
-    String question = "%s. %s\n" +
-        "(ক) %s \t\t (খ) %s\n" +
-        "(গ) %s \t\t (ঘ) %s\n";
-    answerSheet.append(serial)
+    String question = "%s. %s\n" + "(ক) %s \t\t (খ) %s\n" + "(গ) %s \t\t (ঘ) %s\n";
+    answerSheet
+        .append(serial)
         .append(" - ")
         .append(getAnswerFromIndex(detail.getAnswer()))
         .append("\n");
-    return String.format(question, serial, detail.getQuestionBody(),
-        detail.getOption1(), detail.getOption2(),
-        detail.getOption3(), detail.getOption4());
+    return String.format(
+        question,
+        serial,
+        detail.getQuestionBody(),
+        detail.getOption1(),
+        detail.getOption2(),
+        detail.getOption3(),
+        detail.getOption4());
   }
 
   private String renderPolynomialMcq(int i, PolynomialMCQDetail detail) {
     String serial = enNumberToBnNumber(i);
-    String question = "%s. %s\n" +
-        "(i) %s\n" +
-        "(ii) %s\n" +
-        "(iii) %s\n" +
-        "%s\n" +
-        "(ক) %s \t\t (খ) %s\n" +
-        "(গ) %s \t\t (ঘ) %s\n";
-    answerSheet.append(serial)
+    String question =
+        "%s. %s\n"
+            + "(i) %s\n"
+            + "(ii) %s\n"
+            + "(iii) %s\n"
+            + "%s\n"
+            + "(ক) %s \t\t (খ) %s\n"
+            + "(গ) %s \t\t (ঘ) %s\n";
+    answerSheet
+        .append(serial)
         .append(" - ")
         .append(getAnswerFromIndex(detail.getAnswer()))
         .append("\n");
-    return String.format(question, serial, detail.getQuestionStatement(), detail.getStatement1(),
-        detail.getStatement2(), detail.getStatement3(), detail.getQuestionBody(), detail.getOption1(),
-        detail.getOption2(), detail.getOption3(), detail.getOption4());
+    return String.format(
+        question,
+        serial,
+        detail.getQuestionStatement(),
+        detail.getStatement1(),
+        detail.getStatement2(),
+        detail.getStatement3(),
+        detail.getQuestionBody(),
+        detail.getOption1(),
+        detail.getOption2(),
+        detail.getOption3(),
+        detail.getOption4());
   }
 
   private String renderStemBasedMcq(int i, StemBasedMCQDetail detail) {

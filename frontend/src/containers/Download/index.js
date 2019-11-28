@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { formValueSelector } from 'redux-form/immutable';
 
 import { DownloadCriteria } from 'components';
-import { PdfComponent } from 'containers';
+
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -14,8 +14,6 @@ import {
 } from 'state/login/selectors';
 import API from 'utils/api';
 import { toastSuccess, toastError } from 'components/Toaster';
-import { fromJS } from 'immutable';
-import { zip } from 'rxjs/operators';
 
 const downloadFormSelector = formValueSelector('downloadForm');
 class Download extends Component {
@@ -29,7 +27,7 @@ class Download extends Component {
     super(props);
     this.state = {
       inProgress: false,
-      questionPayload: [],
+      paperId: 0,
       questionType: '',
       status: false,
     };
@@ -49,33 +47,36 @@ class Download extends Component {
 
     this.setState({ questionType, inProgress: true });
     const uri = '/api/headmaster/generate/paper';
-    //    console.log('data', data);
+
     try {
-      const questionPayload = await API.post(uri, data);
+      const paperId = await API.post(uri, data);
+
       this.setState({
         questionType,
         inProgress: false,
-        questionPayload,
+        paperId,
         status: true,
       });
 
       toastSuccess('Question generation succedded.');
     } catch (error) {
+      console.log('error', error);
+
       toastError(error.response.data.message);
       this.setState({
         questionType: '',
         inProgress: false,
-        questionPayload: [],
+        paperId: [],
         status: false,
       });
     }
   };
 
-  onDownloadClick = async () => {
+  onDownloadClick = async (questionType, paperId) => {
     try {
       let anchor = document.createElement('a');
       document.body.appendChild(anchor);
-      let file = `${process.env.REACT_APP_API_PREFIX}api/headmaster/download/MCQ/29`;
+      let file = `${process.env.REACT_APP_API_PREFIX}api/headmaster/download/${questionType}/${paperId}`;
 
       let headers = new Headers();
       headers.append(
@@ -84,10 +85,13 @@ class Download extends Component {
       );
 
       fetch(file, { headers })
-        .then(response => response.blob())
+        .then(response => {
+          console.log('res', response);
+
+          return response.blob();
+        })
         .then(blobby => {
           let objectUrl = window.URL.createObjectURL(blobby);
-
           anchor.href = objectUrl;
           anchor.download = 'question-answer-file.zip';
           anchor.click();
@@ -96,12 +100,13 @@ class Download extends Component {
         });
     } catch (error) {
       console.log('Error', error);
+      toastError('Unable to download.');
     }
   };
 
   render() {
     const { classes, selectedClass, subjects } = this.props;
-    const { questionPayload, inProgress, questionType, status } = this.state;
+    const { paperId, inProgress, questionType, status } = this.state;
 
     return (
       <div>
@@ -113,14 +118,20 @@ class Download extends Component {
           inProgress={inProgress}
           status={status}
         />
-        {status && (
-          <button className="btn btn-lg" onClick={this.onDownloadClick}>
-            <i className="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-          </button>
+        {status && paperId && paperId !== 0 && (
+          <div className="card">
+            <div>
+              <h5>Click the download button to download generated paper.</h5>
+            </div>
+            <button
+              className="btn btn-lg btn-info"
+              onClick={() => this.onDownloadClick(questionType, paperId)}
+            >
+              <i className="fa fa-download" aria-hidden="true"></i>
+              &nbsp;Download
+            </button>
+          </div>
         )}
-        <button className="btn btn-lg" onClick={this.onDownloadClick}>
-          <i className="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-        </button>
       </div>
     );
   }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { reduxForm, FieldArray, Field } from 'redux-form/immutable';
+import { reduxForm, Field } from 'redux-form/immutable';
 
 import { FormSelect, FormInput } from 'components/FormComponent';
 class CqForm extends Component {

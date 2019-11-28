@@ -42,7 +42,7 @@ public class DownloadController {
     if (questionType.equals(QuestionType.MCQ)) {
       downloadService.downloadMcqPaper(response, paperId);
     } else {
-
+      downloadService.downloadCqPaper(response, paperId);
     }
   }
 }
