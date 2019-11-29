@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
+import Avatar from 'react-avatar';
 class Header extends Component {
   static propTypes = {
     username: PropTypes.string.isRequired,
@@ -27,10 +27,15 @@ class Header extends Component {
           >
             <span className="navbar-toggler-icon" />
           </button>
+
           <div
             id="colapsibleNavbar"
             className="collapse navbar-collapse justify-content-end"
           >
+            <div className="text-light">
+              <Avatar round name={this.props.username} size="45" src="" />
+            </div>
+            &nbsp;
             <ul className="navbar-nav">
               <li className="nav-item dropdown">
                 <span
