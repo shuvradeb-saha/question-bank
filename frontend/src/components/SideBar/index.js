@@ -79,11 +79,14 @@ const AdminSidebar = () => (
 );
 
 const HeadMasterSidebar = ({ roles }) => {
+  const roleStr = roles.includes(Roles.MODERATOR)
+    ? 'Headmaster | Moderator'
+    : 'Headmaster';
   return (
     <ul className="list-group sticky-top sticky-offset">
       <li className="list-group-item bg-info sidebar-separator-title d-flex align-items-center">
         <b>
-          <small>Headmaster</small>
+          <small>{roleStr}</small>
         </b>
       </li>
 
@@ -117,15 +120,32 @@ const HeadMasterSidebar = ({ roles }) => {
       </div>
 
       {roles.includes(Roles.MODERATOR) && renderModerationOption()}
-      <Link
-        to="/download/paper"
-        className="list-group-item list-group-item-action bg-dark text-white"
+      <a
+        href="#download"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
       >
         <div className="d-flex w-100 justify-content-start align-items-center">
           <span className="fa fa-download mr-3"></span>
           <span className="menu-collapsed">Download</span>
+          <span className="submenu-icon ml-auto"></span>
         </div>
-      </Link>
+      </a>
+      <div id="download" className="collapse sidebar-submenu">
+        <Link
+          to="/download/paper"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Generate & Download</span>
+        </Link>
+        <Link
+          to="/download/archive"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Download archive</span>
+        </Link>
+      </div>
     </ul>
   );
 };
@@ -162,7 +182,7 @@ const renderTeacherOptions = () => (
     <a
       href="#submission-status"
       data-toggle="collapse"
-      aria-expanded="false"
+      aria-expanded="true"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -171,7 +191,7 @@ const renderTeacherOptions = () => (
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
-    <div id="submission-status" className="collapse sidebar-submenu">
+    <div id="submission-status" className="collapse sidebar-submenu show">
       <a
         href="#mcq-status"
         data-toggle="collapse"
@@ -266,18 +286,18 @@ const renderModerationOption = () => (
     <a
       href="#moderate"
       data-toggle="collapse"
-      aria-expanded="false"
+      aria-expanded="true"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-tasks mr-3"></span>
+        <span className="fa fa-list-alt mr-3"></span>
 
         <span className="menu-collapsed">Moderate Question</span>
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
 
-    <div id="moderate" className="collapse sidebar-submenu">
+    <div id="moderate" className="collapse sidebar-submenu show">
       <a
         href="#cq"
         data-toggle="collapse"

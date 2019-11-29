@@ -19,4 +19,4 @@ export {
 
 export { default as ModeratorCqViewer } from './CqModeration/ModerateCqViewer';
 export { default as Download } from './Download';
-export { default as PdfComponent } from './PdfComponent';
+export { default as LandingPage } from './LandingPage';

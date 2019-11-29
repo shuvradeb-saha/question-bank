@@ -43,7 +43,7 @@ class CreateQuestion extends Component {
               MCQ (Multiple Choice Question/বহুনির্বাচনী প্রশ্ন)
             </span>
           </div>
-          <div className="card-body" style={{ backgroundColor: '#e0e0e0' }}>
+          <div className="card-body">
             <div className="list-group">
               <ul>
                 <li className="list-group-item list-group-item-action list-group-item-secondary">
@@ -84,7 +84,7 @@ class CreateQuestion extends Component {
               CQ (Creative Question/সৃজনশীল প্রশ্ন)
             </span>
           </div>
-          <div className="card-body" style={{ backgroundColor: '#e0e0e0' }}>
+          <div className="card-body">
             <ul>
               <li className="list-group-item list-group-item-action list-group-item-secondary">
                 <span style={{ marginRight: 10 }}>

@@ -10,16 +10,12 @@ import {
   CreateQuestion,
   McqModeration,
   CqModeration,
+  LandingPage,
   Download,
 } from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 
-const Home = () => (
-  <div className="home-txt p-3">
-    <h1>Dear Shaishab Saha, Welcome to Question Bank</h1>
-  </div>
-);
 const Profile = () => <h1>Profile</h1>;
 
 class MixContent extends Component {
@@ -30,7 +26,7 @@ class MixContent extends Component {
           <Route
             exact
             path="/"
-            component={Authorization(Home, [
+            component={Authorization(LandingPage, [
               Roles.HEADMASTER,
               Roles.ADMIN,
               Roles.MODERATOR,
