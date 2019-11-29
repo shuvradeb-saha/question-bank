@@ -34,8 +34,11 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     String header = request.getHeader(jwtConfig.getHeader());
 
     if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
-      filterChain.doFilter(request, response);
-      return;
+      try {
+        filterChain.doFilter(request, response);
+      } catch (Exception e) {
+        logger.info("Unknown error {}",e);
+      }
     }
 
     String token = header.replace(jwtConfig.getPrefix(), "");

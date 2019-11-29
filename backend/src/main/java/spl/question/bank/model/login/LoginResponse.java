@@ -10,6 +10,7 @@ import spl.question.bank.database.model.User;
 public class LoginResponse {
 
   private User user;
+  private String profilePic;
   private List<String> roles;
   private List<Integer> allocatedSubjects;
   private String token;

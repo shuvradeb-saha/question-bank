@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Avatar from 'react-avatar';
+import UserAvatar from 'react-user-avatar';
 class Header extends Component {
   static propTypes = {
     username: PropTypes.string.isRequired,
@@ -11,7 +11,7 @@ class Header extends Component {
   static defaultProps = {
     username: 'Username',
   };
-
+  //data:image/jpeg;base64,
   render() {
     return (
       <div>
@@ -33,7 +33,7 @@ class Header extends Component {
             className="collapse navbar-collapse justify-content-end"
           >
             <div className="text-light">
-              <Avatar round name={this.props.username} size="45" src="" />
+              <UserAvatar name={this.props.username} size="48" src="" />
             </div>
             &nbsp;
             <ul className="navbar-nav">

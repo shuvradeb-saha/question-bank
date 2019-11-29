@@ -20,3 +20,4 @@ export {
 export { default as ModeratorCqViewer } from './CqModeration/ModerateCqViewer';
 export { default as Download } from './Download';
 export { default as LandingPage } from './LandingPage';
+export { default as Profile } from './Profile';

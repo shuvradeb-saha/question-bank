@@ -108,9 +108,13 @@
         </table>
         <table tableName="moderator_question" domainObjectName="ModeratorQuestion">
             <generatedKey column="id"
-              sqlStatement="select currval('moderator_question_id_seq')"
-              identity="true"/>
+                          sqlStatement="select currval('moderator_question_id_seq')"
+                          identity="true"/>
         </table>
-
+        <table tableName="user_profile_image" domainObjectName="UserProfileImage">
+            <generatedKey column="id"
+                          sqlStatement="select currval('user_profile_image_id_seq')"
+                          identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

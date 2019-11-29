@@ -12,11 +12,10 @@ import {
   CqModeration,
   LandingPage,
   Download,
+  Profile,
 } from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
-
-const Profile = () => <h1>Profile</h1>;
 
 class MixContent extends Component {
   render() {

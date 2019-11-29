@@ -85,11 +85,7 @@ class Download extends Component {
       );
 
       fetch(file, { headers })
-        .then(response => {
-          console.log('res', response);
-
-          return response.blob();
-        })
+        .then(response => response.blob())
         .then(blobby => {
           let objectUrl = window.URL.createObjectURL(blobby);
           anchor.href = objectUrl;
@@ -119,18 +115,13 @@ class Download extends Component {
           status={status}
         />
         {status && paperId && paperId !== 0 && (
-          <div className="card">
-            <div>
-              <h5>Click the download button to download generated paper.</h5>
-            </div>
-            <button
-              className="btn btn-lg btn-info"
-              onClick={() => this.onDownloadClick(questionType, paperId)}
-            >
-              <i className="fa fa-download" aria-hidden="true"></i>
-              &nbsp;Download
-            </button>
-          </div>
+          <button
+            className="btn btn-lg btn-primary rounded"
+            onClick={() => this.onDownloadClick(questionType, paperId)}
+          >
+            <i className="fa fa-download" aria-hidden="true"></i>
+            &nbsp;Download Paper
+          </button>
         )}
       </div>
     );

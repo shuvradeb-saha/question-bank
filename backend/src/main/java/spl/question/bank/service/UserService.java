@@ -185,13 +185,14 @@ public class UserService {
     val id = user.getId();
     val roles = getRolesByUser(id);
     val allocatedSubjects = teacherService.getAllocatedSubject(id);
-
+    val profilePic = teacherService.getBase64ProPic(id);
     var loginResponse = new LoginResponse();
     loginResponse
         .setUser(user)
         .setRoles(roles)
         .setAllocatedSubjects(allocatedSubjects)
-        .setToken(token);
+        .setToken(token)
+        .setProfilePic(profilePic);
     return loginResponse;
   }
 
