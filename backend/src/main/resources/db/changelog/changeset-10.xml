@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="spl3-question-bank-10" author="shuvra">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="otp"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="otp">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="otp_id_pkey"/>
+            </column>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="otpCode" type="INTEGER"/>
+            <column name="created_at" type="DATE"/>
+            <column name="status" type="BOOLEAN"/>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>

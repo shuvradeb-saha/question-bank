@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
-
+import dummy from 'static/dummy.jpeg';
 import Header from 'components/Header';
 import { SideBar, AdminContent, MixContent, AccessDenied } from 'components';
 import { logout } from 'state/login/action';
@@ -13,7 +13,7 @@ import {
   fetchAllChapters,
   fetchAllSubject,
 } from 'state/login/action';
-import { makeUserName, makeRoles } from 'state/login/selectors';
+import { makeUserName, makeRoles, makePropic } from 'state/login/selectors';
 import { Roles } from 'containers/App/constants';
 
 class HomePage extends Component {
@@ -24,6 +24,7 @@ class HomePage extends Component {
     fetchAllClass: PropTypes.func.isRequired,
     fetchAllSubject: PropTypes.func.isRequired,
     fetchAllChapter: PropTypes.func.isRequired,
+    profilePic: PropTypes.string,
   };
 
   static defaultProps = {
@@ -44,11 +45,13 @@ class HomePage extends Component {
   };
 
   render() {
-    const { roles, username } = this.props;
+    const { roles, username, profilePic } = this.props;
+    const img =
+      profilePic === '' ? dummy : `data:image/jpeg;base64, ${profilePic}`;
 
     return (
       <div>
-        <Header username={username} onLogout={this.onLogout} />
+        <Header username={username} onLogout={this.onLogout} profilePic={img} />
         <div className="row mt-4" id="body-row">
           <SideBar roles={roles.toJS()} />
           <div className="col py-3">
@@ -72,6 +75,7 @@ class HomePage extends Component {
 const mapStateToProps = createStructuredSelector({
   username: makeUserName(),
   roles: makeRoles(),
+  profilePic: makePropic(),
 });
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout()),

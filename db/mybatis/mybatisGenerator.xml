@@ -116,5 +116,11 @@
                           sqlStatement="select currval('user_profile_image_id_seq')"
                           identity="true"/>
         </table>
+
+        <table tableName="otp" domainObjectName="OTP">
+            <generatedKey column="id"
+                          sqlStatement="select currval('otp_id_seq')"
+                          identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

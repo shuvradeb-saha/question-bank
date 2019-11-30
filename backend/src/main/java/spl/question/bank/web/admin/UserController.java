@@ -3,6 +3,7 @@ package spl.question.bank.web.admin;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spl.question.bank.database.model.Role;
 import spl.question.bank.model.admin.UserDto;
@@ -18,13 +19,13 @@ import java.util.List;
 public class UserController {
 
   private final UserService userService;
-  private final SecureRandom secureRandom = new SecureRandom();
 
   public UserController(final UserService userService) {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/user",
+  @RequestMapping(
+      value = "/user",
       method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public void create(final @RequestBody UserDto userDto) {
@@ -32,7 +33,8 @@ public class UserController {
     userService.saveUser(userDto);
   }
 
-  @RequestMapping(value = "/user",
+  @RequestMapping(
+      value = "/user",
       method = RequestMethod.PUT,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public void update(final @RequestBody UserDto userDto) {
@@ -40,29 +42,32 @@ public class UserController {
     userService.updateUser(userDto);
   }
 
-  @RequestMapping(value = "/user/{id}",
+  @RequestMapping(
+      value = "/user/{id}",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public UserDto getUser(final @PathVariable Integer id) {
     return userService.getUserById(id);
   }
 
-  @RequestMapping(value = "/users",
+  @RequestMapping(
+      value = "/users",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<UserInfo> getUsers() {
     return userService.getUsersInfo();
   }
 
-  @RequestMapping(value = "/generate-password",
+  @RequestMapping(
+      value = "/generate-password",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public String generatePassword() {
-    return RandomStringUtils
-        .randomAlphanumeric((int) (Math.random() * 4 + 8));
+    return RandomStringUtils.randomAlphanumeric((int) (Math.random() * 4 + 8));
   }
 
-  @RequestMapping(value = "/roles",
+  @RequestMapping(
+      value = "/roles",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public List<Role> getRoles() {
@@ -70,25 +75,13 @@ public class UserController {
   }
 
   @RequestMapping(value = "/moderator/{action}/{id}", method = RequestMethod.POST)
-  public boolean makeModerator(final @PathVariable("action") ActionType action,
-                               final @PathVariable("id") Integer id) {
+  public boolean makeModerator(
+      final @PathVariable("action") ActionType action, final @PathVariable("id") Integer id) {
     return userService.addRemoveModerator(action, id);
   }
 
   public enum ActionType {
-    add, remove
+    add,
+    remove
   }
-
-/*
-  //TODO => While implementing forgot password
-  @RequestMapping(value = "/generate-password",
-          method = RequestMethod.GET,
-          produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public String generatePassword() {
-    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-    buffer.putLong(secureRandom.nextLong());
-    byte[] encodedBytes = Base64.getEncoder().encode(buffer.array());
-    return new String(encodedBytes);
-  }
-*/
 }

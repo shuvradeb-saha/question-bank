@@ -6,6 +6,8 @@ import io.jsonwebtoken.lang.Collections;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,9 +24,11 @@ import spl.question.bank.model.login.LoginResponse;
 import spl.question.bank.security.JwtConfig;
 import spl.question.bank.web.admin.UserController.ActionType;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -42,6 +46,7 @@ public class UserService {
   private final MailService mailService;
   private final TeacherService teacherService;
   private final TeacherSubjectMapper teacherSubjectMapper;
+  private final OTPMapper otpMapper;
 
   public UserService(
       final UserMapper userMapper,
@@ -52,7 +57,8 @@ public class UserService {
       final BCryptPasswordEncoder encoder,
       final MailService mailService,
       final TeacherService teacherService,
-      final TeacherSubjectMapper teacherSubjectMapper) {
+      final TeacherSubjectMapper teacherSubjectMapper,
+      final OTPMapper otpMapper) {
     this.userMapper = userMapper;
     this.userRoleMapper = userRoleMapper;
     this.roleMapper = roleMapper;
@@ -62,6 +68,7 @@ public class UserService {
     this.mailService = mailService;
     this.teacherService = teacherService;
     this.teacherSubjectMapper = teacherSubjectMapper;
+    this.otpMapper = otpMapper;
   }
 
   @Transactional
@@ -333,5 +340,34 @@ public class UserService {
 
     int randIndx = new Random().nextInt(refinedModerators.size());
     return refinedModerators.get(randIndx);
+  }
+
+  public ResponseEntity<String> serveOtpForForgetPassword(String email) {
+    val user = getUserByEmail(email);
+    if (isNull(user)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found with such email.");
+    }
+    // deletePrevious false
+    OTPExample ex = new OTPExample();
+    ex.createCriteria().andEmailEqualTo(email).andStatusEqualTo(false);
+    if (otpMapper.countByExample(ex) > 0) {
+      otpMapper.deleteByExample(ex);
+    }
+
+    String otpCode = getRandomNumberString();
+    OTP otp = new OTP();
+    otp.setEmail(email);
+    otp.setOtpcode(Integer.parseInt(otpCode));
+    otp.setCreatedAt(new Date());
+    otp.setStatus(false);
+    otpMapper.insert(otp);
+    mailService.sendMailWithOtp(otp.getEmail(), otp.getOtpcode());
+    return ResponseEntity.ok("A 6-digit Otp has sent to your email.");
+  }
+
+  private String getRandomNumberString() {
+    SecureRandom rnd = new SecureRandom();
+    int number = rnd.nextInt(999999);
+    return String.format("%06d", number);
   }
 }

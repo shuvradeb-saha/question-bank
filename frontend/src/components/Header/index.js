@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import UserAvatar from 'react-user-avatar';
+
 class Header extends Component {
   static propTypes = {
     username: PropTypes.string.isRequired,
     onLogout: PropTypes.func.isRequired,
+    profilePic: PropTypes.string,
   };
 
   static defaultProps = {
@@ -33,7 +35,11 @@ class Header extends Component {
             className="collapse navbar-collapse justify-content-end"
           >
             <div className="text-light">
-              <UserAvatar name={this.props.username} size="48" src="" />
+              <UserAvatar
+                name={this.props.username}
+                size="48"
+                src={this.props.profilePic}
+              />
             </div>
             &nbsp;
             <ul className="navbar-nav">

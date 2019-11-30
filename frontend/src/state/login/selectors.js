@@ -71,3 +71,14 @@ export const makeallAocatedSubjects = () =>
     selectLogin,
     loginState => loginState.get('allocatedSubjects')
   );
+
+export const makePropic = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('profilePic')
+  );
+export const makeUser = () =>
+  createSelector(
+    selectLogin,
+    loginState => loginState.get('user')
+  );

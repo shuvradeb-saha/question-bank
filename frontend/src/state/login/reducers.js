@@ -14,6 +14,7 @@ import {
 
 const initialState = fromJS({
   user: '',
+  profilePic: '',
   roles: [],
   authenticated: false,
   inProgress: false,
@@ -41,10 +42,10 @@ function reducer(state = initialState, { type, payload }) {
     case SUBMIT_INFO_AND_FETCH_PROFILE_SUCCESS: {
       const { data } = payload;
 
-      const { roles, user, allocatedSubjects } = data;
+      const { roles, user, allocatedSubjects, profilePic } = data;
 
       return state
-        .merge(fromJS({ roles, user, allocatedSubjects }))
+        .merge(fromJS({ roles, profilePic, user, allocatedSubjects }))
         .merge({ authenticated: true, inProgress: false, error: '' });
     }
 

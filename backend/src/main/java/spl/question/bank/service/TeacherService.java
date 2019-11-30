@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,13 +12,13 @@ import spl.question.bank.database.client.TeacherSubjectMapper;
 import spl.question.bank.database.client.UserMapper;
 import spl.question.bank.database.client.UserProfileImageMapper;
 import spl.question.bank.database.model.*;
+import spl.question.bank.model.teacher.PasswordDto;
 import spl.question.bank.model.teacher.TeacherDto;
 import spl.question.bank.web.teacher.HeadmasterController;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -29,14 +30,17 @@ import static spl.question.bank.web.teacher.HeadmasterController.TeacherListType
 public class TeacherService {
   private final List<String> ACCEPTED_FORMAT = Arrays.asList("image/jpeg", "image/png");
   private final UserMapper userMapper;
+  private final BCryptPasswordEncoder encoder;
   private final TeacherSubjectMapper teacherSubjectMapper;
   private final UserProfileImageMapper userProfileImageMapper;
 
   public TeacherService(
       final UserMapper userMapper,
+      final BCryptPasswordEncoder encoder,
       final TeacherSubjectMapper teacherSubjectMapper,
       final UserProfileImageMapper userProfileImageMapper) {
     this.userMapper = userMapper;
+    this.encoder = encoder;
     this.teacherSubjectMapper = teacherSubjectMapper;
     this.userProfileImageMapper = userProfileImageMapper;
   }
@@ -111,14 +115,13 @@ public class TeacherService {
     UserProfileImage profileImage = new UserProfileImage();
     profileImage.setUserId(userId);
     profileImage.setProfilePicture(profilePic.getBytes());
-    val prevProfileImage = userProfileImageMapper.selectByPrimaryKey(userId);
-    if (isNull(prevProfileImage)) {
-      userProfileImageMapper.insert(profileImage);
-    } else {
-      val ex = new UserProfileImageExample();
-      ex.createCriteria().andUserIdEqualTo(userId);
-      userProfileImageMapper.updateByExample(profileImage, ex);
+    val imgEx = new UserProfileImageExample();
+    imgEx.createCriteria().andUserIdEqualTo(userId);
+    val prevProfileImage = userProfileImageMapper.selectByExample(imgEx);
+    if (!isNull(prevProfileImage)) {
+      userProfileImageMapper.deleteByExample(imgEx);
     }
+    userProfileImageMapper.insert(profileImage);
     return ResponseEntity.ok("Profile picture updated successfully.");
   }
 
@@ -137,13 +140,32 @@ public class TeacherService {
   public String getBase64ProPic(Integer userId) {
     val ex = new UserProfileImageExample();
     ex.createCriteria().andUserIdEqualTo(userId);
-    val data = userProfileImageMapper.selectByExample(ex);
+    val data = userProfileImageMapper.selectByExampleWithBLOBs(ex);
 
     if (CollectionUtils.isEmpty(data)) {
       return "";
     } else {
-      val profilePic = data.get(0).getProfilePicture();
-      return Base64.getEncoder().encodeToString(profilePic);
+      return isNull(data.get(0).getProfilePicture())
+          ? ""
+          : Base64.getEncoder().encodeToString(data.get(0).getProfilePicture());
     }
+  }
+
+  public ResponseEntity<String> changePassoword(PasswordDto passwordDto) {
+    val user = userMapper.selectByPrimaryKey(passwordDto.getUserId());
+    String oldPass = passwordDto.getOldPassword();
+
+    if (!encoder.matches(oldPass, user.getPassword())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect old password.");
+    }
+    String newPass = passwordDto.getNewPassword();
+
+    if (!newPass.equals(passwordDto.getConfPassword())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("New password and confirm password does not match.");
+    }
+    user.setPassword(encoder.encode(newPass));
+    userMapper.updateByPrimaryKey(user);
+    return ResponseEntity.ok("Password has changed successfully.");
   }
 }

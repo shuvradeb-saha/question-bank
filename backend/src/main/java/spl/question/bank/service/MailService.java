@@ -72,4 +72,24 @@ public class MailService {
       logger.info("Unable to send mail to => {}", receiverEmail);
     }
   }
+
+  @Async
+  public void sendMailWithOtp(String receiverEmail, Integer otpcode) {
+    MimeMessage msg = javaMailSender.createMimeMessage();
+    try {
+      MimeMessageHelper helper = new MimeMessageHelper(msg, false);
+      helper.setTo(receiverEmail);
+      helper.setSubject("Question Bank Password Reset OTP");
+      String text =
+          "<div><p> Use <b>%s</b> as your password reset otp for Question Bank account.</p></div>";
+      helper.setText(String.format(text, otpcode), true);
+    } catch (MessagingException e) {
+      logger.info("Unable to build message");
+    }
+    try {
+      javaMailSender.send(msg);
+    } catch (Exception e) {
+      logger.info("Unable to send mail to => {}", receiverEmail);
+    }
+  }
 }
