@@ -45,6 +45,7 @@ class CqManager extends Component {
         const uri = `/api/teacher/question/cq`;
         await API.post(uri, questionData);
         toastSuccess('Question has successfully submitted for approval.');
+        this.props.history.push('/question/create');
       } catch (error) {
         toastError(`Unable to save. ${error.response.data.message}`);
         console.log('Error: ', error);
