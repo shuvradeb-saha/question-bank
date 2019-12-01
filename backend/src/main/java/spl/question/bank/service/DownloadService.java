@@ -264,7 +264,7 @@ public class DownloadService {
 
     val questionIds = new ArrayList<Integer>();
     int totalQuestion = idList.size(), summedWeight = 0, prevWeight;
-    //Random random = new Random(totalQuestion);
+    // Random random = new Random(totalQuestion);
     SecureRandom random = new SecureRandom();
 
     while (summedWeight != totalWeight) {
@@ -300,6 +300,19 @@ public class DownloadService {
     cqEx.createCriteria().andIdIn(idsOfPaper);
     val cqs = cqQuestionMapper.selectByExample(cqEx);
     pdfService.createCqPdf(response, cqs, paperDetails);
+  }
+
+  public ResponseEntity<?> getAllPaperById(Integer id) {
+    val user = userService.getAuthenticatedUser();
+    if (!user.getId().equals(id)) {
+      return ResponseEntity.status(FORBIDDEN).body("You do not have access to this archive.");
+    }
+    val ex = new QuestionPaperExample();
+    ex.createCriteria().andGeneratedByEqualTo(id);
+    ex.setOrderByClause("created_at DESC");
+    val items = questionPaperMapper.selectByExample(ex);
+
+    return ResponseEntity.ok(items);
   }
 
   @Data

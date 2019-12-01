@@ -86,3 +86,17 @@ export const prepareChapters = chapters => {
       value: chapter.get('id'),
     }));
 };
+
+export const getClassNameBySubjectId = (id, allClass, allSubject) => {
+  let clsId;
+  allSubject.forEach(subject => {
+    if (subject.get('id') === id) {
+      clsId = subject.get('classId');
+    }
+  });
+  if (clsId === undefined) {
+    return '';
+  } else {
+    return getNameById(clsId, allClass);
+  }
+};

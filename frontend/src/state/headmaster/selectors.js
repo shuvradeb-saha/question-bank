@@ -14,3 +14,9 @@ export const makeApprovedList = () =>
     selectHeadmaster,
     headmasterState => headmasterState.get('approvedTeachers')
   );
+
+export const makeArchiveItems = () =>
+  createSelector(
+    selectHeadmaster,
+    headmasterState => headmasterState.get('archiveItems')
+  );

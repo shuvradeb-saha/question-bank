@@ -22,3 +22,4 @@ export { default as Download } from './Download';
 export { default as LandingPage } from './LandingPage';
 export { default as Profile } from './Profile';
 export { default as OtpSend } from './ForgetPassword/OtpSend';
+export { default as DownloadArchive } from './Download/DownloadArchive';

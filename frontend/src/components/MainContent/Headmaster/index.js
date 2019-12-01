@@ -13,6 +13,7 @@ import {
   LandingPage,
   Download,
   Profile,
+  DownloadArchive,
 } from 'containers';
 import { TableType } from 'containers/TeacherManagement/TableType';
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
@@ -75,6 +76,11 @@ class MixContent extends Component {
             exact
             path="/download/paper"
             component={Authorization(Download, [Roles.HEADMASTER])}
+          />
+          <Route
+            exact
+            path="/download/archive"
+            component={Authorization(DownloadArchive, [Roles.HEADMASTER])}
           />
           <Route
             exact

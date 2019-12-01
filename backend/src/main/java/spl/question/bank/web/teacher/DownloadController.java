@@ -1,6 +1,7 @@
 package spl.question.bank.web.teacher;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spl.question.bank.model.question.DownloadCriteria;
@@ -44,5 +45,13 @@ public class DownloadController {
     } else {
       downloadService.downloadCqPaper(response, paperId);
     }
+  }
+
+  @RequestMapping(
+      value = "/download/archive/{id}",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> getPaperFromArchive(@PathVariable Integer id) {
+    return downloadService.getAllPaperById(id);
   }
 }
