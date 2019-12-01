@@ -50,6 +50,7 @@ class SubjectInfo extends Component {
       ...values.toJS(),
       classId: values.toJS().class.value,
     });
+    this.setState({ modal: false });
   };
 
   onEditClick = id => {

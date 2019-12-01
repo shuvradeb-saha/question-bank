@@ -102,6 +102,7 @@ class UserInfo extends Component {
       eiinNumber: newEiin,
     };
     this.props.saveUser(data);
+    this.setState({ modal: false });
   };
 
   onCreateClick = () => {

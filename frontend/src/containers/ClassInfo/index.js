@@ -35,6 +35,7 @@ class ClassInfo extends Component {
 
   onClassSubmit = values => {
     this.props.saveClass(values.toJS());
+    this.setState({ modal: false });
   };
 
   onEditClick = id => {

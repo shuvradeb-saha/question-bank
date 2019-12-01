@@ -81,6 +81,7 @@ class ChapterInfo extends Component {
     };
 
     this.props.saveChapter(dataToSave);
+    this.setState({ modal: false });
   };
 
   onEditClick = id => {

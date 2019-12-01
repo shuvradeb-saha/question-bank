@@ -39,6 +39,7 @@ class InstituteInfo extends Component {
 
   onInstituteSubmit = values => {
     this.props.saveInstitute(values.toJS());
+    this.setState({ modal: false });
   };
 
   onEditClick = id => {
