@@ -15,12 +15,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import spl.question.bank.database.client.*;
 import spl.question.bank.database.model.*;
 import spl.question.bank.model.admin.Roles;
 import spl.question.bank.model.admin.UserDto;
 import spl.question.bank.model.admin.UserInfo;
 import spl.question.bank.model.login.LoginResponse;
+import spl.question.bank.model.question.QuestionStatus;
+import spl.question.bank.model.teacher.PasswordDto;
 import spl.question.bank.security.JwtConfig;
 import spl.question.bank.web.admin.UserController.ActionType;
 
@@ -47,6 +50,8 @@ public class UserService {
   private final TeacherService teacherService;
   private final TeacherSubjectMapper teacherSubjectMapper;
   private final OTPMapper otpMapper;
+  private final CQQuestionMapper cqQuestionMapper;
+  private final MCQQuestionMapper mcqQuestionMapper;
 
   public UserService(
       final UserMapper userMapper,
@@ -58,7 +63,9 @@ public class UserService {
       final MailService mailService,
       final TeacherService teacherService,
       final TeacherSubjectMapper teacherSubjectMapper,
-      final OTPMapper otpMapper) {
+      final OTPMapper otpMapper,
+      final CQQuestionMapper cqQuestionMapper,
+      final MCQQuestionMapper mcqQuestionMapper) {
     this.userMapper = userMapper;
     this.userRoleMapper = userRoleMapper;
     this.roleMapper = roleMapper;
@@ -69,6 +76,8 @@ public class UserService {
     this.teacherService = teacherService;
     this.teacherSubjectMapper = teacherSubjectMapper;
     this.otpMapper = otpMapper;
+    this.cqQuestionMapper = cqQuestionMapper;
+    this.mcqQuestionMapper = mcqQuestionMapper;
   }
 
   @Transactional
@@ -292,6 +301,25 @@ public class UserService {
       userRole.setUserId(id);
       userRoleMapper.insert(userRole);
     } else {
+      MCQQuestionExample mcqEx = new MCQQuestionExample();
+      mcqEx
+          .createCriteria()
+          .andModeratedByEqualTo(id)
+          .andStatusEqualTo(QuestionStatus.pending.name());
+
+      CQQuestionExample cqEx = new CQQuestionExample();
+      cqEx.createCriteria()
+          .andModeratedByEqualTo(id)
+          .andStatusEqualTo(QuestionStatus.pending.name());
+
+      boolean hasPendingQuestion =
+          cqQuestionMapper.countByExample(cqEx) > 0 || mcqQuestionMapper.countByExample(mcqEx) > 0;
+
+      if (hasPendingQuestion) {
+        throw new IllegalArgumentException(
+            "Unable to remove. The moderator has pending questions.");
+      }
+
       UserRoleExample ex = new UserRoleExample();
       ex.createCriteria().andUserIdEqualTo(id).andRoleIdEqualTo(moderatorRoleId);
       userRoleMapper.deleteByExample(ex);
@@ -349,7 +377,7 @@ public class UserService {
     }
     // deletePrevious false
     OTPExample ex = new OTPExample();
-    ex.createCriteria().andEmailEqualTo(email).andStatusEqualTo(false);
+    ex.createCriteria().andEmailEqualTo(email);
     if (otpMapper.countByExample(ex) > 0) {
       otpMapper.deleteByExample(ex);
     }
@@ -357,17 +385,68 @@ public class UserService {
     String otpCode = getRandomNumberString();
     OTP otp = new OTP();
     otp.setEmail(email);
-    otp.setOtpcode(Integer.parseInt(otpCode));
+    otp.setOtpCode(Integer.parseInt(otpCode));
     otp.setCreatedAt(new Date());
     otp.setStatus(false);
     otpMapper.insert(otp);
-    mailService.sendMailWithOtp(otp.getEmail(), otp.getOtpcode());
-    return ResponseEntity.ok("A 6-digit Otp has sent to your email.");
+    mailService.sendMailWithOtp(otp.getEmail(), otp.getOtpCode());
+    return ResponseEntity.ok("An Otp has sent to your email.");
   }
 
   private String getRandomNumberString() {
     SecureRandom rnd = new SecureRandom();
     int number = rnd.nextInt(999999);
     return String.format("%06d", number);
+  }
+
+  public ResponseEntity<String> verifyOtp(String email, Integer otpCode) {
+    OTPExample ex = new OTPExample();
+    ex.createCriteria().andEmailEqualTo(email).andOtpCodeEqualTo(otpCode).andStatusEqualTo(false);
+    ex.setOrderByClause("created_at DESC");
+
+    val items = otpMapper.selectByExample(ex);
+    if (CollectionUtils.isEmpty(items)) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(String.format("Otp with email %s does not match.", email));
+    }
+    OTP dbOtp = items.get(0);
+    long createdTime = dbOtp.getCreatedAt().getTime();
+    long threeMinAfter = createdTime + (3 * 60 * 1000);
+    Date dateThreeMinAfter = new Date(threeMinAfter);
+    Date now = new Date();
+    logger.info(
+        "Created at => {} three minute after => {} Now => {}",
+        dbOtp.getCreatedAt(),
+        dateThreeMinAfter,
+        now);
+    if (now.after(dateThreeMinAfter)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Otp code you entered has expired.");
+    } else {
+      dbOtp.setStatus(true);
+      otpMapper.updateByPrimaryKey(dbOtp);
+      return ResponseEntity.status(HttpStatus.OK).body("Otp verification has succeeded!!");
+    }
+  }
+
+  public ResponseEntity<String> resetPassword(String email, PasswordDto passwordDto) {
+    if (!passwordDto.getNewPassword().equals(passwordDto.getConfPassword())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("New password and confirm password does not match.");
+    }
+
+    OTPExample example = new OTPExample();
+    example.createCriteria().andEmailEqualTo(email).andStatusEqualTo(true);
+
+    val items = otpMapper.selectByExample(example);
+    if (CollectionUtils.isEmpty(items)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("No verified otp found with email " + email);
+    }
+    val user = getUserByEmail(email);
+    user.setPassword(encoder.encode(passwordDto.getNewPassword()));
+    userMapper.updateByPrimaryKey(user);
+
+    return ResponseEntity.status(HttpStatus.OK).body("Password reset completed!!");
   }
 }

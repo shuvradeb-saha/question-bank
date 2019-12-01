@@ -121,14 +121,14 @@ class UserInfo extends Component {
       ) {
         return;
       } else {
-        const res = await API.post(
-          `/api/admin/moderator/${ActionType.remove}/${id}`
-        );
-        if (res) {
+        try {
+          await API.post(`/api/admin/moderator/${ActionType.remove}/${id}`);
           toastSuccess('Removed moderatorship from this user');
           this.props.history.push('/manage-user');
-        } else {
-          toastError('Unable to remove this teacher from moderator');
+        } catch (error) {
+          console.log('error', error);
+
+          toastError(error.response.data.message);
         }
       }
     } else {
@@ -139,14 +139,11 @@ class UserInfo extends Component {
       ) {
         return;
       } else {
-        const res = await API.post(
-          `/api/admin/moderator/${ActionType.add}/${id}`
-        );
-
-        if (res) {
+        try {
+          await API.post(`/api/admin/moderator/${ActionType.add}/${id}`);
           toastSuccess('Teacher added as moderator');
           this.props.history.push('/manage-user');
-        } else {
+        } catch (error) {
           toastError('Unable to add this teacher as moderator');
         }
       }

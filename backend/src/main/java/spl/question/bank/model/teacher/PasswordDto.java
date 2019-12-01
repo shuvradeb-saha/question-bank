@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PasswordDto {
   private Integer userId;
+  private String email;
   private String oldPassword;
   private String newPassword;
   private String confPassword;

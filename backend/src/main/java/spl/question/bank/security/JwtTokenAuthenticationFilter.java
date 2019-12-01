@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 @Slf4j
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -37,11 +39,17 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
       try {
         filterChain.doFilter(request, response);
       } catch (Exception e) {
-        logger.info("Unknown error {}",e);
+        logger.info("Unknown error {}", e.getMessage());
+        return;
       }
     }
-
-    String token = header.replace(jwtConfig.getPrefix(), "");
+    String token;
+    try {
+      token = header.replace(jwtConfig.getPrefix(), "");
+    } catch (Exception e) {
+      logger.info(e.getMessage());
+      return;
+    }
 
     try {
       Claims claims =
@@ -51,6 +59,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
               .getBody();
 
       String username = claims.getSubject();
+
       if (username != null) {
         val authorities = (List<String>) claims.get("authorities");
 

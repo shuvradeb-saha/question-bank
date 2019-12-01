@@ -16,6 +16,7 @@ import {
   makeLoginErrorCode,
   makeInProgress,
 } from 'state/login/selectors';
+import { OtpSend } from 'containers';
 
 const NOT_FOUND = () => <h1>Not Found</h1>;
 
@@ -46,7 +47,6 @@ const NO_Server = () => (
     </div>
   </div>
 ); */
-
 class App extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
@@ -93,6 +93,7 @@ class App extends Component {
             path="/login"
             component={this.props.inProgress ? PRE_LOGIN_LOADER : Login}
           />
+          <Route path="/forget/password" component={OtpSend} />
           <Route path="/" component={userIsAuthenticated(HomePage)} />
           <Route path="" component={NOT_FOUND} />
         </Switch>
