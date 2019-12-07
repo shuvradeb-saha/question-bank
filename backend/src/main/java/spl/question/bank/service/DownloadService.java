@@ -60,7 +60,7 @@ public class DownloadService {
     val teacherId = downloadCriteria.getTeacherId();
     if (!userService.getRolesByUser(teacherId).contains(Roles.HEADMASTER.name())) {
       return ResponseEntity.status(FORBIDDEN)
-          .body("You do not have permission to download question.");
+          .body("You do not have permission to download questions.");
     }
     val subjectId = downloadCriteria.getSubjectId();
     val chapters = downloadCriteria.getChapters();
@@ -110,7 +110,7 @@ public class DownloadService {
     return ResponseEntity.ok(generatedPaperId);
   }
 
-  public ResponseEntity generateMcqPaper(DownloadCriteria downloadCriteria) throws IOException {
+  public ResponseEntity<?> generateMcqPaper(DownloadCriteria downloadCriteria) {
     val teacherId = downloadCriteria.getTeacherId();
     if (!userService.getRolesByUser(teacherId).contains(Roles.HEADMASTER.name())) {
       return ResponseEntity.status(FORBIDDEN)
@@ -139,7 +139,6 @@ public class DownloadService {
             .andChapterIdIn(chapters)
             .andStatusEqualTo(QuestionStatus.approved.name());
       }
-
     } else {
       mcqExample
           .createCriteria()
@@ -159,7 +158,7 @@ public class DownloadService {
     final int totalWeight = ExamType.valueOf(examType).getMcqWeight();
     if (totalWeightInDb < totalWeight) {
       return ResponseEntity.status(BAD_REQUEST)
-          .body("Question Bank does not have sufficient question.");
+          .body("Question Bank does not have sufficient questions.");
     }
 
     val generatedPaperId =

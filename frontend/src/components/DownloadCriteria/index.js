@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form/immutable';
 import PropTypes from 'prop-types';
 
-import { prepareClasses, prepareSubjects } from 'utils/utils';
+import { prepareClasses, prepareSubjects, prepareChapters } from 'utils/utils';
 import { FormSelect } from 'components';
 import { fromJS } from 'immutable';
 
@@ -19,9 +19,11 @@ const questionType = fromJS([
 class DownloadCriteria extends Component {
   static propTypes = {
     classes: PropTypes.object,
+    chapters: PropTypes.object,
     subjects: PropTypes.object,
     selectedClass: PropTypes.object,
-    onSubmit: PropTypes.func,
+    selectedSubject: PropTypes.object,
+    selectedExamType: PropTypes.object,
     inProgress: PropTypes.bool,
     status: PropTypes.bool,
   };
@@ -37,6 +39,9 @@ class DownloadCriteria extends Component {
       selectedClass,
       inProgress,
       status,
+      selectedSubject,
+      chapters,
+      selectedExamType,
     } = this.props;
 
     return (
@@ -81,6 +86,24 @@ class DownloadCriteria extends Component {
                 />
               </div>
             </div>
+            {selectedExamType && selectedExamType.get('value') === 'midExam' && (
+              <div className="row">
+                <div className="col">
+                  <FormSelect
+                    name="chapters"
+                    placeholder={
+                      selectedSubject
+                        ? 'Select chapters'
+                        : 'Please select subject first'
+                    }
+                    disabled={selectedSubject ? false : true}
+                    label="অধ্যায়"
+                    options={prepareChapters(selectedSubject, chapters)}
+                    multi
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="row">
               <div className="col text-right">

@@ -11,6 +11,7 @@ import {
   makeAllClasses,
   makeAllSubjects,
   makeUserId,
+  makeAllChapters,
 } from 'state/login/selectors';
 import API from 'utils/api';
 import { toastSuccess, toastError } from 'components/Toaster';
@@ -22,6 +23,8 @@ class Download extends Component {
     classes: PropTypes.object,
     chapters: PropTypes.object,
     selectedClass: PropTypes.object,
+    selectedSubject: PropTypes.object,
+    selectedExamType: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -35,10 +38,18 @@ class Download extends Component {
 
   onSubmit = async values => {
     const jsValue = values.toJS();
+
     const questionType = jsValue.questionType.value;
+    const examType = jsValue.examType.value;
+
+    const chapterIds =
+      jsValue.chapters && jsValue.chapters.map(chp => chp.value);
+    const chapters = examType === 'midExam' ? chapterIds : [];
+
     const data = {
       teacherId: this.props.userId,
       ...jsValue,
+      chapters,
       classId: jsValue.classId.value,
       subjectId: jsValue.subjectId.value,
       examType: jsValue.examType.value,
@@ -62,7 +73,7 @@ class Download extends Component {
     } catch (error) {
       console.log('error', error);
 
-      toastError(error.response.data.message);
+      toastError(error.response.data);
       this.setState({
         questionType: '',
         inProgress: false,
@@ -101,7 +112,14 @@ class Download extends Component {
   };
 
   render() {
-    const { classes, selectedClass, subjects } = this.props;
+    const {
+      classes,
+      selectedClass,
+      subjects,
+      selectedSubject,
+      chapters,
+      selectedExamType,
+    } = this.props;
     const { paperId, inProgress, questionType, status } = this.state;
 
     return (
@@ -110,6 +128,9 @@ class Download extends Component {
           classes={classes}
           subjects={subjects}
           selectedClass={selectedClass}
+          selectedSubject={selectedSubject}
+          selectedExamType={selectedExamType}
+          chapters={chapters}
           onSubmit={this.onSubmit}
           inProgress={inProgress}
           status={status}
@@ -131,8 +152,11 @@ class Download extends Component {
 const mapStateToProps = createStructuredSelector({
   userId: makeUserId(),
   selectedClass: state => downloadFormSelector(state, 'classId'),
+  selectedSubject: state => downloadFormSelector(state, 'subjectId'),
+  selectedExamType: state => downloadFormSelector(state, 'examType'),
   classes: makeAllClasses(),
   subjects: makeAllSubjects(),
+  chapters: makeAllChapters(),
 });
 
 const mapDispatchToProps = dispatch => ({});

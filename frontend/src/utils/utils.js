@@ -73,8 +73,7 @@ export const prepareSubjects = (selectedClass, subjects) => {
     }));
 };
 
-export const prepareChapters = chapters => {
-  const { selectedSubject } = this.props;
+export const prepareChapters = (selectedSubject, chapters) => {
   return chapters
     .filter(
       chapter =>
