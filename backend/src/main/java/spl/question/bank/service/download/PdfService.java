@@ -8,6 +8,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
 import com.itextpdf.layout.font.FontSet;
 import com.itextpdf.layout.property.Property;
+import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.licensekey.LicenseKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import spl.question.bank.database.model.CQQuestion;
 import spl.question.bank.database.model.QuestionPaper;
+import spl.question.bank.model.moderator.ExamType;
 import spl.question.bank.model.question.mcq.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -50,6 +53,7 @@ public class PdfService {
     answerSheet = new StringBuilder();
     String fileName = makeNameForFile(paperDetails);
     buildResponse(response, fileName);
+    ExamType examType = ExamType.valueOf(paperDetails.getExamType());
     logger.info("Selected size ==> {} questions for download.", mcqs.size());
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
       ZipEntry questionEntry = new ZipEntry(fileName + ".pdf");
@@ -58,6 +62,7 @@ public class PdfService {
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
+      addHeader(examType, questionDocument, "বহুনির্বাচনী প্রশ্ন");
       int i = 1;
       for (MCQDto mcqDto : mcqs) {
         String question = "";
@@ -83,6 +88,14 @@ public class PdfService {
     }
   }
 
+  private void addHeader(ExamType examType, Document questionDocument, String qType) {
+    Paragraph paragraph = new Paragraph();
+    paragraph.setTextAlignment(TextAlignment.CENTER);
+    paragraph.add(
+        examType.getLabel() + " " + enNumberToBnNumber(LocalDate.now().getYear()) + "\n" + qType);
+    questionDocument.add(paragraph);
+  }
+
   private void buildResponse(HttpServletResponse response, String fileName) {
     response.setContentType("application/zip");
     response.setHeader(
@@ -98,6 +111,7 @@ public class PdfService {
 
     String fileName = makeNameForFile(paperDetails);
     buildResponse(response, fileName);
+    ExamType examType = ExamType.valueOf(paperDetails.getExamType());
     logger.info("Selected size ==> {} questions for download.", cqs.size());
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
@@ -107,6 +121,7 @@ public class PdfService {
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
+      addHeader(examType, questionDocument, "সৃজনশীল প্রশ্ন");
       int i = 1;
       for (CQQuestion cq : cqs) {
         String question = renderCq(i, cq);

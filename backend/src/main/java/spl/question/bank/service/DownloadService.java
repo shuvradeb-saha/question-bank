@@ -66,7 +66,7 @@ public class DownloadService {
     val chapters = downloadCriteria.getChapters();
     val cqExample = new CQQuestionExample();
     val examType = downloadCriteria.getExamType();
-    if (Arrays.asList(ExamType.midExam.name(), ExamType.weeklyExam.name()).contains(examType)) {
+    if (Arrays.asList(ExamType.midExam.name()).contains(examType)) {
 
       if (CollectionUtils.isEmpty(chapters)) {
         throw new IllegalArgumentException("Must provide chapters in MID exam.");
@@ -120,7 +120,7 @@ public class DownloadService {
     val chapters = downloadCriteria.getChapters();
     val mcqExample = new MCQQuestionExample();
     val examType = downloadCriteria.getExamType();
-    if (Arrays.asList(ExamType.midExam.name(), ExamType.weeklyExam.name()).contains(examType)) {
+    if (Arrays.asList(ExamType.midExam.name()).contains(examType)) {
 
       if (CollectionUtils.isEmpty(chapters)) {
         throw new IllegalArgumentException("Must provide chapters in MID exam.");
