@@ -13,8 +13,8 @@ import {
 import { fetchArchive } from 'state/headmaster/action';
 import { makeArchiveItems } from 'state/headmaster/selectors';
 import { getNameById, getClassNameBySubjectId } from 'utils/utils';
-import API from 'utils/api';
-import { toastSuccess, toastError } from 'components/Toaster';
+
+import { toastError } from 'components/Toaster';
 class DownloadArchive extends Component {
   static propTypes = {
     userId: PropTypes.number,
@@ -27,6 +27,7 @@ class DownloadArchive extends Component {
   componentDidMount() {
     this.props.fetchArchive(this.props.userId);
   }
+
   onDownloadClick = async (questionType, paperId) => {
     try {
       let anchor = document.createElement('a');

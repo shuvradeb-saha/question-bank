@@ -21,7 +21,7 @@ const AdminSidebar = () => (
         <span className="menu-collapsed">Home</span>
       </div>
     </Link>
-    <Link
+    {/* <Link
       to="/profile"
       className="list-group-item list-group-item-action bg-dark text-white"
     >
@@ -29,7 +29,7 @@ const AdminSidebar = () => (
         <span className="fa fa-user fa-fw mr-3"></span>
         <span className="menu-collapsed">Profile</span>
       </div>
-    </Link>
+    </Link> */}
     <Link
       to="/manage-user"
       className="list-group-item list-group-item-action bg-dark text-white"

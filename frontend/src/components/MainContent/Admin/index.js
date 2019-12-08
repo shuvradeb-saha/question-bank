@@ -10,23 +10,16 @@ import {
   ClassInfo,
   SubjectInfo,
   ChapterInfo,
+  LandingPage,
 } from 'containers';
-
-const Home = () => <h1 className="text-center">Welcome to your Portal</h1>;
-const Profile = () => <h1>Profile</h1>;
-//const Chapter = () => <h1>Manage Chapter</h1>;
 
 class AdminContent extends Component {
   render() {
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route
-            exact
-            path="/profile"
-            component={Authorization(Profile, [Roles.ADMIN])}
-          />
+          <Route exact path="/" component={LandingPage} />
+
           <Route
             exact
             path="/manage-user"
