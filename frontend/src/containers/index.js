@@ -23,3 +23,4 @@ export { default as LandingPage } from './LandingPage';
 export { default as Profile } from './Profile';
 export { default as OtpSend } from './ForgetPassword/OtpSend';
 export { default as DownloadArchive } from './Download/DownloadArchive';
+export { default as Dashboard } from './Dashboard';

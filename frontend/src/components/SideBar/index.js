@@ -162,6 +162,15 @@ const renderTeacherOptions = () => (
       </div>
     </Link>
     <Link
+      to="/dashboard"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-user fa-fw mr-3"></span>
+        <span className="menu-collapsed">Dashboard</span>
+      </div>
+    </Link>
+    <Link
       to="/profile"
       className="list-group-item list-group-item-action bg-dark text-white"
     >
