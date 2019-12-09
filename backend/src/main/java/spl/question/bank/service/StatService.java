@@ -56,6 +56,7 @@ public class StatService {
     resultMap.put("createdMcqMap", mcqCountMap);
     resultMap.put("createdMcqCount", createdMcqCount);
     resultMap.put("createdCqCount", createdCqCount);
+    resultMap.put("totalCreated", createdMcqCount + createdCqCount);
 
     if (userService.getRolesByUser(id).contains(Roles.HEADMASTER.name())) {
       long totalTeacher = getTotalTeacher(user.getEiinNumber());
@@ -68,6 +69,7 @@ public class StatService {
 
       resultMap.put("moderatedMcqCount", moderatedMcqCount);
       resultMap.put("moderatedCqCount", moderatedCqCount);
+      resultMap.put("totalModerated", moderatedMcqCount + moderatedCqCount);
     }
     return ResponseEntity.ok(resultMap);
   }

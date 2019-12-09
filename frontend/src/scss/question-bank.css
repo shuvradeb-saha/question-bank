@@ -130,6 +130,12 @@ button {
 tbody + thead {
   display: none; }
 
+.bg-light-green {
+  background-color: #1abd74; }
+
+.bg-purple {
+  background-color: #8d2abbcb; }
+
 .Toastify__toast-container.toaster {
   top: 5em;
   width: 400px;
