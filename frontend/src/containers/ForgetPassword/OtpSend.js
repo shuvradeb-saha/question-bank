@@ -31,7 +31,8 @@ class OtpSend extends Component {
       toastSuccess(res);
       this.setState({ sendForm: false, otpForm: true });
     } catch (error) {
-      console.log('Error', error);
+      console.log('Error email submit', error);
+      toastError(error.response.data.message);
     }
   }
 
@@ -65,7 +66,7 @@ class OtpSend extends Component {
       this.setState({ sendForm: false, otpForm: false, resetForm: true });
       this.props.history.push('/');
     } catch (error) {
-      console.log('Error', error);
+      console.log('Error in otp send', error);
       toastError(error.response.data);
     }
   }
@@ -105,7 +106,7 @@ class OtpSend extends Component {
                     required
                     name="email"
                     className="form-control"
-                    type="text"
+                    type="email"
                     placeholder="Enter email"
                     onChange={this.handleInputChange}
                   />

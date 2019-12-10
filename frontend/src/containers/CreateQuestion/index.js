@@ -28,11 +28,9 @@ class CreateQuestion extends Component {
         <h3>
           <b>
             <i className="fa fa-frown-o" aria-hidden="true"></i>
-            {'   '}দুঃখিত!!
+            {'   '}Sorry!!
           </b>{' '}
-          আপনাকে কোন বিষয় প্রদান করা হয়নি। এই মুহুর্তে আপনি কোন প্রশ্ন তৈরী করতে
-          পারছেন না। বিষয় নির্ধারনের জন্য আপনার প্রতিষ্ঠান প্রধানের সাথে যোগাযোগ
-          করুন।
+          No subject has been allocated to you.
         </h3>
       </div>
     ) : (

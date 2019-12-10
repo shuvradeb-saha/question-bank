@@ -14,7 +14,6 @@ import {
 import { saveQuestion } from 'state/question/action';
 import { QuestionType } from 'containers/CreateQuestion/Question';
 import { McqForm } from 'components/QuestionForm';
-import { reset } from 'redux-form';
 
 const mcqFormSelector = formValueSelector('mcqForm');
 
@@ -23,7 +22,7 @@ class McqManager extends Component {
     mcqType: PropTypes.string.isRequired,
     classes: PropTypes.object,
     chapters: PropTypes.object,
-    resetForm: PropTypes.func,
+
     subjects: PropTypes.object,
     selectedClass: PropTypes.object,
     selectedSubject: PropTypes.object,
@@ -47,7 +46,6 @@ class McqManager extends Component {
       };
       this.props.saveMcq(questionData, QuestionType.MCQ);
       this.props.history.push('/question/create');
-      //this.props.resetForm();
     } else {
       return;
     }
@@ -90,7 +88,6 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   saveMcq: (question, type) => dispatch(saveQuestion(question, type)),
-  resetForm: () => dispatch(reset('mcqForm')),
 });
 
 const withConnect = connect(

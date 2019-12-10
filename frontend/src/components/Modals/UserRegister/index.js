@@ -69,7 +69,7 @@ class UserRegister extends Component {
             <form onSubmit={handleSubmit(onUserDetailsSubmit)}>
               <div className="row">
                 <div className="col">
-                  <FormInput name="email" label="Email" />
+                  <FormInput name="email" label="Email" type="email" />
                 </div>
                 {!isUpdate && (
                   <div className="col-6">

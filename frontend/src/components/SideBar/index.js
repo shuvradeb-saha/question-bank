@@ -109,13 +109,13 @@ const HeadMasterSidebar = ({ roles }) => {
           to="/teacher/pending"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
-          <span className="menu-collapsed">Pending list</span>
+          <span className="menu-collapsed">Unallocated list</span>
         </Link>
         <Link
           to="/teacher/approved"
           className="list-group-item list-group-item-action bg-dark text-white"
         >
-          <span className="menu-collapsed">Approved list</span>
+          <span className="menu-collapsed">Allocated list</span>
         </Link>
       </div>
 

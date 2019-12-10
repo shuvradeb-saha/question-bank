@@ -1,4 +1,4 @@
 export const TableType = Object.freeze({
-  PENDING: Symbol('Pending Teacher List'),
-  APPROVED: Symbol('Approved Teacher List'),
+  PENDING: Symbol('Unallocated Teacher List'),
+  APPROVED: Symbol('Allocated Teacher List'),
 });
