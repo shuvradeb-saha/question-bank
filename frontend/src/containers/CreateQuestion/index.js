@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 
@@ -116,4 +117,4 @@ const withConnect = connect(
   mapDispatchToProps
 );
 
-export default withConnect(CreateQuestion);
+export default compose(withConnect)(CreateQuestion);

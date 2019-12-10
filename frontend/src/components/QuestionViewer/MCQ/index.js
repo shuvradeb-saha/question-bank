@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { McqType } from 'containers/CreateQuestion/Question';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import {
+  getClassNameBySubjectId,
+  getNameById,
+  getChpNameById,
+} from 'utils/utils';
+import {
+  makeAllClasses,
+  makeAllSubjects,
+  makeAllChapters,
+} from 'state/login/selectors';
 
 export const getAnsStrFromNum = n => {
   switch (n) {
@@ -94,14 +107,17 @@ export const renderStemViewer = mcq => {
 class MCQ extends Component {
   static propTypes = {
     mcq: PropTypes.object.isRequired,
+    allClass: PropTypes.any,
+    allChapters: PropTypes.any,
+    allSubjects: PropTypes.any,
   };
 
   render() {
-    const { mcq } = this.props;
+    const { mcq, allClass, allChapters, allSubjects } = this.props;
 
     return (
       <div className="container clearfix border rounded">
-        <div className="row p-3">
+        <div className="row mt-2">
           <div className="col">
             <label htmlFor="type">
               Mcq type:&nbsp;
@@ -123,6 +139,37 @@ class MCQ extends Component {
             </label>
           </div>
         </div>
+        <div className="row ">
+          <div className="col">
+            <label htmlFor="clasz">
+              Class:&nbsp;
+              <span id="clasz">
+                {getClassNameBySubjectId(
+                  mcq.get('subjectId'),
+                  allClass,
+                  allSubjects
+                )}
+              </span>
+            </label>
+          </div>
+          <div className="col">
+            <label htmlFor="subject">
+              Subject : &nbsp;
+              <span id="subject">
+                {getNameById(mcq.get('subjectId'), allSubjects)}
+              </span>
+            </label>
+          </div>
+          <div className="col">
+            <label htmlFor="chapter">
+              Chapter: &nbsp;
+              <span id="chapter">
+                {getChpNameById(mcq.get('chapterId'), allChapters)}
+              </span>
+            </label>
+          </div>
+        </div>
+
         <hr />
         {mcq.get('mcqType') === McqType.GENERAL && renderGeneralViewer(mcq)}
         {mcq.get('mcqType') === McqType.POLYNOMIAL &&
@@ -133,4 +180,15 @@ class MCQ extends Component {
   }
 }
 
-export default MCQ;
+const mapStateToProps = createStructuredSelector({
+  allClass: makeAllClasses(),
+  allSubjects: makeAllSubjects(),
+  allChapters: makeAllChapters(),
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  null
+);
+
+export default compose(withConnect)(MCQ);

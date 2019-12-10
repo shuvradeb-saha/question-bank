@@ -114,15 +114,19 @@ class Dashboard extends Component {
           <div className="col text-center">
             <h2>Created Questions</h2>
             <div>
-              <Pie
-                data={this.preparePieData(
-                  data.createdMcqCount,
-                  data.createdCqCount
-                )}
-                width={400}
-                height={400}
-                options={{ maintainAspectRatio: false }}
-              />
+              {data.createdMcqCount === 0 && data.createdCqCount === 0 ? (
+                <h2>No question has been created yet.</h2>
+              ) : (
+                <Pie
+                  data={this.preparePieData(
+                    data.createdMcqCount,
+                    data.createdCqCount
+                  )}
+                  width={400}
+                  height={400}
+                  options={{ maintainAspectRatio: false }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -173,15 +177,19 @@ class Dashboard extends Component {
             <div className="col text-center">
               <h2>Moderated Questions</h2>
               <div>
-                <Pie
-                  data={this.preparePieData(
-                    data.moderatedMcqCount,
-                    data.moderatedCqCount
-                  )}
-                  width={400}
-                  height={400}
-                  options={{ maintainAspectRatio: false }}
-                />
+                {data.moderatedMcqCount === 0 && data.moderatedCqCount === 0 ? (
+                  <h2>No question has been created yet.</h2>
+                ) : (
+                  <Pie
+                    data={this.preparePieData(
+                      data.moderatedMcqCount,
+                      data.moderatedCqCount
+                    )}
+                    width={400}
+                    height={400}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                )}
               </div>
             </div>
           </div>

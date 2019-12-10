@@ -32,6 +32,14 @@ export const getNameById = (id, data) => {
     : '';
 };
 
+export const getChpNameById = (id, data) => {
+  const filteredItem = data.filter(item => item.get('id') === id);
+
+  return filteredItem && filteredItem.size > 0
+    ? filteredItem.get(0).toJS().chapterName
+    : '';
+};
+
 export const extractNameObject = (
   chapterId,
   allChapter,

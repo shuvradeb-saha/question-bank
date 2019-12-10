@@ -30,7 +30,10 @@ class QuestionRoute extends Component {
             path="/question/mcq/stem"
             component={Authorization(
               () => (
-                <McqManager mcqType={McqType.STEM} />
+                <McqManager
+                  mcqType={McqType.STEM}
+                  history={this.props.history}
+                />
               ),
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
@@ -40,7 +43,10 @@ class QuestionRoute extends Component {
             path={`/question/mcq/general`}
             component={Authorization(
               () => (
-                <McqManager mcqType={McqType.GENERAL} />
+                <McqManager
+                  mcqType={McqType.GENERAL}
+                  history={this.props.history}
+                />
               ),
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
@@ -50,7 +56,10 @@ class QuestionRoute extends Component {
             path="/question/mcq/polynomial"
             component={Authorization(
               () => (
-                <McqManager mcqType={McqType.POLYNOMIAL} />
+                <McqManager
+                  mcqType={McqType.POLYNOMIAL}
+                  history={this.props.history}
+                />
               ),
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
