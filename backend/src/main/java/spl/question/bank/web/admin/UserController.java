@@ -51,6 +51,14 @@ public class UserController {
   }
 
   @RequestMapping(
+      value = "/user/disable/{id}",
+      method = RequestMethod.PUT,
+      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<String> disable(@PathVariable Integer id) {
+    return userService.disableUser(id);
+  }
+
+  @RequestMapping(
       value = "/users",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -75,7 +83,7 @@ public class UserController {
   }
 
   @RequestMapping(value = "/moderator/{action}/{id}", method = RequestMethod.POST)
-  public boolean makeModerator(
+  public ResponseEntity<String> makeModerator(
       final @PathVariable("action") ActionType action, final @PathVariable("id") Integer id) {
     return userService.addRemoveModerator(action, id);
   }

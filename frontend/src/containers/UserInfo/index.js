@@ -88,6 +88,22 @@ class UserInfo extends Component {
     }));
   };
 
+  onDisableClick = async id => {
+    const url = `/api/admin/user/disable/${id}`;
+    if (this.isPropmpted('Are you sure to remove this user?')) {
+      try {
+        const res = await API.put(url);
+        toastSuccess(res);
+        this.props.history.push('/manage-user');
+      } catch (error) {
+        console.log('Error ', error);
+        toastError(error.response.data);
+      }
+    } else {
+      return;
+    }
+  };
+
   onUserDetailsSubmit = values => {
     const roles = values.get('roles');
     const eiin = values.get('eiinNumber');
@@ -123,13 +139,14 @@ class UserInfo extends Component {
         return;
       } else {
         try {
-          await API.post(`/api/admin/moderator/${ActionType.remove}/${id}`);
-          toastSuccess('Removed moderatorship from this user');
+          const res = await API.post(
+            `/api/admin/moderator/${ActionType.remove}/${id}`
+          );
+          toastSuccess(res);
           this.props.history.push('/manage-user');
         } catch (error) {
           console.log('error', error);
-
-          toastError(error.response.data.message);
+          toastError(error.response.data);
         }
       }
     } else {
@@ -141,11 +158,14 @@ class UserInfo extends Component {
         return;
       } else {
         try {
-          await API.post(`/api/admin/moderator/${ActionType.add}/${id}`);
-          toastSuccess('Teacher added as moderator');
+          const res = await API.post(
+            `/api/admin/moderator/${ActionType.add}/${id}`
+          );
+          toastSuccess(res);
           this.props.history.push('/manage-user');
         } catch (error) {
-          toastError('Unable to add this teacher as moderator');
+          console.log('error', error);
+          toastError(error.response.data);
         }
       }
     }
@@ -192,6 +212,12 @@ class UserInfo extends Component {
         width: 150,
       },
       {
+        label: 'Status',
+        field: 'status',
+        sort: 'asc',
+        width: 150,
+      },
+      {
         label: 'Action',
         field: 'action',
         sort: 'asc',
@@ -207,13 +233,20 @@ class UserInfo extends Component {
         .get('roles')
         .toJS()
         .join(', '),
-      action: (
+      status: user.get('enabled') ? 'Active' : 'Removed',
+      action: user.get('enabled') ? (
         <span>
           <button
             className="btn btn-sm btn-outline-info"
             onClick={() => this.onEditClick(user.get('id'))}
           >
             Edit
+          </button>
+          <button
+            className="btn btn-sm btn-outline-danger"
+            onClick={() => this.onDisableClick(user.get('id'))}
+          >
+            Disable
           </button>
           {user.get('roles').includes(Roles.MODERATOR) ? (
             <button
@@ -235,6 +268,8 @@ class UserInfo extends Component {
             </button>
           )}
         </span>
+      ) : (
+        'User is removed.'
       ),
     }));
     return { columns, rows: rows.toJS() };

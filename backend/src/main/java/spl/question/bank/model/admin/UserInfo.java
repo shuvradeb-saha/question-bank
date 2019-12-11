@@ -14,5 +14,6 @@ public class UserInfo {
     private String name;
     private Integer eiinNumber;
     private String instituteName;
+    private boolean enabled;
     private List<String> roles;
 }

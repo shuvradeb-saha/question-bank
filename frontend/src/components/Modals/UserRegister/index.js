@@ -69,7 +69,12 @@ class UserRegister extends Component {
             <form onSubmit={handleSubmit(onUserDetailsSubmit)}>
               <div className="row">
                 <div className="col">
-                  <FormInput name="email" label="Email" type="email" />
+                  <FormInput
+                    name="email"
+                    label="Email"
+                    type="email"
+                    disabled={isUpdate}
+                  />
                 </div>
                 {!isUpdate && (
                   <div className="col-6">
@@ -90,19 +95,37 @@ class UserRegister extends Component {
 
               <div className="row">
                 <div className="col-6">
-                  <FormInput name="firstName" label="First Name" />
+                  <FormInput
+                    name="firstName"
+                    label="First Name"
+                    disabled={isUpdate}
+                  />
                 </div>
                 <div className="col-6">
-                  <FormInput name="lastName" label="Last Name" />
+                  <FormInput
+                    name="lastName"
+                    label="Last Name"
+                    disabled={isUpdate}
+                  />
                 </div>
               </div>
 
               <div className="row">
                 <div className="col-6">
-                  <FormInput name="birthDate" label="Birth Date" type="date" />
+                  <FormInput
+                    name="birthDate"
+                    label="Birth Date"
+                    type="date"
+                    disabled={isUpdate}
+                  />
                 </div>
                 <div className="col-6">
-                  <FormInput name="joinDate" label="Join Date" type="date" />
+                  <FormInput
+                    name="joinDate"
+                    label="Join Date"
+                    type="date"
+                    disabled={isUpdate}
+                  />
                 </div>
               </div>
               <div className="row">
@@ -112,6 +135,7 @@ class UserRegister extends Component {
                     label="Select Role"
                     options={roleOptions}
                     multi
+                    disabled={isUpdate}
                   />
                 </div>
                 <div className="col-6">
@@ -128,10 +152,15 @@ class UserRegister extends Component {
                   <FormInput
                     name="permanentAddress"
                     label="Parmanent Address"
+                    disabled={isUpdate}
                   />
                 </div>
                 <div className="col-6">
-                  <FormInput name="tempAddress" label="Present Address" />
+                  <FormInput
+                    name="tempAddress"
+                    label="Present Address"
+                    disabled={isUpdate}
+                  />
                 </div>
               </div>
 

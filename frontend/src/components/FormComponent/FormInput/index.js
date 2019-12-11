@@ -10,16 +10,18 @@ class FormInput extends Component {
     label: PropTypes.string.isRequired,
     type: PropTypes.string,
     require: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     type: 'text',
     require: true,
+    disabled: false,
   };
 
   renderField = field => {
     const { input, meta } = field;
-    const { type, label } = this.props;
+    const { type, label, disabled } = this.props;
 
     const fieldErrorClass =
       meta.touched && meta.error ? 'border border-danger' : '';
@@ -33,11 +35,13 @@ class FormInput extends Component {
           <textarea
             className={`form-control ${fieldErrorClass}`}
             {...input}
+            disabled={disabled}
           ></textarea>
         ) : (
           <input
             className={`form-control ${fieldErrorClass}`}
             {...input}
+            disabled={disabled}
             type={type}
           />
         )}

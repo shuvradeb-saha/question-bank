@@ -3,7 +3,7 @@ import { reduxForm } from 'redux-form/immutable';
 import PropTypes from 'prop-types';
 
 import { prepareClasses, prepareSubjects, prepareChapters } from 'utils/utils';
-import { FormSelect } from 'components';
+import { FormSelect, FormInput } from 'components';
 import { fromJS } from 'immutable';
 
 const examType = fromJS([
@@ -104,6 +104,25 @@ class DownloadCriteria extends Component {
                 </div>
               </div>
             )}
+
+            <div className="row">
+              <div className="col">
+                <FormInput
+                  name="instituteName"
+                  label="প্রতিষ্ঠানের নাম"
+                  require={true}
+                  placeholder="Enter institute name for paper"
+                />
+              </div>
+              <div className="col">
+                <FormInput
+                  name="time"
+                  label="সময়"
+                  require={true}
+                  placeholder="Enter exam duration for paper"
+                />
+              </div>
+            </div>
 
             <div className="row">
               <div className="col text-right">

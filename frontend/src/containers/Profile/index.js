@@ -10,6 +10,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import dummy from 'static/dummy.jpeg';
 import { makePropic, makeUserId, makeUser } from 'state/login/selectors';
 import { toastSuccess, toastError } from 'components/Toaster';
+// import { UserRegisterModal } from 'components/Modals';
 class Profile extends Component {
   static propTypes = {
     userDetails: PropTypes.any,
@@ -42,6 +43,8 @@ class Profile extends Component {
       imagePreviewUrl: '',
     }));
   };
+
+  onEditProfileClick = () => {};
 
   onChangePasswordClick = () => {
     this.setState(prevState => ({
@@ -187,6 +190,12 @@ class Profile extends Component {
             </table>
             <div className="row m-auto">
               <div>
+                {/* <button
+                  className="btn btn-primary"
+                  onClick={this.onEditProfileClick}
+                >
+                  Edit Profile
+                </button> */}
                 <button
                   className="btn btn-primary"
                   onClick={this.onChangePasswordClick}

@@ -15,10 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import spl.question.bank.database.client.*;
 import spl.question.bank.database.model.*;
-import spl.question.bank.model.admin.Roles;
 import spl.question.bank.model.admin.UserDto;
 import spl.question.bank.model.admin.UserInfo;
 import spl.question.bank.model.login.LoginResponse;
@@ -35,6 +33,9 @@ import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
+import static spl.question.bank.model.admin.Roles.HEADMASTER;
+import static spl.question.bank.model.admin.Roles.MODERATOR;
 
 @Service
 @Slf4j
@@ -86,6 +87,12 @@ public class UserService {
     val roles = userDto.getRoles();
 
     validateUser(user);
+    val stringRoles = roleObjToString(roles);
+    // check any headmaster has before
+    if (stringRoles.contains(HEADMASTER.name()) && hasHeadmaster(userDto)) {
+      throw new IllegalArgumentException("This institute already has a headmaster.");
+    }
+
     user.setEnabled(true);
     user.setPassword(encoder.encode(user.getPassword()));
     if (userMapper.insert(user) < 0) {
@@ -105,6 +112,26 @@ public class UserService {
       userMapper.deleteByPrimaryKey(id);
       throw new RuntimeException("Unable to insert new user for technical problem.");
     }
+  }
+
+  private boolean hasHeadmaster(UserDto userDto) {
+    val ex = new UserExample();
+    ex.createCriteria()
+        .andEiinNumberEqualTo(userDto.getUser().getEiinNumber())
+        .andEnabledEqualTo(true);
+    val allUsers = userMapper.selectByExample(ex);
+
+    for (User u : allUsers) {
+      val rolesOfUsr = getRolesByUser(u.getId());
+      if (rolesOfUsr.contains(HEADMASTER.name())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<String> roleObjToString(List<Role> roles) {
+    return roles.stream().map(Role::getName).collect(toList());
   }
 
   @Transactional
@@ -133,6 +160,82 @@ public class UserService {
     example.createCriteria().andUserIdEqualTo(userId);
     // delete previous roles
     userRoleMapper.deleteByExample(example);
+  }
+
+  public ResponseEntity<String> disableUser(Integer id) {
+    val userDetail = getUserById(id);
+    val strRoles = roleObjToString(userDetail.getRoles());
+
+    if (strRoles.contains(MODERATOR.name())) {
+      val problems = sendPendingQuestionsToOther(id);
+      if (!isEmpty(problems)) {
+        String subjects = problems.stream().map(String::valueOf).collect(Collectors.joining(","));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("Please insert at least one moderator to subjects with id " + subjects);
+      }
+    }
+    val usr = userDetail.getUser();
+    usr.setEnabled(false);
+    userMapper.updateByPrimaryKey(usr);
+    return ResponseEntity.ok("User successfully removed.");
+  }
+
+  private Set<Integer> sendPendingQuestionsToOther(Integer mId) {
+    val mcqEx = new MCQQuestionExample();
+    mcqEx
+        .createCriteria()
+        .andModeratedByEqualTo(mId)
+        .andStatusEqualTo(QuestionStatus.pending.name());
+    val mcqs = mcqQuestionMapper.selectByExample(mcqEx);
+    val cqEx = new CQQuestionExample();
+    cqEx.createCriteria()
+        .andModeratedByEqualTo(mId)
+        .andStatusEqualTo(QuestionStatus.pending.name());
+    val cqs = cqQuestionMapper.selectByExample(cqEx);
+
+    if (isEmpty(mcqs) && isEmpty(cqs)) {
+      return null;
+    }
+    val subjectSet = new HashSet<Integer>();
+    mcqs.forEach(
+        mcqQuestion -> {
+          subjectSet.add(mcqQuestion.getSubjectId());
+        });
+    cqs.forEach(
+        cqQuestion -> {
+          subjectSet.add(cqQuestion.getSubjectId());
+        });
+
+    val problemSubject = new HashSet<Integer>();
+    for (val sId : subjectSet) {
+      if (getModeratorBySubject(sId).size() == 1) {
+        problemSubject.add(sId);
+      }
+    }
+
+    if (problemSubject.size() > 0) {
+      return problemSubject;
+    }
+
+    UserRoleExample ex = new UserRoleExample();
+    ex.createCriteria().andUserIdEqualTo(mId).andRoleIdEqualTo(MODERATOR.getValue());
+    userRoleMapper.deleteByExample(ex);
+
+    mcqs.forEach(
+        mcq -> {
+          Integer moderatorId = getRandomModerator(mcq.getSubjectId(), mcq.getCreatedBy()).getId();
+          mcq.setModeratedBy(moderatorId);
+          mcqQuestionMapper.updateByPrimaryKey(mcq);
+        });
+
+    cqs.forEach(
+        cq -> {
+          Integer moderatorId = getRandomModerator(cq.getSubjectId(), cq.getCreatedBy()).getId();
+          cq.setModeratedBy(moderatorId);
+          cqQuestionMapper.updateByPrimaryKey(cq);
+        });
+
+    return null;
   }
 
   private void assignRole(Integer userId, List<Role> roles) {
@@ -250,6 +353,7 @@ public class UserService {
         .map(
             user ->
                 new UserInfo()
+                    .setEnabled(user.getEnabled())
                     .setId(user.getId())
                     .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
                     .setEiinNumber(user.getEiinNumber())
@@ -289,17 +393,21 @@ public class UserService {
         .collect(toList());
   }
 
-  public boolean addRemoveModerator(ActionType action, Integer id) {
-    // if no allocation return false
-    if (teacherService.getAllocatedSubject(id).size() <= 0) {
-      return false;
-    }
-    val moderatorRoleId = Roles.MODERATOR.getValue();
+  public ResponseEntity<String> addRemoveModerator(ActionType action, Integer id) {
+
+    val moderatorRoleId = MODERATOR.getValue();
     if (action.equals(ActionType.add)) {
+      if (teacherService.getAllocatedSubject(id).size() <= 0) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("Unable to make moderator. This user does not have any allocated subject.");
+      }
+
       UserRole userRole = new UserRole();
       userRole.setRoleId(moderatorRoleId);
       userRole.setUserId(id);
       userRoleMapper.insert(userRole);
+
+      return ResponseEntity.ok("User added as moderator.");
     } else {
       MCQQuestionExample mcqEx = new MCQQuestionExample();
       mcqEx
@@ -316,15 +424,15 @@ public class UserService {
           cqQuestionMapper.countByExample(cqEx) > 0 || mcqQuestionMapper.countByExample(mcqEx) > 0;
 
       if (hasPendingQuestion) {
-        throw new IllegalArgumentException(
-            "Unable to remove. The moderator has pending questions.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("Unable to remove. The moderator has pending questions.");
       }
 
       UserRoleExample ex = new UserRoleExample();
       ex.createCriteria().andUserIdEqualTo(id).andRoleIdEqualTo(moderatorRoleId);
       userRoleMapper.deleteByExample(ex);
+      return ResponseEntity.ok("Removed moderatorship from user.");
     }
-    return true;
   }
 
   public List<User> getModeratorBySubject(Integer subjectId) {
@@ -341,7 +449,7 @@ public class UserService {
 
     for (UserRole userRole : allUserRole) {
       if (userRole.getUserId().equals(userId)
-          && userRole.getRoleId().equals(Roles.MODERATOR.getValue())) {
+          && userRole.getRoleId().equals(MODERATOR.getValue())) {
         return teacherService.getAllocatedSubject(userId).contains(subjectId);
       }
     }
@@ -405,7 +513,7 @@ public class UserService {
     ex.setOrderByClause("created_at DESC");
 
     val items = otpMapper.selectByExample(ex);
-    if (CollectionUtils.isEmpty(items)) {
+    if (isEmpty(items)) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
           .body(String.format("Otp with email %s does not match.", email));
     }
@@ -439,7 +547,7 @@ public class UserService {
     example.createCriteria().andEmailEqualTo(email).andStatusEqualTo(true);
 
     val items = otpMapper.selectByExample(example);
-    if (CollectionUtils.isEmpty(items)) {
+    if (isEmpty(items)) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
           .body("No verified otp found with email " + email);
     }
