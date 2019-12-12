@@ -8,6 +8,7 @@ import { fromJS } from 'immutable';
 
 const examType = fromJS([
   { label: 'বার্ষিক পরীক্ষা', value: 'finalExam' },
+  { label: 'নির্বাচনী পরীক্ষা', value: 'testExam' },
   { label: 'অর্ধ-বার্ষিক পরীক্ষা', value: 'midExam' },
 ]);
 
@@ -48,6 +49,16 @@ class DownloadCriteria extends Component {
       <span>
         <div className="jumbotron">
           <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col">
+                <FormInput
+                  name="instituteName"
+                  label="প্রতিষ্ঠানের নাম"
+                  require={true}
+                  placeholder="Enter institute name for paper"
+                />
+              </div>
+            </div>
             <div className="row">
               <div className="col">
                 <FormSelect
@@ -108,15 +119,16 @@ class DownloadCriteria extends Component {
             <div className="row">
               <div className="col">
                 <FormInput
-                  name="instituteName"
-                  label="প্রতিষ্ঠানের নাম"
+                  name="totalMarks"
+                  label="মোট নম্বর"
                   require={true}
-                  placeholder="Enter institute name for paper"
+                  type="number"
+                  placeholder="Enter total marks"
                 />
               </div>
               <div className="col">
                 <FormInput
-                  name="time"
+                  name="duration"
                   label="সময়"
                   require={true}
                   placeholder="Enter exam duration for paper"

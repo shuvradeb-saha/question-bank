@@ -16,56 +16,51 @@ class Header extends Component {
   //data:image/jpeg;base64,
   render() {
     return (
-      <div>
-        <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-          <Link className="navbar-brand" to="/">
-            <div className="qb-png"></div>
-          </Link>
-          <button
-            className="navbar-toggler"
-            data-toggle="collapse"
-            type="button"
-            data-target="#colapsibleNavbar"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <Link className="navbar-brand" to="/">
+          <div className="qb-png"></div>
+        </Link>
+        <button
+          className="navbar-toggler"
+          data-toggle="collapse"
+          type="button"
+          data-target="#colapsibleNavbar"
+        >
+          <span className="navbar-toggler-icon" />
+        </button>
 
-          <div
-            id="colapsibleNavbar"
-            className="collapse navbar-collapse justify-content-end"
-          >
-            <div className="text-light">
-              <UserAvatar
-                name={this.props.username}
-                size="48"
-                src={this.props.profilePic}
-              />
-            </div>
-            &nbsp;
-            <ul className="navbar-nav">
-              <li className="nav-item dropdown">
-                <span
-                  className="nav-link dropdown-toggle btn btn-outline-info"
-                  id="navbardrop"
-                  data-toggle="dropdown"
-                >
-                  <i className="fa fa-user" aria-hidden="true"></i>
-                  &nbsp;&nbsp;
-                  {this.props.username}
-                </span>
-                <div className="dropdown-menu ">
-                  <button
-                    onClick={this.props.onLogout}
-                    className="dropdown-item"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </li>
-            </ul>
+        <div
+          id="colapsibleNavbar"
+          className="collapse navbar-collapse justify-content-end"
+        >
+          <div className="text-light">
+            <UserAvatar
+              name={this.props.username}
+              size="48"
+              src={this.props.profilePic}
+            />
           </div>
-        </nav>
-      </div>
+          &nbsp;
+          <ul className="navbar-nav">
+            <li className="nav-item dropdown">
+              <span
+                className="nav-link dropdown-toggle btn btn-outline-info"
+                id="navbardrop"
+                data-toggle="dropdown"
+              >
+                <i className="fa fa-user" aria-hidden="true"></i>
+                &nbsp;&nbsp;
+                {this.props.username}
+              </span>
+              <div className="dropdown-menu ">
+                <button onClick={this.props.onLogout} className="dropdown-item">
+                  Logout
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }

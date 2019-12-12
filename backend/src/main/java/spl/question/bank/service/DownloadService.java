@@ -56,7 +56,7 @@ public class DownloadService {
     this.cqQuestionMapper = cqQuestionMapper;
   }
 
-  public ResponseEntity generateCQPaper(DownloadCriteria downloadCriteria) {
+  public ResponseEntity<?> generateCQPaper(DownloadCriteria downloadCriteria) {
     val teacherId = downloadCriteria.getTeacherId();
     if (!userService.getRolesByUser(teacherId).contains(Roles.HEADMASTER.name())) {
       return ResponseEntity.status(FORBIDDEN)
@@ -98,7 +98,12 @@ public class DownloadService {
     for (val cq : allApprovedCq) {
       idList.add(new WeightedId().setQuestionId(cq.getId()).setWeight(cq.getWeight()));
     }
-    final int totalWeight = ExamType.valueOf(examType).getCqWeight();
+    final int totalWeight =
+        downloadCriteria.getTotalMarks(); // ExamType.valueOf(examType).getCqWeight();
+    if (totalWeight <= 0) {
+      return ResponseEntity.status(BAD_REQUEST)
+          .body("Must provide a valid weight.");
+    }
     if (totalWeightInDb < totalWeight) {
       return ResponseEntity.status(BAD_REQUEST)
           .body("Question Bank does not have sufficient question.");

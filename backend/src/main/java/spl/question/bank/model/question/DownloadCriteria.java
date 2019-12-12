@@ -15,4 +15,7 @@ public class DownloadCriteria {
   private List<Integer> chapters;
   private String examType;
   private String questionType;
+  private String instituteName;
+  private String duration;
+  private Integer totalMarks;
 }

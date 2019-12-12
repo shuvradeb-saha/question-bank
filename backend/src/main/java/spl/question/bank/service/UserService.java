@@ -85,6 +85,7 @@ public class UserService {
   public void saveUser(final UserDto userDto) {
     val user = userDto.getUser();
     val roles = userDto.getRoles();
+    final String generatedPassword = user.getPassword();
 
     validateUser(user);
     val stringRoles = roleObjToString(roles);
@@ -104,7 +105,7 @@ public class UserService {
     // if everything is done send the password to the email
     boolean isMailSucceed =
         mailService.sendMailWithCredentials(
-            user.getEmail(), user.getFirstName(), user.getPassword());
+            user.getEmail(), user.getFirstName(), generatedPassword);
 
     if (!isMailSucceed) {
       // delete the new user
@@ -140,6 +141,13 @@ public class UserService {
     val roles = userDto.getRoles();
 
     val oldInfo = userMapper.selectByPrimaryKey(user.getId());
+    val oldRoles = roleObjToString(getRolesById(oldInfo.getId()));
+    val newRoles = roleObjToString(userDto.getRoles());
+
+    if (oldRoles.contains(MODERATOR.name()) && !newRoles.contains(MODERATOR.name())) {
+      throw new RuntimeException("Moderator role changing not possible from here.");
+    }
+
     user.setPassword(oldInfo.getPassword());
     validateUser(user);
     if (user.getId() != null) {

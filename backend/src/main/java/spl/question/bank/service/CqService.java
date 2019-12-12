@@ -32,9 +32,14 @@ public class CqService {
     this.mailService = mailService;
   }
 
-  public ResponseEntity saveCq(CQQuestion cqQuestion) {
+  public ResponseEntity<?> saveCq(CQQuestion cqQuestion) {
     Integer creatorId = cqQuestion.getCreatedBy();
     Integer subjectId = cqQuestion.getSubjectId();
+
+    if (cqQuestion.getWeight() != 10) {
+      throw new IllegalArgumentException("Each Cq weight must be 10.");
+    }
+
     if (!userService.checkTeacherSubject(creatorId, subjectId)) {
       throw new IllegalArgumentException("You are not assigned in the subject.");
     }

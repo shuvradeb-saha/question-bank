@@ -55,6 +55,13 @@ public class McqService {
       throw new IllegalArgumentException("Question weight must be positive.");
     }
 
+    if (mcqDto.getMcqType().equals(MCQType.GENERAL)
+        || mcqDto.getMcqType().equals(MCQType.POLYNOMIAL)) {
+      if (mcqDto.getWeight() != 1) {
+        throw new IllegalArgumentException("MCQ weight must not be greater than 1.");
+      }
+    }
+
     mcqQuestion.setCreatedAt(new Date(System.currentTimeMillis()));
     mcqQuestion.setCreatedBy(mcqDto.getCreatedBy());
     mcqQuestion.setSubjectId(mcqDto.getSubjectId());
@@ -74,12 +81,13 @@ public class McqService {
       mcqQuestion.setBaseQuestion(objectMapper.writeValueAsString(polynomialDetail));
     } else if (mcqDto instanceof StemBasedMCQDto) {
       val stemDetail = ((StemBasedMCQDto) mcqDto).getStemBasedMCQDetail();
-      validateStemMcq(stemDetail);
+      validateStemMcq(stemDetail, mcqDto.getWeight());
       mcqQuestion.setBaseQuestion(objectMapper.writeValueAsString(stemDetail));
     }
 
     if (mcqDto.getId() == null) {
-      val moderator = userService.getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
+      val moderator =
+          userService.getRandomModerator(mcqQuestion.getSubjectId(), mcqQuestion.getCreatedBy());
       mcqQuestion.setModeratedBy(moderator.getId());
       mcqMapper.insert(mcqQuestion);
       mailService.sendEmailToModerator(
@@ -92,6 +100,7 @@ public class McqService {
   }
 
   private void validateGeneralMcq(final GeneralMCQDetail detail) {
+
     if (!isNoneEmpty(
             detail.getOption1(),
             detail.getOption2(),
@@ -119,13 +128,17 @@ public class McqService {
     }
   }
 
-  private void validateStemMcq(final StemBasedMCQDetail stemDetail) {
+  private void validateStemMcq(final StemBasedMCQDetail stemDetail, int weight) {
     if (isBlank(stemDetail.getStem())) {
       throw new IllegalArgumentException("Provide the stem.");
     }
 
     final List<GeneralMCQDetail> generalMcqs = stemDetail.getGeneralMcqs();
     final List<PolynomialMCQDetail> polynomialMcqs = stemDetail.getPolynomialMcqs();
+
+    if (weight != (generalMcqs.size() + polynomialMcqs.size())) {
+      throw new IllegalArgumentException("Please provide weight correctly.");
+    }
 
     if (isEmpty(generalMcqs) && isEmpty(polynomialMcqs)) {
       throw new IllegalArgumentException("Must have at least one mcq question.");

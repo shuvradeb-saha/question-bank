@@ -17,6 +17,8 @@ export const minLength2 = minLength(2);
 export const number = value =>
   value && isNaN(Number(value)) ? 'Must be a number' : undefined;
 
+export const positive = value =>
+  value && value < 0 ? 'Must be positive' : undefined;
 export const minValue = min => value =>
   value && value < min ? `Must be at least ${min}` : undefined;
 

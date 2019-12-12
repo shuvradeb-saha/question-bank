@@ -118,7 +118,7 @@ class UserInfo extends Component {
       eiinNumber: newEiin,
     };
     this.props.saveUser(data);
-    this.setState({ modal: false });
+    this.setState({ modal: this.props.inProgress && false });
   };
 
   onCreateClick = () => {
@@ -194,6 +194,12 @@ class UserInfo extends Component {
         width: 150,
       },
       {
+        label: 'Email',
+        field: 'email',
+        sort: 'asc',
+        width: 150,
+      },
+      {
         label: 'Institute Name',
         field: 'instituteName',
         sort: 'asc',
@@ -227,6 +233,7 @@ class UserInfo extends Component {
 
     const rows = users.map(user => ({
       userName: user.get('name'),
+      email: user.get('email'),
       instituteName: user.get('instituteName'),
       eiinNumber: user.get('eiinNumber'),
       roles: user
@@ -243,7 +250,7 @@ class UserInfo extends Component {
             Edit
           </button>
           <button
-            className="btn btn-sm btn-outline-danger"
+            className="btn btn-sm btn-danger"
             onClick={() => this.onDisableClick(user.get('id'))}
           >
             Disable
@@ -298,7 +305,13 @@ class UserInfo extends Component {
   };
 
   render() {
-    const { allUsers, allEiinNumbers, allRoles, userDetails } = this.props;
+    const {
+      allUsers,
+      inProgress,
+      allEiinNumbers,
+      allRoles,
+      userDetails,
+    } = this.props;
 
     return (
       <div>
@@ -326,6 +339,7 @@ class UserInfo extends Component {
         <UserRegisterModal
           isOpen={this.state.modal}
           isUpdate={this.state.edit}
+          inProgress={inProgress}
           toggle={this.onCreateClick}
           allRoles={allRoles}
           allEiinNumbers={allEiinNumbers}

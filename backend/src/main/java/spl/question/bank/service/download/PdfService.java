@@ -62,7 +62,7 @@ public class PdfService {
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
-      addHeader(examType, questionDocument, "বহুনির্বাচনী প্রশ্ন");
+      addHeader(paperDetails, examType, questionDocument, "বহুনির্বাচনী প্রশ্ন");
       int i = 1;
       for (MCQDto mcqDto : mcqs) {
         String question = "";
@@ -88,11 +88,15 @@ public class PdfService {
     }
   }
 
-  private void addHeader(ExamType examType, Document questionDocument, String qType) {
+  private void addHeader(
+      QuestionPaper paperDetails, ExamType examType, Document questionDocument, String qType) {
     Paragraph paragraph = new Paragraph();
     paragraph.setTextAlignment(TextAlignment.CENTER);
+    paragraph.add(paperDetails.getInstituteName());
     paragraph.add(
         examType.getLabel() + " " + enNumberToBnNumber(LocalDate.now().getYear()) + "\n" + qType);
+    paragraph.add(" সময়: " + paperDetails.getDuration());
+    paragraph.add("পূর্নমান: " + enNumberToBnNumber(paperDetails.getTotalMarks()));
     questionDocument.add(paragraph);
   }
 
@@ -121,7 +125,7 @@ public class PdfService {
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
-      addHeader(examType, questionDocument, "সৃজনশীল প্রশ্ন");
+      addHeader(paperDetails, examType, questionDocument, "সৃজনশীল প্রশ্ন");
       int i = 1;
       for (CQQuestion cq : cqs) {
         String question = renderCq(i, cq);

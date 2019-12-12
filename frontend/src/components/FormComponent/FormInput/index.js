@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { required } from '../../../utils/validation';
+import { required, positive } from 'utils/validation';
 import { Field } from 'redux-form/immutable';
 
 class FormInput extends Component {
@@ -11,17 +11,19 @@ class FormInput extends Component {
     type: PropTypes.string,
     require: PropTypes.bool,
     disabled: PropTypes.bool,
+    placeholder: PropTypes.string,
   };
 
   static defaultProps = {
     type: 'text',
     require: true,
     disabled: false,
+    placeholder: '',
   };
 
   renderField = field => {
     const { input, meta } = field;
-    const { type, label, disabled } = this.props;
+    const { type, label, disabled, placeholder } = this.props;
 
     const fieldErrorClass =
       meta.touched && meta.error ? 'border border-danger' : '';
@@ -43,6 +45,7 @@ class FormInput extends Component {
             {...input}
             disabled={disabled}
             type={type}
+            placeholder={placeholder}
           />
         )}
         {!meta.active && meta.touched && meta.error && (
@@ -63,7 +66,13 @@ class FormInput extends Component {
         component={this.renderField}
         label={label}
         type={type}
-        validate={require ? [required] : []}
+        validate={
+          type === 'number' && require
+            ? [positive, required]
+            : require
+            ? [required]
+            : []
+        }
         parse={type === 'number' ? parse : null}
       />
     );

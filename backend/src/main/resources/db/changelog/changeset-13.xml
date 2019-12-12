@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="spl3-question-bank-13" author="shuvra">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="question_paper" columnName="duration"/>
+                <columnExists tableName="question_paper" columnName="institute_name"/>
+                <columnExists tableName="question_paper" columnName="total_marks"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="question_paper">
+            <column name="duration" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="question_paper">
+            <column name="institute_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="question_paper">
+            <column name="total_marks" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

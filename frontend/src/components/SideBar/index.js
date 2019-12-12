@@ -162,15 +162,6 @@ const renderTeacherOptions = () => (
       </div>
     </Link>
     <Link
-      to="/dashboard"
-      className="list-group-item list-group-item-action bg-dark text-white"
-    >
-      <div className="d-flex w-100 justify-content-start align-items-center">
-        <span className="fa fa-user fa-fw mr-3"></span>
-        <span className="menu-collapsed">Dashboard</span>
-      </div>
-    </Link>
-    <Link
       to="/profile"
       className="list-group-item list-group-item-action bg-dark text-white"
     >
@@ -179,6 +170,16 @@ const renderTeacherOptions = () => (
         <span className="menu-collapsed">Profile</span>
       </div>
     </Link>
+    <Link
+      to="/dashboard"
+      className="list-group-item list-group-item-action bg-dark text-white"
+    >
+      <div className="d-flex w-100 justify-content-start align-items-center">
+        <span className="fa fa-bar-chart fa-fw mr-3"></span>
+        <span className="menu-collapsed">Dashboard</span>
+      </div>
+    </Link>
+
     <Link
       to="/question/create"
       className="list-group-item list-group-item-action bg-dark text-white"
@@ -191,7 +192,7 @@ const renderTeacherOptions = () => (
     <a
       href="#submission-status"
       data-toggle="collapse"
-      aria-expanded="true"
+      aria-expanded="false"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -200,7 +201,7 @@ const renderTeacherOptions = () => (
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
-    <div id="submission-status" className="collapse sidebar-submenu show">
+    <div id="submission-status" className="collapse sidebar-submenu ">
       <a
         href="#mcq-status"
         data-toggle="collapse"
@@ -295,7 +296,7 @@ const renderModerationOption = () => (
     <a
       href="#moderate"
       data-toggle="collapse"
-      aria-expanded="true"
+      aria-expanded="false"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -306,7 +307,7 @@ const renderModerationOption = () => (
       </div>
     </a>
 
-    <div id="moderate" className="collapse sidebar-submenu show">
+    <div id="moderate" className="collapse sidebar-submenu ">
       <a
         href="#cq"
         data-toggle="collapse"

@@ -67,7 +67,6 @@ class Dashboard extends Component {
 
   render() {
     const data = this.state.data;
-    console.log('data', data);
 
     const isHeadMaster = this.props.roles.includes('HEADMASTER');
     const isModerator = this.props.roles.includes('MODERATOR');
@@ -76,7 +75,7 @@ class Dashboard extends Component {
     const createdCq = data && data.createdCqMap;
 
     return this.state.inProgress ? (
-      <div className="contaner">
+      <div className="container">
         <div className="row">
           <div className="col text-center">
             <Loader type="RevolvingDot" color="blue" width="200" height="300" />

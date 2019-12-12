@@ -31,6 +31,8 @@ import {
   FETCH_CHAPTER_SUCCESS,
   FETCH_ALL_CHAPTER,
   FETCH_ALL_CHAPTER_SUCCESS,
+  SAVE_USER_SUCCESS,
+  SAVE_USER_FAILURE,
 } from './constants';
 
 export function fetchAllRoles() {
@@ -95,6 +97,15 @@ export function fetchUserSuccess(data) {
 export function saveUser(data) {
   return { type: SAVE_USER, payload: { data } };
 }
+
+export function saveUserSuccess() {
+  return { type: SAVE_USER_SUCCESS };
+}
+
+export function saveUserFilure() {
+  return { type: SAVE_USER_FAILURE };
+}
+
 export function saveInstitute(data) {
   return { type: SAVE_INSTITUTE, payload: { data } };
 }

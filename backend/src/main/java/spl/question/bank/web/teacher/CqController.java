@@ -29,7 +29,7 @@ public class CqController {
       value = "/question/cq",
       method = RequestMethod.POST,
       consumes = APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity saveCq(@RequestBody CQQuestion cqQuestion) {
+  public ResponseEntity<?> saveCq(@RequestBody CQQuestion cqQuestion) {
     logger.info("Cq Question => {}", cqQuestion);
     return cqService.saveCq(cqQuestion);
   }
@@ -38,7 +38,7 @@ public class CqController {
       value = "/question/cq/{cqId}",
       method = GET,
       produces = APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity getCQ(final @PathVariable("cqId") Integer cqId) throws IOException {
+  public ResponseEntity<?> getCQ(final @PathVariable("cqId") Integer cqId) throws IOException {
     return cqService.getCQById(cqId);
   }
 

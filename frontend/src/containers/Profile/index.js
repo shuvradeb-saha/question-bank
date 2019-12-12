@@ -10,7 +10,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import dummy from 'static/dummy.jpeg';
 import { makePropic, makeUserId, makeUser } from 'state/login/selectors';
 import { toastSuccess, toastError } from 'components/Toaster';
-// import { UserRegisterModal } from 'components/Modals';
+
 class Profile extends Component {
   static propTypes = {
     userDetails: PropTypes.any,
@@ -24,6 +24,7 @@ class Profile extends Component {
     this.state = {
       isOpen: false,
       cpOpen: false,
+
       file: '',
       imagePreviewUrl: '',
       oldPassword: '',
@@ -44,8 +45,6 @@ class Profile extends Component {
     }));
   };
 
-  onEditProfileClick = () => {};
-
   onChangePasswordClick = () => {
     this.setState(prevState => ({
       cpOpen: !prevState.cpOpen,
@@ -64,11 +63,34 @@ class Profile extends Component {
     try {
       const res = await API.post(uri, data);
       toastSuccess(res);
+      this.setState({ cpOpen: false });
     } catch (error) {
       console.log('Error', error);
       toastError(error.response.data);
     }
   }
+
+  prepareInitialValue = detail => {
+    const eiin = detail.get('eiinNumber');
+    const roles = detail.get('roles');
+    if (eiin && roles) {
+      const newRoles = roles.map(role => ({
+        label: role.get('name'),
+        value: role.get('id'),
+      }));
+      const eiinNumber = { label: eiin, value: eiin };
+      const joinDate = moment(detail.get('joinDate')).format('YYYY-MM-DD');
+      const birthDate = moment(detail.get('birthDate')).format('YYYY-MM-DD');
+
+      return {
+        ...detail.toJS(),
+        joinDate,
+        birthDate,
+        roles: newRoles.toJS(),
+        eiinNumber,
+      };
+    } else return {};
+  };
 
   handleInputChange(event) {
     const target = event.target;
@@ -190,12 +212,6 @@ class Profile extends Component {
             </table>
             <div className="row m-auto">
               <div>
-                {/* <button
-                  className="btn btn-primary"
-                  onClick={this.onEditProfileClick}
-                >
-                  Edit Profile
-                </button> */}
                 <button
                   className="btn btn-primary"
                   onClick={this.onChangePasswordClick}

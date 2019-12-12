@@ -15,6 +15,9 @@ import {
   FETCH_ALL_CHAPTER_SUCCESS,
   FETCH_CHAPTER_SUCCESS,
   FETCH_ALL_USERS,
+  SAVE_USER,
+  SAVE_USER_SUCCESS,
+  SAVE_USER_FAILURE,
 } from './constants';
 
 const initialState = fromJS({
@@ -78,8 +81,14 @@ function reducer(state = initialState, { type, payload }) {
       return state.merge(fromJS({ user }));
     }
 
+    case SAVE_USER:
     case FETCH_ALL_USERS: {
       return state.merge(fromJS({ inProgress: true }));
+    }
+
+    case SAVE_USER_SUCCESS:
+    case SAVE_USER_FAILURE: {
+      return state.merge(fromJS({ inProgress: false }));
     }
 
     case FETCH_ALL_USERS_SUCCESS: {

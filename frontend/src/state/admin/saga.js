@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { takeEvery, put, call, takeLatest } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import { toastSuccess, toastError } from 'components/Toaster';
 import {
   FETCH_ALL_ROLES,
@@ -40,6 +41,9 @@ import {
   fetchAllChaptersSuccess,
   fetchChapterSuccess,
   fetchAllChapters,
+  saveUserSuccess,
+  fetchUsers,
+  saveUserFilure,
 } from './action';
 
 import API from 'utils/api';
@@ -56,24 +60,27 @@ export function* fetchAllRoles() {
 
 export function* saveUserInfo({ payload: { data } }) {
   if (data.id) {
-    console.log('data ', data.id);
-
     try {
       yield call(API.put, 'api/admin/user', data);
       toastSuccess('User updated successfully');
+      yield put(saveUserSuccess());
       yield put(fetchUsers());
     } catch (error) {
       console.log('Error: ', error);
-      toastSuccess('Unable to update user');
+      yield put(saveUserFilure());
+      toastError(error.response.data.message);
     }
   } else {
     try {
       yield call(API.post, 'api/admin/user', data);
       toastSuccess('User saved successfully');
+      yield put(saveUserSuccess());
       yield put(fetchUsers());
+      yield put(push(`/manage-user`));
     } catch (error) {
       console.log('Error: ', error);
-      toastSuccess('Unable to save user');
+      yield put(saveUserFilure());
+      toastError(error.response.data.message);
     }
   }
 }
@@ -140,7 +147,7 @@ export function* fetchNewPassword() {
   }
 }
 
-export function* fetchUsers() {
+export function* fetchAllUsers() {
   try {
     const users = yield call(API.get, 'api/admin/users');
     yield put(fetchUsersSuccess(users));
@@ -285,7 +292,7 @@ export default function* saga() {
   yield takeLatest(FETCH_INSTITUTE, fetchInstitute);
   yield takeLatest(FETCH_ALL_EIIN, fetchEiinNumbers);
   yield takeEvery(FETCH_NEW_PASSWORD, fetchNewPassword);
-  yield takeLatest(FETCH_ALL_USERS, fetchUsers);
+  yield takeLatest(FETCH_ALL_USERS, fetchAllUsers);
   yield takeEvery(FETCH_USER, fetchUser);
   yield takeLatest(SAVE_CLASS, saveClass);
   yield takeEvery(FETCH_ALL_CLASS, fetchClasses);
