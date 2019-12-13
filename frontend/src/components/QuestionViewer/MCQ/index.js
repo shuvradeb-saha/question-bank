@@ -116,7 +116,7 @@ class MCQ extends Component {
     const { mcq, allClass, allChapters, allSubjects } = this.props;
 
     return (
-      <div className="container clearfix border rounded">
+      <div className="container border rounded">
         <div className="row mt-2">
           <div className="col">
             <label htmlFor="type">

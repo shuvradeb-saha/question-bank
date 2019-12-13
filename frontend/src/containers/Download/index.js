@@ -137,7 +137,7 @@ class Download extends Component {
         />
         {status && paperId && paperId !== 0 && (
           <button
-            className="btn btn-lg btn-primary rounded"
+            className="sp-btn third"
             onClick={() => this.onDownloadClick(questionType, paperId)}
           >
             <i className="fa fa-download" aria-hidden="true"></i>

@@ -120,7 +120,7 @@ class ModeratorCqViewer extends Component {
                       <div className="col-8">
                         <button
                           type="button"
-                          className="btn btn-outline-success"
+                          className="sp-btn third"
                           onClick={() => this.onApproveClick(id)}
                         >
                           <i className="fa fa-check" aria-hidden="true"></i>
@@ -128,7 +128,7 @@ class ModeratorCqViewer extends Component {
                         </button>
                         <button
                           type="button"
-                          className="btn btn-outline-danger"
+                          className="sp-btn first"
                           onClick={() => this.onRejectClick(id)}
                         >
                           <i className="fa fa-trash" aria-hidden="true"></i>

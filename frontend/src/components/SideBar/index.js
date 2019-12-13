@@ -309,37 +309,6 @@ const renderModerationOption = () => (
 
     <div id="moderate" className="collapse sidebar-submenu ">
       <a
-        href="#cq"
-        data-toggle="collapse"
-        aria-expanded="false"
-        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
-      >
-        <div className="d-flex w-100 justify-content-start align-items-center">
-          <span className="menu-collapsed">Creative Question</span>
-          <span className="submenu-icon ml-auto"></span>
-        </div>
-      </a>
-      <div id="cq" className="collapse sidebar-submenu">
-        <Link
-          to="/moderate/cq/pending"
-          className="list-group-item list-group-item-action bg-dark text-white"
-        >
-          <span className="menu-collapsed">Pending CQ</span>
-        </Link>
-        <Link
-          to="/moderate/cq/approved"
-          className="list-group-item list-group-item-action bg-dark text-white"
-        >
-          <span className="menu-collapsed">Approved CQ</span>
-        </Link>
-        <Link
-          to="/moderate/cq/rejected"
-          className="list-group-item list-group-item-action bg-dark text-white"
-        >
-          <span className="menu-collapsed">Rejected CQ</span>
-        </Link>
-      </div>
-      <a
         href="#mcq"
         data-toggle="collapse"
         aria-expanded="false"
@@ -369,6 +338,37 @@ const renderModerationOption = () => (
           className="list-group-item list-group-item-action bg-dark text-white"
         >
           <span className="menu-collapsed">Rejected MCQ</span>
+        </Link>
+      </div>
+      <a
+        href="#cq"
+        data-toggle="collapse"
+        aria-expanded="false"
+        className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+      >
+        <div className="d-flex w-100 justify-content-start align-items-center">
+          <span className="menu-collapsed">Creative Question</span>
+          <span className="submenu-icon ml-auto"></span>
+        </div>
+      </a>
+      <div id="cq" className="collapse sidebar-submenu">
+        <Link
+          to="/moderate/cq/pending"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Pending CQ</span>
+        </Link>
+        <Link
+          to="/moderate/cq/approved"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Approved CQ</span>
+        </Link>
+        <Link
+          to="/moderate/cq/rejected"
+          className="list-group-item list-group-item-action bg-dark text-white"
+        >
+          <span className="menu-collapsed">Rejected CQ</span>
         </Link>
       </div>
     </div>

@@ -116,7 +116,7 @@ class ModerateMcqViewer extends Component {
                     <div className="col-8">
                       <button
                         type="button"
-                        className="btn btn-outline-success"
+                        className="sp-btn third"
                         onClick={() => this.onApproveClick(id)}
                       >
                         <i className="fa fa-check" aria-hidden="true"></i>
@@ -124,7 +124,7 @@ class ModerateMcqViewer extends Component {
                       </button>
                       <button
                         type="button"
-                        className="btn btn-outline-danger"
+                        className="sp-btn first"
                         onClick={() => this.onRejectClick(id)}
                       >
                         <i className="fa fa-trash" aria-hidden="true"></i>
@@ -136,35 +136,47 @@ class ModerateMcqViewer extends Component {
               </div>
 
               {status === QuestionStatusType.PENDING && (
-                <div className="col-4">
+                <div
+                  className="col-4 border"
+                  style={{ height: '100vh', backgroundColor: 'antiquewhite' }}
+                >
                   <div className=" row bg-dark text-light p-2 rounded">
-                    <strong>Similar Questions</strong>
+                    <strong>Proable Similar Questions</strong>
                   </div>
-                  {similarMcqs.map(mcq => {
-                    const mcqType = mcq.get('mcqType');
-                    let contentToShow = '';
-                    if (mcqType === McqType.GENERAL) {
-                      const mainStr = mcq.get('questionBody');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    } else if (mcqType === McqType.POLYNOMIAL) {
-                      const mainStr = mcq.get('questionStatement');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    } else {
-                      const mainStr = mcq.get('stem');
-                      contentToShow = mainStr && splitStringForContent(mainStr);
-                    }
+                  {similarMcqs.size === 0 ? (
+                    <div>
+                      <span>No similar question available </span>
+                    </div>
+                  ) : (
+                    similarMcqs.map(mcq => {
+                      const mcqType = mcq.get('mcqType');
+                      let contentToShow = '';
+                      if (mcqType === McqType.GENERAL) {
+                        const mainStr = mcq.get('questionBody');
+                        contentToShow =
+                          mainStr && splitStringForContent(mainStr);
+                      } else if (mcqType === McqType.POLYNOMIAL) {
+                        const mainStr = mcq.get('questionStatement');
+                        contentToShow =
+                          mainStr && splitStringForContent(mainStr);
+                      } else {
+                        const mainStr = mcq.get('stem');
+                        contentToShow =
+                          mainStr && splitStringForContent(mainStr);
+                      }
 
-                    return (
-                      <div key={mcq.get('id')} className="row  p-2 ">
-                        <Link
-                          to={`/mcq/${mcq.get('id')}`}
-                          style={{ color: 'blue' }}
-                        >
-                          {contentToShow}
-                        </Link>
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div key={mcq.get('id')} className="row  p-2 ">
+                          <Link
+                            to={`/mcq/${mcq.get('id')}`}
+                            style={{ color: 'blue' }}
+                          >
+                            {contentToShow}
+                          </Link>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               )}
             </div>

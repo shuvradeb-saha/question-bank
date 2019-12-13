@@ -179,6 +179,89 @@ tbody + thead {
     font-size: 1.2rem;
     font-weight: normal; }
 
+.sp-btn {
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #e74c3c;
+  border-radius: 0.6em;
+  color: #e74c3c;
+  cursor: pointer;
+  align-self: center;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  margin: 20px;
+  padding: 1.0em 1.8em;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; }
+  .sp-btn:hover, .sp-btn:focus {
+    color: #fff;
+    outline: 0; }
+
+.first {
+  transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out; }
+  .first:hover {
+    box-shadow: 0 0 40px 40px #e74c3c inset; }
+
+.third {
+  border-color: #1f6899;
+  color: #fff;
+  box-shadow: 0 0 30px 30px #1f6899 inset, 0 0 0 0 #1f6899;
+  transition: all 150ms ease-in-out; }
+  .third:hover {
+    box-shadow: 0 0 10px 30px #1f6899 inset, 0 0 10px 4px #1f6899; }
+
+.fourth {
+  border-color: #f1c40f;
+  color: #fff;
+  background-image: linear-gradient(45deg, #f1c40f 50%, transparent 50%);
+  background-position: 100%;
+  background-size: 400%;
+  transition: background 300ms ease-in-out; }
+  .fourth:hover {
+    background-position: 0; }
+
+.fifth {
+  border-color: #8e44ad;
+  border-radius: 0;
+  color: #8e44ad;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 150ms ease-in-out; }
+  .fifth:after {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 100%;
+    background: #8e44ad;
+    z-index: -1;
+    transition: width 150ms ease-in-out; }
+  .fifth:hover {
+    color: #fff; }
+    .fifth:hover:after {
+      width: 110%; }
+
+.sixth {
+  border-radius: 3em;
+  border-color: #2ecc71;
+  color: #2ecc71;
+  background-image: linear-gradient(to bottom, transparent 50%, #2ecc71 50%);
+  background-position: 0% 0%;
+  background-size: 210%;
+  transition: background 150ms ease-in-out, color 150ms ease-in-out; }
+  .sixth:hover {
+    color: #fff;
+    background-position: 0 100%; }
+
 .qb-png {
   background: url("../static/QuestionBank.png") no-repeat center;
   margin: 5px;
