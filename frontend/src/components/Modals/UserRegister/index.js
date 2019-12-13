@@ -35,10 +35,14 @@ class UserRegister extends Component {
   };
 
   prepareRoles = roles =>
-    roles.map(role => ({
-      label: role.get('name'),
-      value: role.get('id'),
-    }));
+    roles
+      .filter(
+        role => role.get('name') !== 'ADMIN' && role.get('name') !== 'MODERATOR'
+      )
+      .map(role => ({
+        label: role.get('name'),
+        value: role.get('id'),
+      }));
 
   prepareEiinNumbers = eiinNumbers =>
     eiinNumbers.map(eiin => ({ label: eiin, value: eiin }));

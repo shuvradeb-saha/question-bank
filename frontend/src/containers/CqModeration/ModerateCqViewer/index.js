@@ -111,9 +111,8 @@ class ModeratorCqViewer extends Component {
           <span>
             <div className="row ">
               <div className="col">
-                <div>
-                  <CQ cq={cq} />
-                </div>
+                <CQ cq={cq} />
+
                 {status === QuestionStatusType.PENDING &&
                   cq.get('moderatedBy') === userId && (
                     <div className="row">

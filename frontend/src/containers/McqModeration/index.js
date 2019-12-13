@@ -98,10 +98,10 @@ export const SimpleMcqList = props => {
         <div className={`card-header bg-dark text-light`}>
           <b>
             {type === QuestionStatusType.PENDING
-              ? 'Pending Mcq for moderation'
+              ? 'MCQs Waiting for Your Moderation'
               : type === QuestionStatusType.APPROVED
-              ? 'Approved Mcq'
-              : 'Rejected Mcq'}
+              ? 'MCQs Approved by Yourself'
+              : 'MCQs Rejected by Yourself'}
           </b>
         </div>
         <div className="card-body">

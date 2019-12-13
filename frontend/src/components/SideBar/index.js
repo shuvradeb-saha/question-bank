@@ -192,7 +192,7 @@ const renderTeacherOptions = () => (
     <a
       href="#submission-status"
       data-toggle="collapse"
-      aria-expanded="false"
+      aria-expanded="true"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -201,7 +201,7 @@ const renderTeacherOptions = () => (
         <span className="submenu-icon ml-auto"></span>
       </div>
     </a>
-    <div id="submission-status" className="collapse sidebar-submenu ">
+    <div id="submission-status" className="collapse show sidebar-submenu ">
       <a
         href="#mcq-status"
         data-toggle="collapse"
@@ -296,7 +296,7 @@ const renderModerationOption = () => (
     <a
       href="#moderate"
       data-toggle="collapse"
-      aria-expanded="false"
+      aria-expanded="true"
       className="bg-dark list-group-item list-group-item-action flex-column align-items-start"
     >
       <div className="d-flex w-100 justify-content-start align-items-center">
@@ -307,7 +307,7 @@ const renderModerationOption = () => (
       </div>
     </a>
 
-    <div id="moderate" className="collapse sidebar-submenu ">
+    <div id="moderate" className="collapse show sidebar-submenu ">
       <a
         href="#mcq"
         data-toggle="collapse"

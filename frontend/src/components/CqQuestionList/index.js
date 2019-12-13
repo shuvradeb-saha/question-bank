@@ -85,10 +85,10 @@ class QuestionList extends Component {
           <div className={`card-header bg-dark text-light`}>
             <b>
               {status === QuestionStatusType.PENDING
-                ? 'Pending CQ List'
+                ? 'Pending CQs Submitted by Yourself'
                 : status === QuestionStatusType.APPROVED
-                ? 'Approved CQ List'
-                : 'Rejected CQ List'}
+                ? 'Approved CQs Submitted by Yourself'
+                : 'Rejected CQs Submitted by Yourself'}
             </b>
           </div>
           <div className="card-body">

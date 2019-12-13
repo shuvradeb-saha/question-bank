@@ -31,7 +31,7 @@ $turquoise: #1abc9c;
 
   &:hover,
   &:focus {
-    color: #fff;
+    color: rgb(26, 15, 15);
     outline: 0;
   }
 }
@@ -40,7 +40,7 @@ $turquoise: #1abc9c;
 .first {
   transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
   &:hover {
-    box-shadow: 0 0 40px 40px $red inset;
+    box-shadow: 0 0px 40px 40px $red inset;
   }
 }
 

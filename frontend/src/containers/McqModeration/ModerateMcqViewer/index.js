@@ -19,6 +19,7 @@ import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqType } from 'containers/CreateQuestion/Question';
 import { splitStringForContent } from 'utils/utils';
 import { toastSuccess, toastError } from 'components/Toaster';
+import { makeUserId } from 'state/login/selectors';
 
 class ModerateMcqViewer extends Component {
   static propTypes = {
@@ -75,7 +76,7 @@ class ModerateMcqViewer extends Component {
   };
 
   render() {
-    const { mcq, errorCode, similarMcqs, inProgress } = this.props;
+    const { mcq, errorCode, similarMcqs, inProgress, userId } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
     const status = mcq.get('status');
 
@@ -111,74 +112,76 @@ class ModerateMcqViewer extends Component {
                 <div>
                   <MCQ mcq={mcq} />
                 </div>
-                {status === QuestionStatusType.PENDING && (
-                  <div className="row">
-                    <div className="col-8">
-                      <button
-                        type="button"
-                        className="sp-btn third"
-                        onClick={() => this.onApproveClick(id)}
-                      >
-                        <i className="fa fa-check" aria-hidden="true"></i>
-                        &nbsp;&nbsp; Approve
-                      </button>
-                      <button
-                        type="button"
-                        className="sp-btn first"
-                        onClick={() => this.onRejectClick(id)}
-                      >
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-                        &nbsp;&nbsp;Reject
-                      </button>
+                {status === QuestionStatusType.PENDING &&
+                  mcq.get('moderatedBy') === userId && (
+                    <div className="row">
+                      <div className="col-8">
+                        <button
+                          type="button"
+                          className="sp-btn third"
+                          onClick={() => this.onApproveClick(id)}
+                        >
+                          <i className="fa fa-check" aria-hidden="true"></i>
+                          &nbsp;&nbsp; Approve
+                        </button>
+                        <button
+                          type="button"
+                          className="sp-btn first"
+                          onClick={() => this.onRejectClick(id)}
+                        >
+                          <i className="fa fa-trash" aria-hidden="true"></i>
+                          &nbsp;&nbsp;Reject
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
 
-              {status === QuestionStatusType.PENDING && (
-                <div
-                  className="col-4 border"
-                  style={{ height: '100vh', backgroundColor: 'antiquewhite' }}
-                >
-                  <div className=" row bg-dark text-light p-2 rounded">
-                    <strong>Proable Similar Questions</strong>
-                  </div>
-                  {similarMcqs.size === 0 ? (
-                    <div>
-                      <span>No similar question available </span>
+              {status === QuestionStatusType.PENDING &&
+                mcq.get('moderatedBy') === userId && (
+                  <div
+                    className="col-4 border"
+                    style={{ height: '100vh', backgroundColor: 'antiquewhite' }}
+                  >
+                    <div className=" row bg-dark text-light p-2 rounded">
+                      <strong>Proable Similar Questions</strong>
                     </div>
-                  ) : (
-                    similarMcqs.map(mcq => {
-                      const mcqType = mcq.get('mcqType');
-                      let contentToShow = '';
-                      if (mcqType === McqType.GENERAL) {
-                        const mainStr = mcq.get('questionBody');
-                        contentToShow =
-                          mainStr && splitStringForContent(mainStr);
-                      } else if (mcqType === McqType.POLYNOMIAL) {
-                        const mainStr = mcq.get('questionStatement');
-                        contentToShow =
-                          mainStr && splitStringForContent(mainStr);
-                      } else {
-                        const mainStr = mcq.get('stem');
-                        contentToShow =
-                          mainStr && splitStringForContent(mainStr);
-                      }
+                    {similarMcqs.size === 0 ? (
+                      <div>
+                        <span>No similar question available </span>
+                      </div>
+                    ) : (
+                      similarMcqs.map(mcq => {
+                        const mcqType = mcq.get('mcqType');
+                        let contentToShow = '';
+                        if (mcqType === McqType.GENERAL) {
+                          const mainStr = mcq.get('questionBody');
+                          contentToShow =
+                            mainStr && splitStringForContent(mainStr);
+                        } else if (mcqType === McqType.POLYNOMIAL) {
+                          const mainStr = mcq.get('questionStatement');
+                          contentToShow =
+                            mainStr && splitStringForContent(mainStr);
+                        } else {
+                          const mainStr = mcq.get('stem');
+                          contentToShow =
+                            mainStr && splitStringForContent(mainStr);
+                        }
 
-                      return (
-                        <div key={mcq.get('id')} className="row  p-2 ">
-                          <Link
-                            to={`/mcq/${mcq.get('id')}`}
-                            style={{ color: 'blue' }}
-                          >
-                            {contentToShow}
-                          </Link>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              )}
+                        return (
+                          <div key={mcq.get('id')} className="row  p-2 ">
+                            <Link
+                              to={`/mcq/${mcq.get('id')}`}
+                              style={{ color: 'blue' }}
+                            >
+                              {contentToShow}
+                            </Link>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
             </div>
           </span>
         );
@@ -195,6 +198,7 @@ class ModerateMcqViewer extends Component {
 
 const mapStateToProps = createStructuredSelector({
   mcq: makeMcqForModerator(),
+  userId: makeUserId(),
   similarMcqs: makeSimilarMcqs(),
   inProgress: makeInProgress(),
   errorCode: makeErrorCode(),
