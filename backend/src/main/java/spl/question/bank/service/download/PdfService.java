@@ -92,11 +92,11 @@ public class PdfService {
       QuestionPaper paperDetails, ExamType examType, Document questionDocument, String qType) {
     Paragraph paragraph = new Paragraph();
     paragraph.setTextAlignment(TextAlignment.CENTER);
-    paragraph.add(paperDetails.getInstituteName());
+    paragraph.add(paperDetails.getInstituteName() + "\n");
     paragraph.add(
         examType.getLabel() + " " + enNumberToBnNumber(LocalDate.now().getYear()) + "\n" + qType);
-    paragraph.add(" সময়: " + paperDetails.getDuration());
-    paragraph.add("পূর্নমান: " + enNumberToBnNumber(paperDetails.getTotalMarks()));
+    paragraph.add("\n" + " সময়: " + paperDetails.getDuration());
+    paragraph.add("\t" + "পূর্নমান: " + enNumberToBnNumber(paperDetails.getTotalMarks()));
     questionDocument.add(paragraph);
   }
 

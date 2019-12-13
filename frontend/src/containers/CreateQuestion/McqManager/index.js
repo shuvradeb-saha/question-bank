@@ -45,7 +45,6 @@ class McqManager extends Component {
         mcqType: this.props.mcqType,
       };
       this.props.saveMcq(questionData, QuestionType.MCQ);
-      this.props.history.push('/question/create');
     } else {
       return;
     }

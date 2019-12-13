@@ -91,7 +91,7 @@ class TeacherTable extends Component {
           dataToSave
         );
         toastSuccess('Teacher has been suspended');
-        this.props.history.push('/teacher-approved');
+        this.props.history.push('/teacher/approved');
       } catch (error) {
         console.log('error', error);
       }
@@ -109,7 +109,7 @@ class TeacherTable extends Component {
       try {
         await API.post(`/api/headmaster/allocation/remove/${id}`);
         toastSuccess('All allocation has beed deleted.');
-        this.props.history.push('/teacher-approved');
+        this.props.history.push('/teacher/approved');
       } catch (error) {
         console.log('error', error);
       }

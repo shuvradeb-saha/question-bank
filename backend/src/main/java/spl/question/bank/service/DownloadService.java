@@ -101,17 +101,22 @@ public class DownloadService {
     final int totalWeight =
         downloadCriteria.getTotalMarks(); // ExamType.valueOf(examType).getCqWeight();
     if (totalWeight <= 0) {
-      return ResponseEntity.status(BAD_REQUEST)
-          .body("Must provide a valid weight.");
+      return ResponseEntity.status(BAD_REQUEST).body("Must provide a valid weight.");
     }
     if (totalWeightInDb < totalWeight) {
       return ResponseEntity.status(BAD_REQUEST)
-          .body("Question Bank does not have sufficient question.");
+          .body("Question Bank does not have sufficient questions.");
     }
 
     val generatedPaperId =
         prepareQuestionPaper(
-            QuestionType.CQ.name(), teacherId, subjectId, examType, totalWeight, idList);
+            downloadCriteria,
+            QuestionType.CQ.name(),
+            teacherId,
+            subjectId,
+            examType,
+            totalWeight,
+            idList);
     return ResponseEntity.ok(generatedPaperId);
   }
 
@@ -160,7 +165,8 @@ public class DownloadService {
       idList.add(new WeightedId().setQuestionId(mcq.getId()).setWeight(mcq.getWeight()));
     }
 
-    final int totalWeight = ExamType.valueOf(examType).getMcqWeight();
+    final int totalWeight =
+        downloadCriteria.getTotalMarks(); // ExamType.valueOf(examType).getMcqWeight();
     if (totalWeightInDb < totalWeight) {
       return ResponseEntity.status(BAD_REQUEST)
           .body("Question Bank does not have sufficient questions.");
@@ -168,11 +174,18 @@ public class DownloadService {
 
     val generatedPaperId =
         prepareQuestionPaper(
-            QuestionType.MCQ.name(), teacherId, subjectId, examType, totalWeight, idList);
+            downloadCriteria,
+            QuestionType.MCQ.name(),
+            teacherId,
+            subjectId,
+            examType,
+            totalWeight,
+            idList);
     return ResponseEntity.ok(generatedPaperId);
   }
 
   private Integer prepareQuestionPaper(
+      DownloadCriteria downloadCriteria,
       String qType,
       Integer teacherId,
       Integer subjectId,
@@ -195,7 +208,7 @@ public class DownloadService {
 
     if (allPaperOfThisExm.isEmpty()) {
       val newPaperQuestionIds = generateNewPaper(totalWeight, idList);
-      val paperId = saveNewPaper(qType, examType, teacherId, subjectId);
+      val paperId = saveNewPaper(downloadCriteria, qType, examType, teacherId, subjectId);
       addQuestionIdToPaperId(paperId, newPaperQuestionIds);
       return paperId;
     } else {
@@ -220,7 +233,7 @@ public class DownloadService {
       if (!flag) {
         newPaperQuestions = storedResult.firstEntry().getValue();
       }
-      val paperId = saveNewPaper(qType, examType, teacherId, subjectId);
+      val paperId = saveNewPaper(downloadCriteria, qType, examType, teacherId, subjectId);
       addQuestionIdToPaperId(paperId, newPaperQuestions);
       return paperId;
     }
@@ -243,13 +256,21 @@ public class DownloadService {
         .collect(toList());
   }
 
-  private Integer saveNewPaper(String type, String examType, Integer teacherId, Integer subjectId) {
+  private Integer saveNewPaper(
+      DownloadCriteria criteria,
+      String type,
+      String examType,
+      Integer teacherId,
+      Integer subjectId) {
     val newPaper = new QuestionPaper();
     newPaper.setExamType(examType);
     newPaper.setCreatedAt(new Date(System.currentTimeMillis()));
     newPaper.setGeneratedBy(teacherId);
     newPaper.setType(type);
     newPaper.setSubjectId(subjectId);
+    newPaper.setInstituteName(criteria.getInstituteName());
+    newPaper.setDuration(criteria.getDuration());
+    newPaper.setTotalMarks(criteria.getTotalMarks());
 
     questionPaperMapper.insert(newPaper);
     return newPaper.getId();

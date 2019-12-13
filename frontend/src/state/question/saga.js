@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { takeLatest, call, put } from 'redux-saga/effects';
-
+import { push } from 'react-router-redux';
 import { toastError, toastSuccess } from 'components/Toaster';
 import { QuestionType } from 'containers/CreateQuestion/Question';
 import API from 'utils/api';
@@ -36,6 +36,7 @@ export function* saveQuestion({ payload: { question, type } }) {
     try {
       yield call(API.post, saveNewUri, question);
       toastSuccess('Question has successfully submitted for approval.');
+      yield put(push('/question/create'));
     } catch (error) {
       toastError(`Unable to save. ${error.response.data.message}`);
       console.log('Error: ', error);
