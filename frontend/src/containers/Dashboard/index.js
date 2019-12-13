@@ -83,8 +83,8 @@ class Dashboard extends Component {
         </div>
       </div>
     ) : (
-      <div className="container">
-        <div className="row">
+      <span>
+        <div className="row ml-5">
           {isHeadMaster && (
             <div className="col-3">
               <div className="bg-info p-3 text center rounded">
@@ -110,7 +110,7 @@ class Dashboard extends Component {
         </div>
         <br />
         <div className="row">
-          <div className="col text-center">
+          <div className="col-10 m-auto">
             <h2>Created Questions</h2>
             <div>
               {data.createdMcqCount === 0 && data.createdCqCount === 0 ? (
@@ -132,7 +132,7 @@ class Dashboard extends Component {
         <br />
         <br />
         <div className="row">
-          <div className="col text-center">
+          <div className="col-10 m-auto">
             <h2>Last Six Month MCQ</h2>
             <div>
               <Bar
@@ -152,7 +152,7 @@ class Dashboard extends Component {
         <br />
         <br />
         <div className="row">
-          <div className="col text-center">
+          <div className="col-10 m-auto">
             <h2>Last Six Month CQ</h2>
             <div>
               <Bar
@@ -173,7 +173,7 @@ class Dashboard extends Component {
         <br />
         {isModerator && (
           <div className="row">
-            <div className="col text-center">
+            <div className="col-10 m-auto">
               <h2>Moderated Questions</h2>
               <div>
                 {data.moderatedMcqCount === 0 && data.moderatedCqCount === 0 ? (
@@ -193,7 +193,7 @@ class Dashboard extends Component {
             </div>
           </div>
         )}
-      </div>
+      </span>
     );
   }
 }
