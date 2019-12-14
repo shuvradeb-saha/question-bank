@@ -94,6 +94,12 @@ class SubjectInfo extends Component {
     const { subjects } = this.props;
     const columns = [
       {
+        label: 'Subject Id',
+        field: 'subjectId',
+        sort: 'asc',
+        width: 150,
+      },
+      {
         label: 'Subject Name',
         field: 'subjectName',
         sort: 'asc',
@@ -119,6 +125,7 @@ class SubjectInfo extends Component {
       },
     ];
     const rows = subjects.map(subject => ({
+      subjectId: subject.get('id'),
       subjectName: subject.get('name'),
       subjectCode: subject.get('subjectCode'),
       class: this.extractClassName(subject.get('classId')),

@@ -95,7 +95,7 @@ class UserInfo extends Component {
         const res = await API.put(url);
         toastSuccess(res);
         this.props.history.push('/manage-user');
-      } catch (error) {                                                                                                                                                                                                     
+      } catch (error) {
         console.log('Error ', error);
 
         toastError(JSON.stringify(error.response.data));
@@ -206,12 +206,7 @@ class UserInfo extends Component {
         sort: 'asc',
         width: 150,
       },
-      {
-        label: 'EIIN Number',
-        field: 'eiinNumber',
-        sort: 'asc',
-        width: 270,
-      },
+
       {
         label: 'Roles',
         field: 'roles',
@@ -236,7 +231,7 @@ class UserInfo extends Component {
       userName: user.get('name'),
       email: user.get('email'),
       instituteName: user.get('instituteName'),
-      eiinNumber: user.get('eiinNumber'),
+
       roles: user
         .get('roles')
         .toJS()
@@ -250,20 +245,16 @@ class UserInfo extends Component {
           >
             Edit
           </button>
-          <button
-            className="btn btn-sm btn-danger"
-            onClick={() => this.onDisableClick(user.get('id'))}
-          >
-            Disable
-          </button>
+
           {user.get('roles').includes(Roles.MODERATOR) ? (
             <button
-              className="btn btn-sm btn-outline-danger"
+              className=" btn btn-sm btn-outline-danger"
               onClick={() =>
                 this.onModeratorOption(user.get('id'), ActionType.remove)
               }
             >
-              Remove Moderator
+              <i className="fa fa-trash" aria-hidden="true" />
+              &nbsp;<span>Moderator</span>
             </button>
           ) : (
             <button
@@ -272,9 +263,16 @@ class UserInfo extends Component {
                 this.onModeratorOption(user.get('id'), ActionType.add)
               }
             >
-              Make Moderator
+              <i className="fa fa-plus" aria-hidden="true" /> &nbsp;
+              <span>Moderator</span>
             </button>
           )}
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => this.onDisableClick(user.get('id'))}
+          >
+            Disable
+          </button>
         </span>
       ) : (
         'User is removed.'
@@ -331,7 +329,6 @@ class UserInfo extends Component {
               <MDBDataTable
                 striped
                 bordered
-                small
                 data={this.createDataForTable(allUsers)}
               />
             )}

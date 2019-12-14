@@ -4,12 +4,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import spl.question.bank.service.UserService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 @Slf4j
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
@@ -41,7 +37,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
       try {
         filterChain.doFilter(request, response);
       } catch (Exception e) {
-        logger.info("Unknown error {}", e.getMessage());
+        // logger.info("Unknown error {}", e.getMessage());
         return;
       }
     }
@@ -49,7 +45,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     try {
       token = header.replace(jwtConfig.getPrefix(), "");
     } catch (Exception e) {
-      logger.info(e.getMessage());
+      // logger.info(e.getMessage());
       return;
     }
 
