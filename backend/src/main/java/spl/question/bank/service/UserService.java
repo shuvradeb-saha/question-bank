@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -147,6 +148,9 @@ public class UserService {
     if (oldRoles.contains(MODERATOR.name()) && !newRoles.contains(MODERATOR.name())) {
       throw new RuntimeException("Moderator role changing not possible from here.");
     }
+    if (newRoles.contains(HEADMASTER.name()) && hasHeadmaster(userDto)) {
+      throw new IllegalArgumentException("This institute already has a headmaster.");
+    }
 
     user.setPassword(oldInfo.getPassword());
     validateUser(user);
@@ -179,7 +183,7 @@ public class UserService {
       if (!isEmpty(problems)) {
         String subjects = problems.stream().map(String::valueOf).collect(Collectors.joining(","));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Please insert at least one moderator to subjects with id " + subjects);
+            .body("Please insert moderator to subjects with id " + subjects);
       }
       UserRoleExample ex = new UserRoleExample();
       ex.createCriteria().andUserIdEqualTo(id).andRoleIdEqualTo(MODERATOR.getValue());
@@ -203,23 +207,20 @@ public class UserService {
         .andModeratedByEqualTo(mId)
         .andStatusEqualTo(QuestionStatus.pending.name());
     val cqs = cqQuestionMapper.selectByExample(cqEx);
-
     if (isEmpty(mcqs) && isEmpty(cqs)) {
       return null;
     }
-    val subjectSet = new HashSet<Integer>();
-    mcqs.forEach(
-        mcqQuestion -> {
-          subjectSet.add(mcqQuestion.getSubjectId());
-        });
-    cqs.forEach(
-        cqQuestion -> {
-          subjectSet.add(cqQuestion.getSubjectId());
-        });
-
     val problemSubject = new HashSet<Integer>();
-    for (val sId : subjectSet) {
-      if (getModeratorBySubject(sId).size() == 1) {
+    for (val mcq : mcqs) {
+      val sId = mcq.getSubjectId();
+      if (getRandomModeratorForDel(sId, mId, mcq.getCreatedBy()) == null) {
+        problemSubject.add(sId);
+      }
+    }
+
+    for (val cq : cqs) {
+      val sId = cq.getSubjectId();
+      if (getRandomModeratorForDel(sId, mId, cq.getCreatedBy()) == null) {
         problemSubject.add(sId);
       }
     }
@@ -230,14 +231,17 @@ public class UserService {
 
     mcqs.forEach(
         mcq -> {
-          Integer moderatorId = getRandomModerator(mcq.getSubjectId(), mcq.getCreatedBy()).getId();
+          Integer moderatorId =
+              getRandomModeratorForDel(mcq.getSubjectId(), mId, mcq.getCreatedBy());
+          logger.info("Sending MCQ to moderator => {}", moderatorId);
           mcq.setModeratedBy(moderatorId);
           mcqQuestionMapper.updateByPrimaryKey(mcq);
         });
 
     cqs.forEach(
         cq -> {
-          Integer moderatorId = getRandomModerator(cq.getSubjectId(), cq.getCreatedBy()).getId();
+          Integer moderatorId = getRandomModeratorForDel(cq.getSubjectId(), mId, cq.getCreatedBy());
+          logger.info("Sending CQ to moderator => {}", moderatorId);
           cq.setModeratedBy(moderatorId);
           cqQuestionMapper.updateByPrimaryKey(cq);
         });
@@ -305,11 +309,12 @@ public class UserService {
   }
 
   public LoginResponse createLoginResponse(final Authentication auth) {
-    val token = getToken(auth);
+
     val user = getUserByEmail(auth.getName());
     user.setPassword("");
     val id = user.getId();
     val roles = getRolesByUser(id);
+    val token = getToken(auth, roles);
     val allocatedSubjects = teacherService.getAllocatedSubject(id);
     val profilePic = teacherService.getBase64ProPic(id);
     var loginResponse = new LoginResponse();
@@ -322,13 +327,15 @@ public class UserService {
     return loginResponse;
   }
 
-  private String getToken(Authentication auth) {
+  private String getToken(Authentication auth, List<String> roles) {
     long now = System.currentTimeMillis();
+    val grantedAuthorities =
+        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(toList());
     return Jwts.builder()
         .setSubject(auth.getName())
         .claim(
             "authorities",
-            auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(toList()))
+            grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(toList()))
         .setIssuedAt(new Date(now))
         .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000)) // in milliseconds
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
@@ -467,6 +474,23 @@ public class UserService {
     val ex = new TeacherSubjectExample();
     ex.createCriteria().andTeacherIdEqualTo(teacherId).andSubjectIdEqualTo(subjectId);
     return teacherSubjectMapper.countByExample(ex) > 0;
+  }
+
+  public Integer getRandomModeratorForDel(
+      Integer subjectId, Integer prevModerator, Integer creator) {
+    val allModerators = getModeratorBySubject(subjectId);
+    // Remove the creator if he is a moderator
+    val refinedModerators =
+        allModerators.stream()
+            .filter(user -> !user.getId().equals(prevModerator) && !user.getId().equals(creator))
+            .collect(Collectors.toList());
+
+    if (refinedModerators.isEmpty()) {
+      return null;
+    }
+
+    int randIndx = new Random().nextInt(refinedModerators.size());
+    return refinedModerators.get(randIndx).getId();
   }
 
   public User getRandomModerator(Integer subjectId, Integer creator) {

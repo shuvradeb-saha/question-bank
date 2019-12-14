@@ -56,7 +56,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/headmaster/**").hasAnyRole("HEADMASTER")
                 .antMatchers("/api/moderator/**").hasRole("MODERATOR")
                 .anyRequest().permitAll();
-    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

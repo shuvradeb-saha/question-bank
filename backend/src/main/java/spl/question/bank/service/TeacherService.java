@@ -48,7 +48,7 @@ public class TeacherService {
   public List<TeacherDto> getTeachersList(
       final Integer eiinNumber, final HeadmasterController.TeacherListType listType) {
     val example = new UserExample();
-    example.createCriteria().andEiinNumberEqualTo(eiinNumber);
+    example.createCriteria().andEiinNumberEqualTo(eiinNumber).andEnabledEqualTo(true);
     val allUsers = userMapper.selectByExample(example);
 
     return allUsers.stream()

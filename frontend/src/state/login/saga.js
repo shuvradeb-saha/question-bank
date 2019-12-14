@@ -66,6 +66,7 @@ export function* fetchCurrentProfile() {
     });
     if (response.ok) {
       const responseData = yield response.json();
+      localStorage.setItem('token', responseData.token);
       yield put(fetchProfileSuccess(responseData));
     } else {
       // toastError('Could not fetch the user');

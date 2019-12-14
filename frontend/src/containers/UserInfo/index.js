@@ -95,9 +95,10 @@ class UserInfo extends Component {
         const res = await API.put(url);
         toastSuccess(res);
         this.props.history.push('/manage-user');
-      } catch (error) {
+      } catch (error) {                                                                                                                                                                                                     
         console.log('Error ', error);
-        toastError(error.response.data.message);
+
+        toastError(JSON.stringify(error.response.data));
       }
     } else {
       return;
@@ -118,7 +119,7 @@ class UserInfo extends Component {
       eiinNumber: newEiin,
     };
     this.props.saveUser(data);
-    this.setState({ modal: this.props.inProgress && false });
+    //this.setState({ modal: this.props.inProgress && false });
   };
 
   onCreateClick = () => {

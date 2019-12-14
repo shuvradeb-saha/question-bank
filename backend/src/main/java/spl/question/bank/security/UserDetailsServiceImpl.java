@@ -3,6 +3,8 @@ package spl.question.bank.security;
 import static java.util.stream.Collectors.toList;
 
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,7 @@ import spl.question.bank.database.model.User;
 import spl.question.bank.service.UserService;
 
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final UserService userService;
@@ -23,8 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
   public UserDetailsServiceImpl(
-      final UserService userService,
-      final BCryptPasswordEncoder encoder) {
+      final UserService userService, final BCryptPasswordEncoder encoder) {
     this.userService = userService;
     this.encoder = encoder;
   }
@@ -32,14 +34,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     User user = userService.getUserByEmail(email);
+    if (!user.getEnabled()) {
+      logger.error("Disabled user is not valid. ");
+      throw new UsernameNotFoundException("Invalid user.");
+    }
+
     val roles = userService.getRolesByUser(user.getId());
 
-    val grantedAuthorities = roles
-        .stream()
-        .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role))
-        .collect(toList());
+    val grantedAuthorities =
+        roles.stream()
+            .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role))
+            .collect(toList());
 
-    return new org.springframework.security.core.userdetails.User(user.getEmail(),
-        user.getPassword(), grantedAuthorities);
+    return new org.springframework.security.core.userdetails.User(
+        user.getEmail(), user.getPassword(), grantedAuthorities);
   }
 }
