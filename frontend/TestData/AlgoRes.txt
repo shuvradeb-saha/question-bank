@@ -1,0 +1,9 @@
+Paper details => QuestionPaper [Hash = 53463917, id=66, type=MCQ, subjectId=12, createdAt=Sun Dec 15 00:18:06 BDT 2019, generatedBy=9, examType=finalExam, duration=১৫ মিনিট, instituteName=জাগলা এইচ এম হাইস্কুল, totalMarks=15] Questions => [42, 48, 59, 58, 69, 64, 66, 60, 44, 47, 49, 55, 67, 65, 52]
+2019-12-15 00:19:26.100  INFO 12029 --- [nio-1515-exec-2] s.q.bank.service.download.PdfService     : Selected size ==> 15 questions for download.
+2019-12-15 00:20:09.931  INFO 12029 --- [nio-1515-exec-5] s.question.bank.service.DownloadService  : Got similarity of paper => 53.0. Retry question generation.
+2019-12-15 00:20:09.932  INFO 12029 --- [nio-1515-exec-5] s.question.bank.service.DownloadService  : Got similarity of paper => 66.0. Retry question generation.
+2019-12-15 00:20:09.933  INFO 12029 --- [nio-1515-exec-5] s.question.bank.service.DownloadService  : Got similarity of paper => 57.0. Retry question generation.
+2019-12-15 00:20:09.934  INFO 12029 --- [nio-1515-exec-5] s.question.bank.service.DownloadService  : Got similarity of paper => 50.0. Retry question generation.
+2019-12-15 00:20:09.935  INFO 12029 --- [nio-1515-exec-5] s.question.bank.service.DownloadService  : Got similarity of paper => 57.0. Retry question generation.
+2019-12-15 00:20:16.731  INFO 12029 --- [nio-1515-exec-8] s.question.bank.service.DownloadService  : Paper details => QuestionPaper [Hash = -1662179390, id=67, type=MCQ, subjectId=12, createdAt=Sun Dec 15 00:20:09 BDT 2019, generatedBy=9, examType=testExam, duration=১৫ মিনিট, instituteName=জাগলা এইচ এম হাইস্কুল, totalMarks=15] Questions => [66, 57, 60, 50, 59, 58, 56, 44, 46, 63, 64, 70, 52, 43]
+2019-12-15 00:20:17.065  INFO 12029 --- [nio-1515-exec-8] s.q.bank.service.download.PdfService     : Selected size ==> 14 questions for download.

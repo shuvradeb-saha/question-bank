@@ -3,11 +3,12 @@ const decideColor = data => '#FFF';
 export default {
   option: (base, context) => ({
     ...base,
-    color: 'rgb(102, 102, 102)',
     cursor: 'pointer',
     ':hover': {
       backgroundColor: 'rgb(223, 229, 242)',
     },
+    borderBottom: '1px dotted pink',
+    color: context.isSelected ? 'red' : 'blue',
     overflow: 'hidden',
   }),
   control: base => ({
@@ -25,6 +26,7 @@ export default {
     marginBottom: '10px',
     borderRadius: '0px 4px 0px 0px',
     boxShadow: 'none',
+    backgroundColor: '#a3c9d6',
   }),
   menuList: base => ({
     borderBottom: '1px solid #d6c851',

@@ -49,7 +49,7 @@ class ModerateMcqViewer extends Component {
       } catch (error) {
         toastError('Some error occured during approving question.');
       }
-      this.props.history.push('/moderate/mcq/approved');
+      this.props.history.push('/moderate/mcq/pending');
     } else {
       return;
     }
@@ -69,7 +69,7 @@ class ModerateMcqViewer extends Component {
       } catch (error) {
         toastError('Some error occured during rejecting question.');
       }
-      this.props.history.push('/moderate/mcq/rejected');
+      this.props.history.push('/moderate/mcq/pending');
     } else {
       return;
     }
@@ -144,7 +144,7 @@ class ModerateMcqViewer extends Component {
                     style={{ height: '100vh', backgroundColor: 'antiquewhite' }}
                   >
                     <div className=" row bg-dark text-light p-2 rounded">
-                      <strong>Proable Similar Questions</strong>
+                      <strong>Probable Similar Questions</strong>
                     </div>
                     {similarMcqs.size === 0 ? (
                       <div>

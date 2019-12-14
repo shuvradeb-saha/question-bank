@@ -1,6 +1,7 @@
 package spl.question.bank.service.download;
 
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfOutputStream;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.AreaBreak;
@@ -13,6 +14,7 @@ import com.itextpdf.licensekey.LicenseKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import spl.question.bank.database.model.CQQuestion;
@@ -55,10 +57,8 @@ public class PdfService {
     buildResponse(response, fileName);
     ExamType examType = ExamType.valueOf(paperDetails.getExamType());
     logger.info("Selected size ==> {} questions for download.", mcqs.size());
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
-      ZipEntry questionEntry = new ZipEntry(fileName + ".pdf");
-      zipOutputStream.putNextEntry(questionEntry);
-      final PdfWriter questionPaperWriter = new PdfWriter(zipOutputStream);
+    try (PdfOutputStream pdfOutputStream = new PdfOutputStream(response.getOutputStream())) {
+      final PdfWriter questionPaperWriter = new PdfWriter(pdfOutputStream);
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
@@ -82,10 +82,8 @@ public class PdfService {
       questionDocument.add(ap);
 
       questionDocument.close();
-      zipOutputStream.closeEntry();
       questionPdfDocument.close();
       questionPaperWriter.close();
-
     }
   }
 
@@ -102,10 +100,11 @@ public class PdfService {
   }
 
   private void buildResponse(HttpServletResponse response, String fileName) {
-    response.setContentType("application/zip");
+    response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+
     response.setHeader(
         HttpHeaders.CONTENT_DISPOSITION,
-        ContentDisposition.builder("attachment").filename(fileName + ".zip").build().toString());
+        ContentDisposition.builder("inline").filename(fileName + ".pdf").build().toString());
   }
 
   public void createCqPdf(
@@ -119,10 +118,9 @@ public class PdfService {
     ExamType examType = ExamType.valueOf(paperDetails.getExamType());
     logger.info("Selected size ==> {} questions for download.", cqs.size());
 
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
-      ZipEntry questionEntry = new ZipEntry(fileName + ".pdf");
-      zipOutputStream.putNextEntry(questionEntry);
-      final PdfWriter questionPaperWriter = new PdfWriter(zipOutputStream);
+    try (PdfOutputStream pdfOutputStream = new PdfOutputStream(response.getOutputStream())) {
+
+      final PdfWriter questionPaperWriter = new PdfWriter(pdfOutputStream);
       final PdfDocument questionPdfDocument = new PdfDocument(questionPaperWriter);
       Document questionDocument = new Document(questionPdfDocument);
       setFontToDocument(questionDocument);
@@ -134,7 +132,6 @@ public class PdfService {
         Paragraph p = new Paragraph(question);
         questionDocument.add(p);
       }
-      zipOutputStream.closeEntry();
       questionDocument.close();
       questionPdfDocument.close();
       questionPaperWriter.close();
@@ -218,7 +215,9 @@ public class PdfService {
   }
 
   private String renderStemBasedMcq(int i, StemBasedMCQDetail detail) {
-    StringBuilder sb = new StringBuilder(detail.getStem() + "\n");
+    int size = detail.getGeneralMcqs().size() + detail.getPolynomialMcqs().size();
+    String init = String.format("ঊদ্দীপকটি অনুসারে %s থেকে %s নং প্রশ্নের উওর দাও:", i, i + size);
+    StringBuilder sb = new StringBuilder(init + detail.getStem() + "\n");
     int j = i;
     for (GeneralMCQDetail generalMCQDetail : detail.getGeneralMcqs()) {
       sb.append(renderGeneralMcq(j, generalMCQDetail));

@@ -15,6 +15,16 @@ import {
 } from 'state/login/selectors';
 import API from 'utils/api';
 import { toastSuccess, toastError } from 'components/Toaster';
+import moment from 'moment';
+
+export const makeFileName = paperDetails => {
+  if (!paperDetails) {
+    return '_';
+  }
+  const date = moment(paperDetails.createdAt).format('DD MMM YYYY hh:mm a');
+  const exType = paperDetails.examType;
+  return `${paperDetails.type}_${exType}_${date}`;
+};
 
 const downloadFormSelector = formValueSelector('downloadForm');
 class Download extends Component {
@@ -31,6 +41,7 @@ class Download extends Component {
     super(props);
     this.state = {
       inProgress: false,
+      paperDetails: {},
       paperId: 0,
       questionType: '',
       status: false,
@@ -61,12 +72,12 @@ class Download extends Component {
     const uri = '/api/headmaster/generate/paper';
 
     try {
-      const paperId = await API.post(uri, data);
+      const paperDetails = await API.post(uri, data);
 
       this.setState({
         questionType,
         inProgress: false,
-        paperId,
+        paperId: paperDetails.id,
         status: true,
       });
 
@@ -84,7 +95,7 @@ class Download extends Component {
     }
   };
 
-  onDownloadClick = async (questionType, paperId) => {
+  onDownloadClick = async (fileName, questionType, paperId) => {
     try {
       let anchor = document.createElement('a');
       document.body.appendChild(anchor);
@@ -101,7 +112,7 @@ class Download extends Component {
         .then(blobby => {
           let objectUrl = window.URL.createObjectURL(blobby);
           anchor.href = objectUrl;
-          anchor.download = 'question-answer-file.zip';
+          anchor.download = `${fileName}.pdf`;
           anchor.click();
 
           window.URL.revokeObjectURL(objectUrl);
@@ -122,7 +133,13 @@ class Download extends Component {
       selectedExamType,
       selectedQuestionType,
     } = this.props;
-    const { paperId, inProgress, questionType, status } = this.state;
+    const {
+      paperId,
+      inProgress,
+      questionType,
+      status,
+      paperDetails,
+    } = this.state;
 
     return (
       <div>
@@ -141,7 +158,13 @@ class Download extends Component {
         {status && paperId && paperId !== 0 && (
           <button
             className="sp-btn third"
-            onClick={() => this.onDownloadClick(questionType, paperId)}
+            onClick={() =>
+              this.onDownloadClick(
+                this.makeFileName(paperDetails),
+                questionType,
+                paperId
+              )
+            }
           >
             <i className="fa fa-download" aria-hidden="true"></i>
             &nbsp;Download Paper

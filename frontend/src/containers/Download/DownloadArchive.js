@@ -13,6 +13,7 @@ import {
 import { fetchArchive } from 'state/headmaster/action';
 import { makeArchiveItems } from 'state/headmaster/selectors';
 import { getNameById, getClassNameBySubjectId } from 'utils/utils';
+import { makeFileName } from './index';
 
 import { toastError } from 'components/Toaster';
 class DownloadArchive extends Component {
@@ -28,7 +29,7 @@ class DownloadArchive extends Component {
     this.props.fetchArchive(this.props.userId);
   }
 
-  onDownloadClick = async (questionType, paperId) => {
+  onDownloadClick = async (fileName, questionType, paperId) => {
     try {
       let anchor = document.createElement('a');
       document.body.appendChild(anchor);
@@ -45,7 +46,7 @@ class DownloadArchive extends Component {
         .then(blobby => {
           let objectUrl = window.URL.createObjectURL(blobby);
           anchor.href = objectUrl;
-          anchor.download = 'question-answer-file.zip';
+          anchor.download = `${fileName}.pdf`;
           anchor.click();
 
           window.URL.revokeObjectURL(objectUrl);
@@ -105,7 +106,13 @@ class DownloadArchive extends Component {
       action: (
         <button
           className="btn btn-sm btn-outline-dark"
-          onClick={() => this.onDownloadClick(item.get('type'), item.get('id'))}
+          onClick={() =>
+            this.onDownloadClick(
+              makeFileName(item.toJS()),
+              item.get('type'),
+              item.get('id')
+            )
+          }
         >
           Download
         </button>

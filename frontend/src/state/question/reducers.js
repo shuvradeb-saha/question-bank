@@ -16,6 +16,7 @@ import {
   FETCH_ALL_CQ_FOR_MODERATOR_SUCCESS,
   FETCH_CQ_FOR_MODERATION_SUCCESS,
   FETCH_CQ_FOR_MODERATION_FAILURE,
+  FETCH_CQ_FOR_MODERATION,
 } from './constants';
 
 const initialState = fromJS({
@@ -62,6 +63,7 @@ function reducer(state = initialState, { type, payload }) {
     }
     case FETCH_CQ:
     case FETCH_MCQ_FOR_MODERATION:
+    case FETCH_CQ_FOR_MODERATION:
     case FETCH_MCQ: {
       return state.merge(fromJS({ inProgress: true }));
     }

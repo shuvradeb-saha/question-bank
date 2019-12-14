@@ -23,8 +23,7 @@ public class DownloadController {
   }
 
   @RequestMapping(value = "/generate/paper", method = RequestMethod.POST)
-  public ResponseEntity<?> generatePaper(@RequestBody DownloadCriteria downloadCriteria)
-      throws IOException {
+  public ResponseEntity<?> generatePaper(@RequestBody DownloadCriteria downloadCriteria) {
 
     if (downloadCriteria.getQuestionType().equals(QuestionType.MCQ.name())) {
       return downloadService.generateMcqPaper(downloadCriteria);

@@ -50,7 +50,7 @@ class ModeratorCqViewer extends Component {
       } catch (error) {
         toastError('Some error occured during approving question.');
       }
-      this.props.history.push('/moderate/cq/approved');
+      this.props.history.push('/moderate/cq/pending');
     } else {
       return;
     }
@@ -70,7 +70,7 @@ class ModeratorCqViewer extends Component {
       } catch (error) {
         toastError('Some error occured during rejecting question.');
       }
-      this.props.history.push('/moderate/cq/rejected');
+      this.props.history.push('/moderate/cq/pending');
     } else {
       return;
     }
@@ -79,6 +79,7 @@ class ModeratorCqViewer extends Component {
   render() {
     const { cq, errorCode, similarCqs, inProgress, userId } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
+    console.log('inProgress', inProgress);
 
     const status = cq.get('status');
 
@@ -140,25 +141,34 @@ class ModeratorCqViewer extends Component {
 
               {status === QuestionStatusType.PENDING &&
                 cq.get('moderatedBy') === userId && (
-                  <div className="col-4">
+                  <div
+                    className="col-4 border"
+                    style={{ height: '100vh', backgroundColor: 'antiquewhite' }}
+                  >
                     <div className=" row bg-dark text-light p-2 rounded">
-                      <strong>Similar Questions</strong>
+                      <strong>Probable Similar Questions</strong>
                     </div>
-                    {similarCqs.map(cq => {
-                      let contentToShow = '';
-                      contentToShow = splitStringForContent(cq.get('stem'));
+                    {similarCqs.size === 0 ? (
+                      <div>
+                        <span>No similar question available </span>
+                      </div>
+                    ) : (
+                      similarCqs.map(cq => {
+                        let contentToShow = '';
+                        contentToShow = splitStringForContent(cq.get('stem'));
 
-                      return (
-                        <div key={cq.get('id')} className="row  p-2 ">
-                          <Link
-                            to={`/cq/${cq.get('id')}`}
-                            style={{ color: 'blue' }}
-                          >
-                            {contentToShow}
-                          </Link>
-                        </div>
-                      );
-                    })}
+                        return (
+                          <div key={cq.get('id')} className="row  p-2 ">
+                            <Link
+                              to={`/cq/${cq.get('id')}`}
+                              style={{ color: 'blue' }}
+                            >
+                              {contentToShow}
+                            </Link>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 )}
             </div>

@@ -118,7 +118,8 @@ public class DownloadService {
             examType,
             totalWeight,
             idList);
-    return ResponseEntity.ok(generatedPaperId);
+    val paperDetails = questionPaperMapper.selectByPrimaryKey(generatedPaperId);
+    return ResponseEntity.ok(paperDetails);
   }
 
   public ResponseEntity<?> generateMcqPaper(DownloadCriteria downloadCriteria) {
@@ -182,7 +183,8 @@ public class DownloadService {
             examType,
             totalWeight,
             idList);
-    return ResponseEntity.ok(generatedPaperId);
+    val paperDetails = questionPaperMapper.selectByPrimaryKey(generatedPaperId);
+    return ResponseEntity.ok(paperDetails);
   }
 
   private Integer prepareQuestionPaper(
@@ -220,7 +222,7 @@ public class DownloadService {
       val storedResult = new TreeMap<Double, List<Integer>>();
       boolean flag = false;
       List<Integer> newPaperQuestions = new ArrayList<>();
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 5; i++) {
         newPaperQuestions = generateNewPaper(totalWeight, idList);
         double similarity = computeSimilarityPercentage(lastPaperQuestions, newPaperQuestions);
         if (similarity <= toleranceOfSimilarity) {
@@ -313,6 +315,9 @@ public class DownloadService {
   public void downloadMcqPaper(HttpServletResponse response, Integer paperId) throws IOException {
     val paperDetails = questionPaperMapper.selectByPrimaryKey(paperId);
     val idsOfPaper = getQuestionIdsByPaperId(paperId);
+
+    logger.info("Paper details => {} Questions => {}", paperDetails, idsOfPaper);
+
     MCQQuestionExample ex = new MCQQuestionExample();
     ex.createCriteria().andIdIn(idsOfPaper);
     val dtos = mcqService.getDtoByExample(ex);
@@ -322,6 +327,9 @@ public class DownloadService {
   public void downloadCqPaper(HttpServletResponse response, Integer paperId) throws IOException {
     val paperDetails = questionPaperMapper.selectByPrimaryKey(paperId);
     val idsOfPaper = getQuestionIdsByPaperId(paperId);
+
+    logger.info("Paper details => {} Questions => {}", paperDetails, idsOfPaper);
+
     val cqEx = new CQQuestionExample();
     cqEx.createCriteria().andIdIn(idsOfPaper);
     val cqs = cqQuestionMapper.selectByExample(cqEx);

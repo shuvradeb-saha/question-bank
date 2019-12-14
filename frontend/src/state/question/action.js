@@ -99,8 +99,6 @@ export function fetchAllCqForModeratorSuccess(status, cqs) {
 }
 
 export function fetchCQForModeration(id) {
-  console.log('action0');
-
   return { type: FETCH_CQ_FOR_MODERATION, payload: { id } };
 }
 

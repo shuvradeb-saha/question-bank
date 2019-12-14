@@ -7,7 +7,7 @@ import { required } from 'utils/validation';
 import { Field } from 'redux-form/immutable';
 import { fromJS } from 'immutable';
 
-import customStyle from './style';
+import customStyles from './style';
 
 export default class FormSelect extends Component {
   static propTypes = {
@@ -44,7 +44,7 @@ export default class FormSelect extends Component {
             input.onChange(fromJS(value));
           }}
           onBlur={() => input.onBlur(input.value)}
-          styles={customStyle}
+          styles={customStyles}
           options={options.toJS()}
           isMulti={this.props.multi}
           isDisabled={disabled}
