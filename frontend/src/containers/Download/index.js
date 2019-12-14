@@ -25,6 +25,7 @@ class Download extends Component {
     selectedClass: PropTypes.object,
     selectedSubject: PropTypes.object,
     selectedExamType: PropTypes.object,
+    selectedQuestionType: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -119,6 +120,7 @@ class Download extends Component {
       selectedSubject,
       chapters,
       selectedExamType,
+      selectedQuestionType,
     } = this.props;
     const { paperId, inProgress, questionType, status } = this.state;
 
@@ -130,6 +132,7 @@ class Download extends Component {
           selectedClass={selectedClass}
           selectedSubject={selectedSubject}
           selectedExamType={selectedExamType}
+          selectedQuestionType={selectedQuestionType}
           chapters={chapters}
           onSubmit={this.onSubmit}
           inProgress={inProgress}
@@ -154,6 +157,7 @@ const mapStateToProps = createStructuredSelector({
   selectedClass: state => downloadFormSelector(state, 'classId'),
   selectedSubject: state => downloadFormSelector(state, 'subjectId'),
   selectedExamType: state => downloadFormSelector(state, 'examType'),
+  selectedQuestionType: state => downloadFormSelector(state, 'questionType'),
   classes: makeAllClasses(),
   subjects: makeAllSubjects(),
   chapters: makeAllChapters(),

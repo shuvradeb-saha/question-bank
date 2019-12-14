@@ -82,9 +82,10 @@ public class PdfService {
       questionDocument.add(ap);
 
       questionDocument.close();
+      zipOutputStream.closeEntry();
       questionPdfDocument.close();
       questionPaperWriter.close();
-      zipOutputStream.closeEntry();
+
     }
   }
 

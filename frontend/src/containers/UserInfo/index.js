@@ -97,7 +97,7 @@ class UserInfo extends Component {
         this.props.history.push('/manage-user');
       } catch (error) {
         console.log('Error ', error);
-        toastError(error.response.data);
+        toastError(error.response.data.message);
       }
     } else {
       return;

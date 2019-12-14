@@ -181,6 +181,9 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("Please insert at least one moderator to subjects with id " + subjects);
       }
+      UserRoleExample ex = new UserRoleExample();
+      ex.createCriteria().andUserIdEqualTo(id).andRoleIdEqualTo(MODERATOR.getValue());
+      userRoleMapper.deleteByExample(ex);
     }
     val usr = userDetail.getUser();
     usr.setEnabled(false);
@@ -224,10 +227,6 @@ public class UserService {
     if (problemSubject.size() > 0) {
       return problemSubject;
     }
-
-    UserRoleExample ex = new UserRoleExample();
-    ex.createCriteria().andUserIdEqualTo(mId).andRoleIdEqualTo(MODERATOR.getValue());
-    userRoleMapper.deleteByExample(ex);
 
     mcqs.forEach(
         mcq -> {

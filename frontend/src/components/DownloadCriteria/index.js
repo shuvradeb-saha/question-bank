@@ -25,6 +25,7 @@ class DownloadCriteria extends Component {
     selectedClass: PropTypes.object,
     selectedSubject: PropTypes.object,
     selectedExamType: PropTypes.object,
+    selectedQuestionType: PropTypes.object,
     inProgress: PropTypes.bool,
     status: PropTypes.bool,
   };
@@ -126,6 +127,7 @@ class DownloadCriteria extends Component {
                   placeholder="Enter total marks"
                 />
               </div>
+
               <div className="col">
                 <FormInput
                   name="duration"

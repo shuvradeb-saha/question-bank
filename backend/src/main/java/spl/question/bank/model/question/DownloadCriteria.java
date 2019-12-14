@@ -18,4 +18,5 @@ public class DownloadCriteria {
   private String instituteName;
   private String duration;
   private Integer totalMarks;
+  // private Integer totalCqQuestion;
 }

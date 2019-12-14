@@ -100,8 +100,9 @@ public class DownloadService {
     }
     final int totalWeight =
         downloadCriteria.getTotalMarks(); // ExamType.valueOf(examType).getCqWeight();
-    if (totalWeight <= 0) {
-      return ResponseEntity.status(BAD_REQUEST).body("Must provide a valid weight.");
+    if (totalWeight <= 0 || totalWeight % 10 != 0) {
+      return ResponseEntity.status(BAD_REQUEST)
+          .body("Provide a valid weight. Total marks must be multiple of 10.");
     }
     if (totalWeightInDb < totalWeight) {
       return ResponseEntity.status(BAD_REQUEST)
