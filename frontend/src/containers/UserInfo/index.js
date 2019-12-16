@@ -206,10 +206,15 @@ class UserInfo extends Component {
         sort: 'asc',
         width: 150,
       },
-
       {
         label: 'Roles',
         field: 'roles',
+        sort: 'asc',
+        width: 150,
+      },
+      {
+        label: 'Allocation',
+        field: 'allocation',
         sort: 'asc',
         width: 150,
       },
@@ -236,6 +241,13 @@ class UserInfo extends Component {
         .get('roles')
         .toJS()
         .join(', '),
+      allocation:
+        user.get('allocatedSubject') && user.get('allocatedSubject').size > 0
+          ? user
+              .get('allocatedSubject')
+              .toJS()
+              .join(', ')
+          : 'N/A',
       status: user.get('enabled') ? 'Active' : 'Removed',
       action: user.get('enabled') ? (
         <span>
@@ -243,7 +255,7 @@ class UserInfo extends Component {
             className="btn btn-sm btn-outline-info"
             onClick={() => this.onEditClick(user.get('id'))}
           >
-            Edit
+            <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
           </button>
 
           {user.get('roles').includes(Roles.MODERATOR) ? (
@@ -271,7 +283,7 @@ class UserInfo extends Component {
             className="btn btn-sm btn-danger"
             onClick={() => this.onDisableClick(user.get('id'))}
           >
-            Disable
+            <i className="fa fa-trash" aria-hidden="true"></i>
           </button>
         </span>
       ) : (
@@ -309,6 +321,7 @@ class UserInfo extends Component {
       inProgress,
       allEiinNumbers,
       allRoles,
+
       userDetails,
     } = this.props;
 

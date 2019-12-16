@@ -102,7 +102,7 @@ class DownloadArchive extends Component {
       subject: getNameById(item.get('subjectId'), subjects),
       questionType: item.get('type'),
       examType: item.get('examType'),
-      creationDate: moment(item.get('createdAt')).format('YYYY-MM-DD'),
+      creationDate: moment(item.get('createdAt')).format('DD MMM YYYY hh:mm a'),
       action: (
         <button
           className="btn btn-sm btn-outline-dark"

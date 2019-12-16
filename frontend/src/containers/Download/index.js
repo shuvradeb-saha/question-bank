@@ -160,7 +160,7 @@ class Download extends Component {
             className="sp-btn third"
             onClick={() =>
               this.onDownloadClick(
-                this.makeFileName(paperDetails),
+                makeFileName(paperDetails),
                 questionType,
                 paperId
               )

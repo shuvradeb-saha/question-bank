@@ -15,5 +15,6 @@ public class UserInfo {
     private Integer eiinNumber;
     private String instituteName;
     private boolean enabled;
+    private List<Integer> allocatedSubject;
     private List<String> roles;
 }

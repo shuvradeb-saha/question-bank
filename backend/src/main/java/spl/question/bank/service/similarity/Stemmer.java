@@ -115,7 +115,7 @@ public class Stemmer {
   }
 
   private void dependantCharSetInstallation() {
-    st = new TreeSet<Character>();
+    st = new TreeSet<>();
     st.add('া');
     st.add('ি');
     st.add('ী');

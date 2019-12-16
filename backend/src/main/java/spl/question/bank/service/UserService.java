@@ -372,6 +372,7 @@ public class UserService {
                     .setName(String.format("%s %s", user.getFirstName(), user.getLastName()))
                     .setEiinNumber(user.getEiinNumber())
                     .setRoles(getRolesByUser(user.getId()))
+                    .setAllocatedSubject(teacherService.getAllocatedSubject(user.getId()))
                     .setInstituteName(eiinInstituteMap.get(user.getEiinNumber()))
                     .setEmail(user.getEmail()))
         .collect(toList());

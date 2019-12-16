@@ -37,7 +37,7 @@ public class SimilarityService {
   }
 
   public List<CQQuestion> extractSimilarCq(CQQuestion cq) {
-    List<String> tokenizedQuery = similarityUtils.extractTokenFromCq(cq);
+    List<String> queryCQ = similarityUtils.extractTokenFromCq(cq);
     val questions =
         cqService.getCQListByStatusAndSubject(cq.getSubjectId(), QuestionStatus.approved);
     // If no question in db then return empty list
@@ -52,7 +52,7 @@ public class SimilarityService {
         });
 
     HashMap<Integer, Double> cqScore =
-        calculateSimilarityScores(tokenizedQuery, allTokenizedDocuments);
+        calculateSimilarityScores(queryCQ, allTokenizedDocuments);
 
     val sortedMap =
         cqScore.entrySet().stream()
@@ -65,7 +65,7 @@ public class SimilarityService {
   }
 
   public List<MCQDto> extractSimilarMcq(MCQDto queryMcqDto) {
-    List<String> tokenizedQuery = similarityUtils.extractTokenFromDto(queryMcqDto);
+    List<String> queryMcq = similarityUtils.extractTokenFromDto(queryMcqDto);
     // Extract all approved mcq of this subject from db
     val questions =
         mcqService.getMcqBySubjectAndStatus(queryMcqDto.getSubjectId(), QuestionStatus.approved);
@@ -78,7 +78,7 @@ public class SimilarityService {
         similarityUtils.getTokenizedMap(questions);
 
     HashMap<Integer, Double> dtoScore =
-        calculateSimilarityScores(tokenizedQuery, allTokenizedDocuments);
+        calculateSimilarityScores(queryMcq, allTokenizedDocuments);
 
     val sortedMap =
         dtoScore.entrySet().stream()
@@ -93,14 +93,14 @@ public class SimilarityService {
   private HashMap<Integer, Double> calculateSimilarityScores(
       List<String> tokenizedQuery, HashMap<Integer, List<String>> allTokenizedDocuments) {
     HashMap<Integer, Double> dtoScore = new HashMap<>();
-    for (Entry<Integer, List<String>> docInDb : allTokenizedDocuments.entrySet()) {
+    for (Entry<Integer, List<String>> mcqInDb : allTokenizedDocuments.entrySet()) {
 
-      List<String> combinedDocTokens = combineTokens(tokenizedQuery, docInDb.getValue());
+      List<String> combinedDocTokens = combineTokens(tokenizedQuery, mcqInDb.getValue());
       HashMap<String, Double> tfIdfOfQueryDoc =
           tfIdfExtractor.calculateTfIDf(combinedDocTokens, tokenizedQuery, allTokenizedDocuments);
       HashMap<String, Double> tfIdfDbDoc =
           tfIdfExtractor.calculateTfIDf(
-              combinedDocTokens, docInDb.getValue(), allTokenizedDocuments);
+              combinedDocTokens, mcqInDb.getValue(), allTokenizedDocuments);
 
       List<Double> tfIdfQueryValues = new ArrayList<>(tfIdfOfQueryDoc.values());
       List<Double> tfIdfDbValues = new ArrayList<>(tfIdfDbDoc.values());
@@ -108,8 +108,8 @@ public class SimilarityService {
       double similarityScore =
           tfIdfExtractor.calculateCosineSimilarity(tfIdfQueryValues, tfIdfDbValues);
       logger.info(
-          "Similarity between query question and {} = {}", docInDb.getKey(), similarityScore);
-      if (similarityScore > 0.3) dtoScore.put(docInDb.getKey(), similarityScore);
+          "Similarity between query question and {} = {}", mcqInDb.getKey(), similarityScore);
+      if (similarityScore > 0.3) dtoScore.put(mcqInDb.getKey(), similarityScore);
     }
     return dtoScore;
   }

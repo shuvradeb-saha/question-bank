@@ -215,25 +215,32 @@ public class DownloadService {
       addQuestionIdToPaperId(paperId, newPaperQuestionIds);
       return paperId;
     } else {
-      // Similarity % tolerance of two consecutive same exam
+      // Similarity % tolerance of two consecutive
       double toleranceOfSimilarity = qType.equals(QuestionType.MCQ.name()) ? 10 : 20;
       val lastPaperOfThisExam = allPaperOfThisExm.get(0);
       val lastPaperQuestions = getQuestionIdsByPaperId(lastPaperOfThisExam.getId());
+      logger.info("Last Exam Paper Ids => {}", lastPaperQuestions);
       val storedResult = new TreeMap<Double, List<Integer>>();
       boolean flag = false;
       List<Integer> newPaperQuestions = new ArrayList<>();
+      logger.info(
+          "Generating new Paper for Subject => {}, Exam => {}",
+          downloadCriteria.getExamType(),
+          examType);
       for (int i = 0; i < 5; i++) {
         newPaperQuestions = generateNewPaper(totalWeight, idList);
+        logger.info("Iteration => {} & Generated => {}", (i + 1), newPaperQuestions);
         double similarity = computeSimilarityPercentage(lastPaperQuestions, newPaperQuestions);
         if (similarity <= toleranceOfSimilarity) {
           flag = true;
           break;
         }
-        logger.info("Got similarity of paper => {}. Retry question generation.", similarity);
+        logger.info("Got similarity => {}. Retry question generation.", similarity);
         storedResult.put(similarity, newPaperQuestions);
       }
 
       if (!flag) {
+        logger.info("Tree map => {}", storedResult);
         newPaperQuestions = storedResult.firstEntry().getValue();
       }
       val paperId = saveNewPaper(downloadCriteria, qType, examType, teacherId, subjectId);
