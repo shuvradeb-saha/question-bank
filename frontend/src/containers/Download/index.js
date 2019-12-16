@@ -79,6 +79,7 @@ class Download extends Component {
         inProgress: false,
         paperId: paperDetails.id,
         status: true,
+        paperDetails,
       });
 
       toastSuccess('Question generation succedded.');

@@ -44,7 +44,7 @@ export default class FormSelect extends Component {
             input.onChange(fromJS(value));
           }}
           onBlur={() => input.onBlur(input.value)}
-          styles={customStyles}
+          // styles={customStyles}
           options={options.toJS()}
           isMulti={this.props.multi}
           isDisabled={disabled}

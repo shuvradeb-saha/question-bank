@@ -216,17 +216,18 @@ public class PdfService {
 
   private String renderStemBasedMcq(int i, StemBasedMCQDetail detail) {
     int size = detail.getGeneralMcqs().size() + detail.getPolynomialMcqs().size();
-    String init = String.format("ঊদ্দীপকটি অনুসারে %s থেকে %s নং প্রশ্নের উওর দাও:", i, i + size);
+    String init =
+        String.format(
+            "ঊদ্দীপকটি অনুসারে %s থেকে %s নং প্রশ্নের উওর দাও:\n",
+            enNumberToBnNumber(i), enNumberToBnNumber(i + size));
     StringBuilder sb = new StringBuilder(init + detail.getStem() + "\n");
     int j = i;
     for (GeneralMCQDetail generalMCQDetail : detail.getGeneralMcqs()) {
       sb.append(renderGeneralMcq(j, generalMCQDetail));
-      sb.append("\n");
       j++;
     }
     for (PolynomialMCQDetail polynomialMCQDetail : detail.getPolynomialMcqs()) {
       sb.append(renderPolynomialMcq(j, polynomialMCQDetail));
-      sb.append("\n");
       j++;
     }
     return sb.toString();
