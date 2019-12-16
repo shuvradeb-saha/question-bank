@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { splitStringForContent, extractNameObject } from 'utils/utils';
+import { toastError, toastSuccess } from '../Toaster';
+import API from 'utils/api';
 
 class QuestionList extends Component {
   static propTypes = {
@@ -16,7 +18,41 @@ class QuestionList extends Component {
     status: PropTypes.string,
   };
 
+  onDeleteClick = async id => {
+    if (window.confirm('Are you sure to delete the MCQ?')) {
+      const uri = `/api/teacher/question/cq/${id}`;
+      try {
+        await API.delete(uri);
+        toastSuccess('Question deleted');
+        this.props.history.push('/question/cq/rejected');
+      } catch (error) {
+        console.log('error', error);
+        toastError('Can not delete');
+      }
+    } else {
+      return;
+    }
+  };
+
   createDataForTable = (allCqs, allChapter, allClass, allSubject) => {
+    const status = this.props.status;
+    const rejectExtra =
+      status !== QuestionStatusType.REJECTED
+        ? []
+        : [
+            {
+              label: 'Cause',
+              field: 'cause',
+              sort: 'asc',
+              width: 100,
+            },
+            {
+              label: 'Action',
+              field: 'action',
+              sort: 'asc',
+              width: 100,
+            },
+          ];
     const columns = [
       {
         label: 'Question',
@@ -48,6 +84,7 @@ class QuestionList extends Component {
         sort: 'asc',
         width: 100,
       },
+      ...rejectExtra,
     ];
 
     const rows = allCqs.map(cq => {
@@ -60,7 +97,25 @@ class QuestionList extends Component {
         allClass,
         allSubject
       );
-
+      const rejectExtraObj =
+        status !== QuestionStatusType.REJECTED
+          ? {}
+          : {
+              cause:
+                cq.get('rejectCause') == null ? (
+                  <div className="text-justify">No Comment</div>
+                ) : (
+                  <div className="text-justify">{cq.get('rejectCause')}</div>
+                ),
+              action: (
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => this.onDeleteClick(cq.get('id'))}
+                >
+                  <i className="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              ),
+            };
       const createdAt = moment(cq.get('createdAt')).format('YYYY-MM-DD');
       return {
         cq: (
@@ -70,6 +125,7 @@ class QuestionList extends Component {
         ),
         ...nameObject,
         createdAt,
+        ...rejectExtraObj,
       };
     });
 

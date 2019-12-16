@@ -195,7 +195,8 @@ public class McqService {
         .setModeratedAt(mcq.getModeratedAt())
         .setModeratedBy(mcq.getModeratedBy())
         .setMcqType(MCQType.valueOf(mcq.getType()))
-        .setWeight(mcq.getWeight());
+        .setWeight(mcq.getWeight())
+        .setRejectedCause(mcq.getRejectCause());
 
     dto.setGeneralMCQDetail(objectMapper.readValue(mcq.getBaseQuestion(), GeneralMCQDetail.class));
     return dto;
@@ -213,7 +214,8 @@ public class McqService {
         .setModeratedAt(mcq.getModeratedAt())
         .setModeratedBy(mcq.getModeratedBy())
         .setMcqType(MCQType.valueOf(mcq.getType()))
-        .setWeight(mcq.getWeight());
+        .setWeight(mcq.getWeight())
+        .setRejectedCause(mcq.getRejectCause());
 
     dto.setPolynomialMCQDetail(
         objectMapper.readValue(mcq.getBaseQuestion(), PolynomialMCQDetail.class));
@@ -232,7 +234,8 @@ public class McqService {
         .setModeratedAt(mcq.getModeratedAt())
         .setModeratedBy(mcq.getModeratedBy())
         .setMcqType(MCQType.valueOf(mcq.getType()))
-        .setWeight(mcq.getWeight());
+        .setWeight(mcq.getWeight())
+        .setRejectedCause(mcq.getRejectCause());
 
     dto.setStemBasedMCQDetail(
         objectMapper.readValue(mcq.getBaseQuestion(), StemBasedMCQDetail.class));
@@ -330,5 +333,10 @@ public class McqService {
               return null;
             })
         .collect(toList());
+  }
+
+  public ResponseEntity<?> deleteById(Integer mcqId) {
+    mcqMapper.deleteByPrimaryKey(mcqId);
+    return ResponseEntity.ok("Mcq Successfully Deleted.");
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { required, positive } from 'utils/validation';
+import { required, positive, alphaNumeric } from 'utils/validation';
 import { Field } from 'redux-form/immutable';
 
 class FormInput extends Component {
@@ -69,6 +69,8 @@ class FormInput extends Component {
         validate={
           type === 'number' && require
             ? [positive, required]
+            : type === 'password' && require
+            ? [alphaNumeric, required]
             : require
             ? [required]
             : []

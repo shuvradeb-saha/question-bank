@@ -30,14 +30,7 @@ class CreateQuestion extends Component {
     const { allocatedSubjects, allClass, allSubjects } = this.props;
 
     const hasSubject = allocatedSubjects && allocatedSubjects.size > 0;
-    if (hasSubject)
-      allocatedSubjects.map(subId =>
-        console.log(
-          'sub',
-          getClassNameBySubjectId(subId, allClass, allSubjects),
-          getNameById(subId, allSubjects)
-        )
-      );
+
     return !hasSubject ? (
       <div className="alert alert-danger">
         <h3>

@@ -106,4 +106,9 @@ public class CqService {
     cqex.createCriteria().andSubjectIdEqualTo(subjectId).andStatusEqualTo(approved.name());
     return cqQuestionMapper.selectByExample(cqex);
   }
+
+  public ResponseEntity<?> deleteById(Integer cqId) {
+    cqQuestionMapper.deleteByPrimaryKey(cqId);
+    return ResponseEntity.ok("Mcq Successfully Deleted.");
+  }
 }

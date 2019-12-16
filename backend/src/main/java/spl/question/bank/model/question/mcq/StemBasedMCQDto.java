@@ -21,6 +21,7 @@ public class StemBasedMCQDto implements MCQDto {
   private Integer moderatedBy;
   private String status;
   private Difficulty difficulty;
+  private String rejectedCause;
   private Date createdAt;
   private Date moderatedAt;
 

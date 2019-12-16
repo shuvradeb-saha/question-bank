@@ -1,8 +1,7 @@
 package spl.question.bank.web.teacher;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
@@ -50,4 +49,13 @@ public class McqController {
       final @PathVariable QuestionStatus status, final @PathVariable Integer teacherId) {
     return mcqService.getMcqListByStatus(status, teacherId);
   }
+
+  @RequestMapping(
+      value = "/question/mcq/{mcqId}",
+      method = DELETE,
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> deleteMcq(@PathVariable Integer mcqId) {
+    return mcqService.deleteById(mcqId);
+  }
+
 }

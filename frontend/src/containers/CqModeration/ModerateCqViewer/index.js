@@ -20,6 +20,8 @@ import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 
 import { splitStringForContent } from 'utils/utils';
 import { toastSuccess, toastError } from 'components/Toaster';
+import { reset } from 'redux-form';
+import { RejectModal } from 'components/Modals';
 
 class ModeratorCqViewer extends Component {
   static propTypes = {
@@ -30,7 +32,13 @@ class ModeratorCqViewer extends Component {
     similarCqs: PropTypes.any,
     inProgress: PropTypes.bool,
     errorCode: PropTypes.any,
+    resetForm: PropTypes.func,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = { rejectModal: false, rejectedId: 0 };
+  }
 
   componentDidMount() {
     const id = parseInt(this.props.match.params.id, 10);
@@ -56,30 +64,39 @@ class ModeratorCqViewer extends Component {
     }
   };
 
-  onRejectClick = async id => {
-    if (
-      window.confirm(
-        'Question will be added to the rejected question database. Are you sure?'
-      )
-    ) {
-      const uri = `/api/moderator/question/CQ/${id}/${QuestionStatusType.REJECTED}`;
+  onRejectInitiate = id => {
+    this.props.resetForm();
+    this.setState(prevState => ({
+      rejectModal: !prevState.modal,
+      rejectedId: id,
+    }));
+  };
 
-      try {
-        const response = await API.put(uri);
-        toastSuccess(response);
-      } catch (error) {
-        toastError('Some error occured during rejecting question.');
-      }
-      this.props.history.push('/moderate/cq/pending');
-    } else {
-      return;
+  onRejectCancel = () => {
+    this.props.resetForm();
+    this.setState(prevState => ({
+      rejectModal: false,
+      rejectedId: 0,
+    }));
+  };
+
+  onRejectClick = async values => {
+    const data = { rejectCause: values.toJS().rejectCause };
+    const uri = `/api/moderator/question/CQ/${this.state.rejectedId}/${QuestionStatusType.REJECTED}`;
+
+    try {
+      const response = await API.put(uri, data);
+      toastSuccess(response);
+    } catch (error) {
+      toastError('Some error occured during rejecting question.');
     }
+    this.onRejectCancel();
+    this.props.history.push('/moderate/cq/pending');
   };
 
   render() {
     const { cq, errorCode, similarCqs, inProgress, userId } = this.props;
     const id = parseInt(this.props.match.params.id, 10);
-    console.log('inProgress', inProgress);
 
     const status = cq.get('status');
 
@@ -129,7 +146,7 @@ class ModeratorCqViewer extends Component {
                         <button
                           type="button"
                           className="sp-btn first"
-                          onClick={() => this.onRejectClick(id)}
+                          onClick={() => this.onRejectInitiate(id)}
                         >
                           <i className="fa fa-trash" aria-hidden="true"></i>
                           &nbsp;&nbsp;Reject
@@ -172,6 +189,12 @@ class ModeratorCqViewer extends Component {
                   </div>
                 )}
             </div>
+            <RejectModal
+              onOkClick={this.onRejectClick}
+              isOpen={this.state.rejectModal}
+              toggle={this.onRejectCancel}
+              id={this.state.rejectedId}
+            />
           </span>
         );
       } else {
@@ -195,6 +218,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   fetchCQForModeration: id => dispatch(fetchCQForModeration(id)),
+  resetForm: () => dispatch(reset('rejectForm')),
 });
 const withConnect = connect(
   mapStateToProps,

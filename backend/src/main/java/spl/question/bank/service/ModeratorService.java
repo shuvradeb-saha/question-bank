@@ -8,6 +8,7 @@ import spl.question.bank.database.client.CQQuestionMapper;
 import spl.question.bank.database.client.MCQQuestionMapper;
 import spl.question.bank.database.model.CQQuestion;
 import spl.question.bank.database.model.MCQQuestion;
+import spl.question.bank.model.moderator.RejectDto;
 import spl.question.bank.model.moderator.SimilarCqDto;
 import spl.question.bank.model.moderator.SimilarMcqDto;
 import spl.question.bank.model.question.QuestionStatus;
@@ -58,7 +59,7 @@ public class ModeratorService {
   }
 
   public ResponseEntity changeQuestionStatus(
-      Integer questionId, QuestionType questionType, QuestionStatus status) {
+      Integer questionId, QuestionType questionType, QuestionStatus status, RejectDto rejectDto) {
     if (questionType.equals(QuestionType.MCQ)) {
       MCQQuestion mcqQuestion = mcqQuestionMapper.selectByPrimaryKey(questionId);
       if (isNull(mcqQuestion)) {
@@ -69,6 +70,9 @@ public class ModeratorService {
       }
 
       mcqQuestion.setStatus(status.name());
+      if (status == QuestionStatus.rejected) {
+        mcqQuestion.setRejectCause(rejectDto.getRejectCause());
+      }
       mcqQuestion.setModeratedAt(new Date(System.currentTimeMillis()));
       mcqQuestionMapper.updateByPrimaryKey(mcqQuestion);
       return ResponseEntity.ok(String.format("Submitted MCQ has %s successfully.", status.name()));
@@ -82,6 +86,9 @@ public class ModeratorService {
         return ResponseEntity.status(BAD_REQUEST).body("CQ has already " + status.name());
       }
       cqQuestion.setStatus(status.name());
+      if (status == QuestionStatus.rejected) {
+        cqQuestion.setRejectCause(rejectDto.getRejectCause());
+      }
       cqQuestion.setModeratedAt(new Date(System.currentTimeMillis()));
       cqQuestionMapper.updateByPrimaryKey(cqQuestion);
 

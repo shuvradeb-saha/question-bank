@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
@@ -50,4 +51,13 @@ public class CqController {
       final @PathVariable QuestionStatus status, final @PathVariable Integer teacherId) {
     return cqService.getCQListByStatus(status, teacherId);
   }
+
+  @RequestMapping(
+      value = "/question/cq/{cqId}",
+      method = DELETE,
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> deleteMcq(@PathVariable Integer cqId) {
+    return cqService.deleteById(cqId);
+  }
+
 }

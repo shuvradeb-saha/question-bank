@@ -89,7 +89,10 @@ class QuestionRoute extends Component {
             path="/question/mcq/rejected"
             component={Authorization(
               () => (
-                <McqStatusManagement type={QuestionStatusType.REJECTED} />
+                <McqStatusManagement
+                  history={this.props.history}
+                  type={QuestionStatusType.REJECTED}
+                />
               ),
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}
@@ -130,7 +133,10 @@ class QuestionRoute extends Component {
             path="/question/cq/rejected"
             component={Authorization(
               () => (
-                <CqStatusManager type={QuestionStatusType.REJECTED} />
+                <CqStatusManager
+                  history={this.props.history}
+                  type={QuestionStatusType.REJECTED}
+                />
               ),
               [Roles.HEADMASTER, Roles.TEACHER, Roles.MODERATOR]
             )}

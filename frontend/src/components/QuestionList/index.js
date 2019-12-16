@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { MDBDataTable } from 'mdbreact';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-
 import { QuestionStatusType } from 'containers/McqStatusManager/StatusType';
 import { McqType } from 'containers/CreateQuestion/Question';
 import { splitStringForContent, extractNameObject } from 'utils/utils';
+import { toastError, toastSuccess } from '../Toaster';
+import API from 'utils/api';
 
 class QuestionList extends Component {
   static propTypes = {
@@ -17,7 +18,41 @@ class QuestionList extends Component {
     status: PropTypes.string,
   };
 
+  onDeleteClick = async id => {
+    if (window.confirm('Are you sure to delete the MCQ?')) {
+      const uri = `/api/teacher/question/mcq/${id}`;
+      try {
+        await API.delete(uri);
+        toastSuccess('MCQ has deleted');
+        this.props.history.push('/question/mcq/rejected');
+      } catch (error) {
+        console.log('error', error);
+        toastError('error.response.data');
+      }
+    } else {
+      return;
+    }
+  };
+
   createDataForTable = (allMcqs, allChapter, allClass, allSubject) => {
+    const status = this.props.status;
+    const rejectExtra =
+      status !== QuestionStatusType.REJECTED
+        ? []
+        : [
+            {
+              label: 'Cause',
+              field: 'cause',
+              sort: 'asc',
+              width: 100,
+            },
+            {
+              label: 'Action',
+              field: 'action',
+              sort: 'asc',
+              width: 100,
+            },
+          ];
     const columns = [
       {
         label: 'Question',
@@ -55,6 +90,7 @@ class QuestionList extends Component {
         sort: 'asc',
         width: 100,
       },
+      ...rejectExtra,
     ];
 
     const rows = allMcqs.map(mcq => {
@@ -78,6 +114,25 @@ class QuestionList extends Component {
         allSubject
       );
 
+      const rejectExtraObj =
+        status !== QuestionStatusType.REJECTED
+          ? {}
+          : {
+              cause:
+                mcq.get('rejectedCause') == null ? (
+                  <div className="text-justify">No Comment</div>
+                ) : (
+                  <div className="text-justify">{mcq.get('rejectedCause')}</div>
+                ),
+              action: (
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => this.onDeleteClick(mcq.get('id'))}
+                >
+                  <i className="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              ),
+            };
       const createdAt = moment(mcq.get('createdAt')).format('YYYY-MM-DD');
       return {
         mcq: (
@@ -88,6 +143,7 @@ class QuestionList extends Component {
         mcqType,
         ...nameObject,
         createdAt,
+        ...rejectExtraObj,
       };
     });
 

@@ -20,6 +20,8 @@ import { McqType } from 'containers/CreateQuestion/Question';
 import { splitStringForContent } from 'utils/utils';
 import { toastSuccess, toastError } from 'components/Toaster';
 import { makeUserId } from 'state/login/selectors';
+import { reset } from 'redux-form';
+import { RejectModal } from 'components/Modals';
 
 class ModerateMcqViewer extends Component {
   static propTypes = {
@@ -29,7 +31,13 @@ class ModerateMcqViewer extends Component {
     similarMcqs: PropTypes.any,
     inProgress: PropTypes.bool,
     errorCode: PropTypes.any,
+    resetForm: PropTypes.func,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = { rejectModal: false, rejectedId: 0 };
+  }
 
   componentDidMount() {
     const id = parseInt(this.props.match.params.id, 10);
@@ -55,24 +63,34 @@ class ModerateMcqViewer extends Component {
     }
   };
 
-  onRejectClick = async id => {
-    if (
-      window.confirm(
-        'Question will be added to the rejected question database. Are you sure?'
-      )
-    ) {
-      const uri = `/api/moderator/question/MCQ/${id}/${QuestionStatusType.REJECTED}`;
+  onRejectInitiate = id => {
+    this.props.resetForm();
+    this.setState(prevState => ({
+      rejectModal: !prevState.modal,
+      rejectedId: id,
+    }));
+  };
 
-      try {
-        const response = await API.put(uri);
-        toastSuccess(response);
-      } catch (error) {
-        toastError('Some error occured during rejecting question.');
-      }
-      this.props.history.push('/moderate/mcq/pending');
-    } else {
-      return;
+  onRejectCancel = () => {
+    this.props.resetForm();
+    this.setState(prevState => ({
+      rejectModal: false,
+      rejectedId: 0,
+    }));
+  };
+
+  onRejectClick = async values => {
+    const data = { rejectCause: values.toJS().rejectCause };
+    const uri = `/api/moderator/question/MCQ/${this.state.rejectedId}/${QuestionStatusType.REJECTED}`;
+
+    try {
+      const response = await API.put(uri, data);
+      toastSuccess(response);
+    } catch (error) {
+      toastError('Some error occured during rejecting question.');
     }
+    this.onRejectCancel();
+    this.props.history.push('/moderate/mcq/pending');
   };
 
   render() {
@@ -127,7 +145,7 @@ class ModerateMcqViewer extends Component {
                         <button
                           type="button"
                           className="sp-btn first"
-                          onClick={() => this.onRejectClick(id)}
+                          onClick={() => this.onRejectInitiate(id)}
                         >
                           <i className="fa fa-trash" aria-hidden="true"></i>
                           &nbsp;&nbsp;Reject
@@ -183,6 +201,12 @@ class ModerateMcqViewer extends Component {
                   </div>
                 )}
             </div>
+            <RejectModal
+              onOkClick={this.onRejectClick}
+              isOpen={this.state.rejectModal}
+              toggle={this.onRejectCancel}
+              id={this.state.rejectedId}
+            />
           </span>
         );
       } else {
@@ -206,6 +230,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   fetchMcqForModeration: id => dispatch(fetchMcqForModeration(id)),
+  resetForm: () => dispatch(reset('rejectForm')),
 });
 const withConnect = connect(
   mapStateToProps,

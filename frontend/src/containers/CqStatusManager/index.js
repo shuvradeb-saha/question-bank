@@ -72,6 +72,7 @@ class CqStatusManagement extends Component {
           allSubject={allSubject}
           status={type}
           allCqs={cqs}
+          history={this.props.history}
         />
       </div>
     );

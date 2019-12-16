@@ -3,15 +3,13 @@ package spl.question.bank.web.teacher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import spl.question.bank.model.moderator.RejectDto;
 import spl.question.bank.model.question.QuestionStatus;
 import spl.question.bank.model.question.QuestionType;
 import spl.question.bank.service.CqService;
-import spl.question.bank.service.ModeratorService;
 import spl.question.bank.service.McqService;
+import spl.question.bank.service.ModeratorService;
 
 import java.io.IOException;
 
@@ -53,8 +51,9 @@ public class ModeratorController {
   public ResponseEntity changeQuestionStatus(
       @PathVariable("questionType") QuestionType questionType,
       @PathVariable("questionId") Integer questionId,
-      @PathVariable("status") QuestionStatus status) {
-    return moderatorService.changeQuestionStatus(questionId, questionType, status);
+      @PathVariable("status") QuestionStatus status,
+      @RequestBody RejectDto rejectDto) {
+    return moderatorService.changeQuestionStatus(questionId, questionType, status, rejectDto);
   }
 
   @RequestMapping(

@@ -29,8 +29,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Service
 @Slf4j
@@ -96,6 +94,7 @@ public class PdfService {
         examType.getLabel() + " " + enNumberToBnNumber(LocalDate.now().getYear()) + "\n" + qType);
     paragraph.add("\n" + " সময়: " + paperDetails.getDuration());
     paragraph.add("\t" + "পূর্নমান: " + enNumberToBnNumber(paperDetails.getTotalMarks()));
+    paragraph.add("\n প্রতিটি  প্রশ্নের  মান  সমান\n");
     questionDocument.add(paragraph);
   }
 

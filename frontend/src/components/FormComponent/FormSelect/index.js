@@ -7,7 +7,7 @@ import { required } from 'utils/validation';
 import { Field } from 'redux-form/immutable';
 import { fromJS } from 'immutable';
 
-import customStyles from './style';
+// import customStyles from './style';
 
 export default class FormSelect extends Component {
   static propTypes = {

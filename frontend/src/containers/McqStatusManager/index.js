@@ -72,6 +72,7 @@ class McqStatusManagement extends Component {
           allSubject={allSubject}
           status={type}
           allMcqs={mcqs}
+          history={this.props.history}
         />
       </div>
     );

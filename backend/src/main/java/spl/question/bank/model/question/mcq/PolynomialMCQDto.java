@@ -20,6 +20,7 @@ public class PolynomialMCQDto implements MCQDto {
   private Integer createdBy;
   private Integer moderatedBy;
   private String status;
+  private String rejectedCause;
   private Difficulty difficulty;
   private Date createdAt;
   private Date moderatedAt;
