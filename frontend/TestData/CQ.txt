@@ -124,17 +124,4 @@
 
 
 জাগলা এইচ এম হাইস্কুল
-
-Last Exam Paper Ids => [57, 58, 60, 67, 63, 53, 68, 47, 43, 66, 59, 50, 70, 48, 51, 55, 49, 69]
-2019-12-16 13:37:57.521  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Generating new Paper for Subject => finalExam, Exam => finalExam
-2019-12-16 13:37:57.521  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Iteration => 1 & Generated => [53, 49, 44, 42, 58, 47, 52, 60, 65, 57, 67, 43, 59, 69, 56]
-2019-12-16 13:37:57.522  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Got similarity => 66.0. Retry question generation.
-2019-12-16 13:37:57.522  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Iteration => 2 & Generated => [49, 44, 68, 67, 66, 48, 50, 53, 63, 64, 43, 57, 47, 42]
-2019-12-16 13:37:57.523  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Got similarity => 78.0. Retry question generation.
-2019-12-16 13:37:57.523  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Iteration => 3 & Generated => [44, 43, 58, 47, 50, 48, 42, 52, 57, 55, 51, 67, 68, 59]
-2019-12-16 13:37:57.523  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Got similarity => 78.0. Retry question generation.
-2019-12-16 13:37:57.524  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Iteration => 4 & Generated => [65, 55, 64, 49, 67, 51, 46, 56, 63, 43, 58, 60, 48, 42, 69]
-2019-12-16 13:37:57.524  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Got similarity => 66.0. Retry question generation.
-2019-12-16 13:37:57.525  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Iteration => 5 & Generated => [51, 56, 64, 65, 55, 69, 48, 63, 52, 49, 70, 47, 60, 57]
-2019-12-16 13:37:57.525  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Got similarity => 71.0. Retry question generation.
-2019-12-16 13:37:57.525  INFO 11143 --- [nio-1515-exec-4] s.question.bank.service.DownloadService  : Tree map => {66.0=[65, 55, 64, 49, 67, 51, 46, 56, 63, 43, 58, 60, 48, 42, 69], 71.0=[51, 56, 64, 65, 55, 69, 48, 63, 52, 49, 70, 47, 60, 57], 78.0=[44, 43, 58, 47, 50, 48, 42, 52, 57, 55, 51, 67, 68, 59]}
+২ ঘণ্টা ৩০ মিনিট
