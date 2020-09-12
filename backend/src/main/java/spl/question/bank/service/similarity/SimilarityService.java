@@ -51,8 +51,7 @@ public class SimilarityService {
           allTokenizedDocuments.put(cqQuestion.getId(), tokenList);
         });
 
-    HashMap<Integer, Double> cqScore =
-        calculateSimilarityScores(queryCQ, allTokenizedDocuments);
+    HashMap<Integer, Double> cqScore = calculateSimilarityScores(queryCQ, allTokenizedDocuments);
 
     val sortedMap =
         cqScore.entrySet().stream()
@@ -77,8 +76,7 @@ public class SimilarityService {
     HashMap<Integer, List<String>> allTokenizedDocuments =
         similarityUtils.getTokenizedMap(questions);
 
-    HashMap<Integer, Double> dtoScore =
-        calculateSimilarityScores(queryMcq, allTokenizedDocuments);
+    HashMap<Integer, Double> dtoScore = calculateSimilarityScores(queryMcq, allTokenizedDocuments);
 
     val sortedMap =
         dtoScore.entrySet().stream()
