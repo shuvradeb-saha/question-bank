@@ -46,7 +46,7 @@
 		"redux-immutable": "^4.0.0",
 		"redux-saga": "^0.16.0",
 		"reselect": "^3.0.1",
-		"validator": "^11.0.0"
+		"validator": "^13.7.0"
 	},
 	"scripts": {
 		"format": "prettier-eslint --write \"src/**/*.{js,scss}\"",
